@@ -1,0 +1,211 @@
+otf2_snapshots-otf2_snapshots_events.o: \
+ ../src/tools/otf2_snapshots/otf2_snapshots_events.cpp ../src/config.h \
+ ../src/config-backend.h ../src/config-common.h ../src/config-custom.h \
+ /afs/glue.umd.edu/software/gcc/6.1.0/.@sys/include/c++/6.1.0/stdlib.h \
+ /afs/glue.umd.edu/software/gcc/6.1.0/.@sys/include/c++/6.1.0/cstdlib \
+ /afs/glue.umd.edu/software/gcc/6.1.0/.@sys/include/c++/6.1.0/x86_64-pc-linux-gnu/bits/c++config.h \
+ /afs/glue.umd.edu/software/gcc/6.1.0/.@sys/include/c++/6.1.0/x86_64-pc-linux-gnu/bits/os_defines.h \
+ /usr/include/features.h /usr/include/sys/cdefs.h \
+ /usr/include/bits/wordsize.h /usr/include/gnu/stubs.h \
+ /usr/include/gnu/stubs-64.h \
+ /afs/glue.umd.edu/software/gcc/6.1.0/.@sys/include/c++/6.1.0/x86_64-pc-linux-gnu/bits/cpu_defines.h \
+ /usr/include/stdlib.h \
+ /afs/glue.umd.edu/software/gcc/6.1.0/.@sys/lib/gcc/x86_64-pc-linux-gnu/6.1.0/include/stddef.h \
+ /usr/include/bits/waitflags.h /usr/include/bits/waitstatus.h \
+ /usr/include/endian.h /usr/include/bits/endian.h \
+ /usr/include/bits/byteswap.h /usr/include/xlocale.h \
+ /usr/include/sys/types.h /usr/include/bits/types.h \
+ /usr/include/bits/typesizes.h /usr/include/time.h \
+ /usr/include/sys/select.h /usr/include/bits/select.h \
+ /usr/include/bits/sigset.h /usr/include/bits/time.h \
+ /usr/include/sys/sysmacros.h /usr/include/bits/pthreadtypes.h \
+ /usr/include/alloca.h /usr/include/inttypes.h \
+ /afs/glue.umd.edu/software/gcc/6.1.0/.@sys/lib/gcc/x86_64-pc-linux-gnu/6.1.0/include/stdint.h \
+ /usr/include/stdint.h /usr/include/bits/wchar.h /usr/include/string.h \
+ ../include/otf2/otf2.h ../include/otf2/OTF2_Reader.h \
+ ../include/otf2/OTF2_ErrorCodes.h /usr/include/errno.h \
+ /usr/include/bits/errno.h /usr/include/linux/errno.h \
+ /usr/include/asm/errno.h /usr/include/asm-generic/errno.h \
+ /usr/include/asm-generic/errno-base.h \
+ /afs/glue.umd.edu/software/gcc/6.1.0/.@sys/lib/gcc/x86_64-pc-linux-gnu/6.1.0/include/stdarg.h \
+ ../include/otf2/OTF2_Archive.h ../include/otf2/OTF2_Callbacks.h \
+ ../include/otf2/OTF2_GeneralDefinitions.h \
+ ../include/otf2/OTF2_DefWriter.h ../include/otf2/OTF2_AttributeValue.h \
+ ../include/otf2/OTF2_Definitions.h ../include/otf2/OTF2_Events.h \
+ ../include/otf2/OTF2_IdMap.h ../include/otf2/OTF2_DefReader.h \
+ ../include/otf2/OTF2_DefReaderCallbacks.h \
+ ../include/otf2/OTF2_EvtWriter.h ../include/otf2/OTF2_AttributeList.h \
+ ../include/otf2/OTF2_EvtReader.h \
+ ../include/otf2/OTF2_EvtReaderCallbacks.h \
+ ../include/otf2/OTF2_SnapWriter.h ../include/otf2/OTF2_SnapReader.h \
+ ../include/otf2/OTF2_SnapReaderCallbacks.h \
+ ../include/otf2/OTF2_GlobalDefWriter.h \
+ ../include/otf2/OTF2_GlobalDefReader.h \
+ ../include/otf2/OTF2_GlobalDefReaderCallbacks.h \
+ ../include/otf2/OTF2_GlobalEvtReader.h \
+ ../include/otf2/OTF2_GlobalEvtReaderCallbacks.h \
+ ../include/otf2/OTF2_GlobalSnapReader.h \
+ ../include/otf2/OTF2_GlobalSnapReaderCallbacks.h \
+ ../include/otf2/OTF2_Thumbnail.h ../include/otf2/OTF2_MarkerWriter.h \
+ ../include/otf2/OTF2_Marker.h ../include/otf2/OTF2_MarkerReader.h \
+ ../include/otf2/OTF2_MarkerReaderCallbacks.h \
+ ../src/tools/otf2_snapshots/otf2_snapshots_events.hpp \
+ ../src/tools/otf2_snapshots/otf2_snapshots_events_inc.cpp
+
+../src/config.h:
+
+../src/config-backend.h:
+
+../src/config-common.h:
+
+../src/config-custom.h:
+
+/afs/glue.umd.edu/software/gcc/6.1.0/.@sys/include/c++/6.1.0/stdlib.h:
+
+/afs/glue.umd.edu/software/gcc/6.1.0/.@sys/include/c++/6.1.0/cstdlib:
+
+/afs/glue.umd.edu/software/gcc/6.1.0/.@sys/include/c++/6.1.0/x86_64-pc-linux-gnu/bits/c++config.h:
+
+/afs/glue.umd.edu/software/gcc/6.1.0/.@sys/include/c++/6.1.0/x86_64-pc-linux-gnu/bits/os_defines.h:
+
+/usr/include/features.h:
+
+/usr/include/sys/cdefs.h:
+
+/usr/include/bits/wordsize.h:
+
+/usr/include/gnu/stubs.h:
+
+/usr/include/gnu/stubs-64.h:
+
+/afs/glue.umd.edu/software/gcc/6.1.0/.@sys/include/c++/6.1.0/x86_64-pc-linux-gnu/bits/cpu_defines.h:
+
+/usr/include/stdlib.h:
+
+/afs/glue.umd.edu/software/gcc/6.1.0/.@sys/lib/gcc/x86_64-pc-linux-gnu/6.1.0/include/stddef.h:
+
+/usr/include/bits/waitflags.h:
+
+/usr/include/bits/waitstatus.h:
+
+/usr/include/endian.h:
+
+/usr/include/bits/endian.h:
+
+/usr/include/bits/byteswap.h:
+
+/usr/include/xlocale.h:
+
+/usr/include/sys/types.h:
+
+/usr/include/bits/types.h:
+
+/usr/include/bits/typesizes.h:
+
+/usr/include/time.h:
+
+/usr/include/sys/select.h:
+
+/usr/include/bits/select.h:
+
+/usr/include/bits/sigset.h:
+
+/usr/include/bits/time.h:
+
+/usr/include/sys/sysmacros.h:
+
+/usr/include/bits/pthreadtypes.h:
+
+/usr/include/alloca.h:
+
+/usr/include/inttypes.h:
+
+/afs/glue.umd.edu/software/gcc/6.1.0/.@sys/lib/gcc/x86_64-pc-linux-gnu/6.1.0/include/stdint.h:
+
+/usr/include/stdint.h:
+
+/usr/include/bits/wchar.h:
+
+/usr/include/string.h:
+
+../include/otf2/otf2.h:
+
+../include/otf2/OTF2_Reader.h:
+
+../include/otf2/OTF2_ErrorCodes.h:
+
+/usr/include/errno.h:
+
+/usr/include/bits/errno.h:
+
+/usr/include/linux/errno.h:
+
+/usr/include/asm/errno.h:
+
+/usr/include/asm-generic/errno.h:
+
+/usr/include/asm-generic/errno-base.h:
+
+/afs/glue.umd.edu/software/gcc/6.1.0/.@sys/lib/gcc/x86_64-pc-linux-gnu/6.1.0/include/stdarg.h:
+
+../include/otf2/OTF2_Archive.h:
+
+../include/otf2/OTF2_Callbacks.h:
+
+../include/otf2/OTF2_GeneralDefinitions.h:
+
+../include/otf2/OTF2_DefWriter.h:
+
+../include/otf2/OTF2_AttributeValue.h:
+
+../include/otf2/OTF2_Definitions.h:
+
+../include/otf2/OTF2_Events.h:
+
+../include/otf2/OTF2_IdMap.h:
+
+../include/otf2/OTF2_DefReader.h:
+
+../include/otf2/OTF2_DefReaderCallbacks.h:
+
+../include/otf2/OTF2_EvtWriter.h:
+
+../include/otf2/OTF2_AttributeList.h:
+
+../include/otf2/OTF2_EvtReader.h:
+
+../include/otf2/OTF2_EvtReaderCallbacks.h:
+
+../include/otf2/OTF2_SnapWriter.h:
+
+../include/otf2/OTF2_SnapReader.h:
+
+../include/otf2/OTF2_SnapReaderCallbacks.h:
+
+../include/otf2/OTF2_GlobalDefWriter.h:
+
+../include/otf2/OTF2_GlobalDefReader.h:
+
+../include/otf2/OTF2_GlobalDefReaderCallbacks.h:
+
+../include/otf2/OTF2_GlobalEvtReader.h:
+
+../include/otf2/OTF2_GlobalEvtReaderCallbacks.h:
+
+../include/otf2/OTF2_GlobalSnapReader.h:
+
+../include/otf2/OTF2_GlobalSnapReaderCallbacks.h:
+
+../include/otf2/OTF2_Thumbnail.h:
+
+../include/otf2/OTF2_MarkerWriter.h:
+
+../include/otf2/OTF2_Marker.h:
+
+../include/otf2/OTF2_MarkerReader.h:
+
+../include/otf2/OTF2_MarkerReaderCallbacks.h:
+
+../src/tools/otf2_snapshots/otf2_snapshots_events.hpp:
+
+../src/tools/otf2_snapshots/otf2_snapshots_events_inc.cpp:

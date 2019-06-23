@@ -1,0 +1,31 @@
+Configure command:
+  ./configure                   '--prefix=/lustre/ssinghal/tau2-install/x86_64/otf2-gcc' \
+                                'CC=gcc' \
+                                'CXX=g++'
+
+Loaded modules:
+  module load                   hpcc/deepthought2 \
+                                slurm/16.05.1 \
+                                gcc/6.1.0 \
+                                openmpi/1.10.2/gnu/6.1.0 \
+                                cmake/3.9.1 \
+                                likwid/4.3.3 \
+                                ofed/1.5.4.1 \
+                                cuda/7.5.18 \
+                                scalapack/2.0.2/gnu/6.1.0/openmpi/1.10.2 \
+                                lapack/3.6.1 \
+                                texlive/2015 \
+                                python/3.5.1
+
+Configuration summary:
+  OTF2 2.1:
+    Platform:                   linux (auto detected)
+    Cross compiling:            no (auto detected)
+
+    OTF2 (backend):
+      C99 compiler used:        gcc
+      SIONlib support:          no
+      Entropy sources:          clock_gettime getpid sysinfo gethostid
+      Python bindings support:  yes, using /usr/local/python3/3.5.1/bin/python
+      Running tests:            no
+        Parallel tests:         yes

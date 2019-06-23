@@ -1,0 +1,37 @@
+libjenkins_hash_la-jenkins_hash.lo: ../vendor/common/hash/jenkins_hash.c \
+ ../src/config.h ../src/config-backend.h ../src/config-common.h \
+ ../src/config-custom.h \
+ /afs/glue.umd.edu/software/gcc/6.1.0/.@sys/lib/gcc/x86_64-pc-linux-gnu/6.1.0/include/stddef.h \
+ /afs/glue.umd.edu/software/gcc/6.1.0/.@sys/lib/gcc/x86_64-pc-linux-gnu/6.1.0/include/stdint.h \
+ /usr/include/stdint.h /usr/include/features.h /usr/include/sys/cdefs.h \
+ /usr/include/bits/wordsize.h /usr/include/gnu/stubs.h \
+ /usr/include/gnu/stubs-64.h /usr/include/bits/wchar.h \
+ ../vendor/common/hash/jenkins_hash.h
+
+../src/config.h:
+
+../src/config-backend.h:
+
+../src/config-common.h:
+
+../src/config-custom.h:
+
+/afs/glue.umd.edu/software/gcc/6.1.0/.@sys/lib/gcc/x86_64-pc-linux-gnu/6.1.0/include/stddef.h:
+
+/afs/glue.umd.edu/software/gcc/6.1.0/.@sys/lib/gcc/x86_64-pc-linux-gnu/6.1.0/include/stdint.h:
+
+/usr/include/stdint.h:
+
+/usr/include/features.h:
+
+/usr/include/sys/cdefs.h:
+
+/usr/include/bits/wordsize.h:
+
+/usr/include/gnu/stubs.h:
+
+/usr/include/gnu/stubs-64.h:
+
+/usr/include/bits/wchar.h:
+
+../vendor/common/hash/jenkins_hash.h:

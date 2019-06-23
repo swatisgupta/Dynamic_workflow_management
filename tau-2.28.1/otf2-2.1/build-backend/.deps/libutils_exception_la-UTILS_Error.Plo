@@ -1,0 +1,149 @@
+libutils_exception_la-UTILS_Error.lo: \
+ ../vendor/common/src/utils/exception/UTILS_Error.c ../src/config.h \
+ ../src/config-backend.h ../src/config-common.h ../src/config-custom.h \
+ ../vendor/common/src/utils/include/UTILS_Error.h \
+ /afs/glue.umd.edu/software/gcc/6.1.0/.@sys/lib/gcc/x86_64-pc-linux-gnu/6.1.0/include/stdint.h \
+ /usr/include/stdint.h /usr/include/features.h /usr/include/sys/cdefs.h \
+ /usr/include/bits/wordsize.h /usr/include/gnu/stubs.h \
+ /usr/include/gnu/stubs-64.h /usr/include/bits/wchar.h \
+ /afs/glue.umd.edu/software/gcc/6.1.0/.@sys/lib/gcc/x86_64-pc-linux-gnu/6.1.0/include/stdbool.h \
+ /afs/glue.umd.edu/software/gcc/6.1.0/.@sys/lib/gcc/x86_64-pc-linux-gnu/6.1.0/include/stdarg.h \
+ ../vendor/common/src/utils/include/UTILS_Portability.h \
+ ../include/otf2/OTF2_ErrorCodes.h /usr/include/errno.h \
+ /usr/include/bits/errno.h /usr/include/linux/errno.h \
+ /usr/include/asm/errno.h /usr/include/asm-generic/errno.h \
+ /usr/include/asm-generic/errno-base.h /usr/include/stdio.h \
+ /afs/glue.umd.edu/software/gcc/6.1.0/.@sys/lib/gcc/x86_64-pc-linux-gnu/6.1.0/include/stddef.h \
+ /usr/include/bits/types.h /usr/include/bits/typesizes.h \
+ /usr/include/libio.h /usr/include/_G_config.h /usr/include/wchar.h \
+ /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h \
+ /usr/include/bits/stdio.h /usr/include/stdlib.h \
+ /usr/include/bits/waitflags.h /usr/include/bits/waitstatus.h \
+ /usr/include/endian.h /usr/include/bits/endian.h \
+ /usr/include/bits/byteswap.h /usr/include/sys/types.h \
+ /usr/include/time.h /usr/include/sys/select.h /usr/include/bits/select.h \
+ /usr/include/bits/sigset.h /usr/include/bits/time.h \
+ /usr/include/sys/sysmacros.h /usr/include/bits/pthreadtypes.h \
+ /usr/include/alloca.h /usr/include/string.h /usr/include/xlocale.h \
+ /usr/include/bits/string.h /usr/include/bits/string2.h \
+ /usr/include/inttypes.h ../vendor/common/src/utils/include/UTILS_CStr.h \
+ ../vendor/common/src/utils/include/UTILS_IO.h \
+ ../vendor/common/src/utils/include/utils_package.h \
+ ../vendor/common/src/utils/exception/normalize_file.h \
+ ../src/otf2_error_decls.gen.h
+
+../src/config.h:
+
+../src/config-backend.h:
+
+../src/config-common.h:
+
+../src/config-custom.h:
+
+../vendor/common/src/utils/include/UTILS_Error.h:
+
+/afs/glue.umd.edu/software/gcc/6.1.0/.@sys/lib/gcc/x86_64-pc-linux-gnu/6.1.0/include/stdint.h:
+
+/usr/include/stdint.h:
+
+/usr/include/features.h:
+
+/usr/include/sys/cdefs.h:
+
+/usr/include/bits/wordsize.h:
+
+/usr/include/gnu/stubs.h:
+
+/usr/include/gnu/stubs-64.h:
+
+/usr/include/bits/wchar.h:
+
+/afs/glue.umd.edu/software/gcc/6.1.0/.@sys/lib/gcc/x86_64-pc-linux-gnu/6.1.0/include/stdbool.h:
+
+/afs/glue.umd.edu/software/gcc/6.1.0/.@sys/lib/gcc/x86_64-pc-linux-gnu/6.1.0/include/stdarg.h:
+
+../vendor/common/src/utils/include/UTILS_Portability.h:
+
+../include/otf2/OTF2_ErrorCodes.h:
+
+/usr/include/errno.h:
+
+/usr/include/bits/errno.h:
+
+/usr/include/linux/errno.h:
+
+/usr/include/asm/errno.h:
+
+/usr/include/asm-generic/errno.h:
+
+/usr/include/asm-generic/errno-base.h:
+
+/usr/include/stdio.h:
+
+/afs/glue.umd.edu/software/gcc/6.1.0/.@sys/lib/gcc/x86_64-pc-linux-gnu/6.1.0/include/stddef.h:
+
+/usr/include/bits/types.h:
+
+/usr/include/bits/typesizes.h:
+
+/usr/include/libio.h:
+
+/usr/include/_G_config.h:
+
+/usr/include/wchar.h:
+
+/usr/include/bits/stdio_lim.h:
+
+/usr/include/bits/sys_errlist.h:
+
+/usr/include/bits/stdio.h:
+
+/usr/include/stdlib.h:
+
+/usr/include/bits/waitflags.h:
+
+/usr/include/bits/waitstatus.h:
+
+/usr/include/endian.h:
+
+/usr/include/bits/endian.h:
+
+/usr/include/bits/byteswap.h:
+
+/usr/include/sys/types.h:
+
+/usr/include/time.h:
+
+/usr/include/sys/select.h:
+
+/usr/include/bits/select.h:
+
+/usr/include/bits/sigset.h:
+
+/usr/include/bits/time.h:
+
+/usr/include/sys/sysmacros.h:
+
+/usr/include/bits/pthreadtypes.h:
+
+/usr/include/alloca.h:
+
+/usr/include/string.h:
+
+/usr/include/xlocale.h:
+
+/usr/include/bits/string.h:
+
+/usr/include/bits/string2.h:
+
+/usr/include/inttypes.h:
+
+../vendor/common/src/utils/include/UTILS_CStr.h:
+
+../vendor/common/src/utils/include/UTILS_IO.h:
+
+../vendor/common/src/utils/include/utils_package.h:
+
+../vendor/common/src/utils/exception/normalize_file.h:
+
+../src/otf2_error_decls.gen.h:

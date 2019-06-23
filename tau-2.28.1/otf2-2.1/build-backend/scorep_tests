@@ -1,0 +1,19 @@
+# Available tests:
+./../test/OTF2_AnchorFile_test/run_anchor_file_test.sh
+./../test/OTF2_AttributeList_test/run_attribute_list_test.sh
+././run_otf2_buffer_test.sh
+./../test/OTF2_File_test/run_otf2_file_test.sh
+././run_otf2_integrity_test.sh
+./../test/OTF2_Timer_sync_test/run_otf2_timer_sync_test.sh
+./../test/OTF2_UnknownRecord_test/run_otf2_unknown_record_test.sh
+./OTF2_IdMap_test
+./../test/OTF2_Event_Seek_test/run_otf2_event_seek_test.sh
+./../test/OTF2_Snapshot_Seek_test/run_otf2_snapshot_seek_test.sh
+./../test/OTF2_Old_Chunk_List_test/run_old_chunk_list_test.sh
+./../test/OTF2_CallbackInterrupt_test/run_otf2_callback_interrupt_test.sh
+./otf2_undefineds
+./otf2_undefineds_cc
+./../test/cti/run_cti_tests.sh
+./../test/test-parallel/run_otf2_parallel_posix.sh
+./io_test
+./error_test

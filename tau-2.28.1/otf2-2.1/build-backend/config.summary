@@ -1,0 +1,7 @@
+    OTF2 (backend):
+      C99 compiler used:        gcc
+      SIONlib support:          no
+      Entropy sources:          clock_gettime getpid sysinfo gethostid
+      Python bindings support:  yes, using /usr/local/python3/3.5.1/bin/python
+      Running tests:            no
+        Parallel tests:         yes
