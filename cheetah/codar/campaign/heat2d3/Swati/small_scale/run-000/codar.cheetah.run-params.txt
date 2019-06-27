@@ -1,0 +1,2 @@
+/Users/Swati/Documents/Projects/Dynamic_workflow/heat2d/cpp/heatAnalysis sim.bp heat_res.bp
+/Users/Swati/Documents/Projects/Dynamic_workflow/heat2d/cpp/heatSimulation sim.bp 2 1 40 50 500 500

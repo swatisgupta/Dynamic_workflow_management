@@ -1,0 +1,8 @@
+--------------------------------------------------------------------------
+There are not enough slots available in the system to satisfy the 3 slots
+that were requested by the application:
+  /Users/Swati/Documents/Projects/Dynamic_workflow/heat2d/cpp/heatSimulation
+
+Either request fewer slots for your application, or make more slots available
+for use.
+--------------------------------------------------------------------------
