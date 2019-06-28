@@ -10,9 +10,11 @@ from datetime import datetime
 import zmq
 import numpy
 import json
+import queue
 
-cntrl_q = Queue(maxsize=1)
-resp_q = Queue(maxsize=1)
+
+cntrl_q = queue.Queue(maxsize=1)
+resp_q = queue.Queue(maxsize=1)
 
 class Rmonitor():
     model_objs = []
@@ -25,6 +27,7 @@ class Rmonitor():
     #can_change = False
     #can_work = True
     stop_work = False
+    stop_cntrl = False
 
     rank = 0
     mpi_comm = MPI.COMM_SELF
@@ -82,7 +85,7 @@ class Rmonitor():
             socket.send_string(req_or_res)
         self.mpi_comm.Barrier()
          
-    def get_update(self, socket, model_name, timestamp, local_state, req_type):
+    def get_update(self, model_name, timestamp, local_state, req_type):
         global_state = self.mpi_comm.gather(local_state, root=0)
         request = {}
         if self.rank == 0 : 
@@ -100,15 +103,16 @@ class Rmonitor():
         for mdls in self.model_objs:
             action = numpy.zeros(1) 
             g_action = numpy.zeros(1) 
-            action[0] = 1 if mdls.suggest_action else 0
+            action[0] = 1 if mdls.suggest_action == True else 0
             g_action[0] = 0
             self.config.mpi_comm.Reduce(action, g_action, op=MPI.SUM)
+            
             if g_action[0] > 0:
                 print("sending update for ", mdls.name) 
-                request = self.get_update(socket, mdls.name, timestamp, mdls.get_curr_state(), "req:action")
+                request = self.get_update(mdls.name, timestamp, mdls.get_curr_state(), "req:action")
                 self.send_req_or_res(socket, request)
                 message = socket.recv()
-            mdls.suggest_action == False
+            mdls.suggest_action = False
         print("Done with updates") 
     
     def perform_iteration(self): 
@@ -133,6 +137,10 @@ class Rmonitor():
         while do_work == True:
             if self.stop_work == True:
                 do_work = False
+                if self.rank == 0: 
+                    socket.send_string("done")
+                    msg = socket.recv()
+                    print("Done!!")
             else :
                 if do_work == True: 
                     self.perform_iteration() 
@@ -141,7 +149,6 @@ class Rmonitor():
                     message = cntrl_q.get(block=False)
                     self.process_request(message)
                     cntrl_q.task_done()
-
 
     def controller(self):
         l_socket = None
@@ -181,24 +188,27 @@ class Rmonitor():
                j_data = message[msg:]
 
            request = json.loads(j_data)
-           cntrl_q.put()
+           cntrl_q.put(request)
            response = resp_q.get()
            self.send_req_or_res(g_socket, response)
- 
-     def process_request(self, request):
-           if request["msg_type"] == "req:get_update":
-               timestamp = datetime.now() - self.starttime
-               timestamp = list(divmod(timestamp.total_seconds(), 60))   
-               mdls = self.config.perf_models[request["model"]] 
-               response = self.get_update(g_socket, mdls.name, timestamp, mdls.get_curr_state(), "req:action")
-           elif request["msg_type"] == "req:stop":
+           if self.stop_cntrl == True:
+               print("Recieved stop request")
                if_stop = True
-               self.stop_work = True
-               response = "OK"
-           else:
-               # Change model or change mapping
-               response = "OK"
-           resp_q.put(response)
+ 
+    def process_request(self, request):
+         if request["msg_type"] == "req:get_update":
+             timestamp = datetime.now() - self.starttime
+             timestamp = list(divmod(timestamp.total_seconds(), 60))   
+             mdls = self.config.perf_models[request["model"]] 
+             response = self.get_update(mdls.name, timestamp, mdls.get_curr_state(), "res:update")
+         elif request["msg_type"] == "req:stop":
+             self.stop_work = True
+             self.stop_cntrl = True
+             response = "OK"
+         else:
+             # Change model or change mapping
+             response = "OK"
+         resp_q.put(response)
           
 if __name__ == "__main__":
     appID = 10

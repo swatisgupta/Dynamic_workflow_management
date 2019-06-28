@@ -34,16 +34,24 @@ def receiver():
     socket = context.socket(zmq.REP)
     socket_str = "tcp://" + address + ":" + str(iport)
     socket.bind(socket_str) 
-    #socket.setsockopt(zmq.SNDTIMEO, 1)
-    #socket.setsockopt(zmq.RECVTIMEO, 1)
+
     keep_alive = True    
+
     while keep_alive == True:
         with recv_cond:
             if stop_recv == True:
                 keep_alive = False
                 continue
-        message = socket.recv()
-        socket.send_string("OK")
+        try:
+            message = socket.recv()
+            socket.send_string("OK")
+            message = message.decode("utf-8") 
+            if message == "done":
+                 keep_alive = False
+                 print("got stop request") 
+        except:
+            keep_alive = False
+            continue 
   
 def sender():
     address = soc.gethostbyname(soc.gethostname())
@@ -61,6 +69,7 @@ def sender():
         message = message.decode("utf-8")
         print("Received message type 1", message)
         #time.sleep(1)
+        stop = True
         if stop == True:
             request = create_request("memory", datetime.now() - starttime, "req:stop")
             socket.send_string(request)
@@ -68,7 +77,7 @@ def sender():
             print("Received message type 2", message)
             with recv_cond:
                 stop_recv = True
-     
+            keep_requesting = False  
     
     
         
@@ -80,4 +89,4 @@ if __name__ == "__main__":
     receiver_thread = threading.Thread(target=receiver)  
     receiver_thread.start()
     sender()
-        
+    receiver_thread.join()      
