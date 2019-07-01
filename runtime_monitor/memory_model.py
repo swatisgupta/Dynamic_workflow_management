@@ -66,17 +66,25 @@ def _sub_(func, nprocs, val_l):
     return sub
 
 class memory(abstract_model.model):
-    hd_counters = []
-    rss_m = ['Memory Footprint (VmRSS) (KB)']
-    vmswaps_m = ['Peak Memory Usage Resident Set Size (VmHWM) (KB)']
-    metric_func = []
-    adios2_active_conns = []
-    r_map = None
-    name = "memory"
-    m_status_abs = {} 
-    m_status_avg = {} 
-    m_status_inc = {} 
-    m_status_dec = {} 
+
+    def __init__(self, config):
+        self.hd_counters = []
+        self.rss_m = ['Memory Footprint (VmRSS) (KB)']
+        self.vmswaps_m = ['Peak Memory Usage Resident Set Size (VmHWM) (KB)']
+        self.metric_func = []
+        self.adios2_active_conns = []
+        self.r_map = None
+        self.name = "memory"
+        self.m_status_abs = {} 
+        self.m_status_avg = {} 
+        self.m_status_inc = {} 
+        self.m_status_dec = {} 
+        self.urgent_update = False
+
+        if config.hc_lib  == 'papi':
+            hd_counters = papi_counters[config.cpu_model]
+            metric_func = metric[config.cpu_model]
+        self.refresh_model_conf(config)    
 
     def __compute_llc_miss_per(self, nprocs, llc_miss, llc_refs):
         llc_per, maxp = _percentage_('compute_llc_miss_per', nprocs, llc_miss, llc_refs)
@@ -90,11 +98,12 @@ class memory(abstract_model.model):
         ipc, maxv = _divide_('compute_ipc', nprocs, ins_ret, core_cyc)
         return ipc
 
-    def __init__(self, config):
-        if config.hc_lib  == 'papi':
-            hd_counters = papi_counters[config.cpu_model]
-            metric_func = metric[config.cpu_model]
-        self.refresh_model_conf(config)    
+
+    def get_model_name(self):
+        return self.name
+
+    def if_urgent_update(self):
+        return self.urgent_update
 
     def refresh_model_conf(self, config):
         self.adios2_active_conns = config.adios2_c_objs
@@ -117,7 +126,7 @@ class memory(abstract_model.model):
                     rss_all[p_ctrs[k][i]] = rss_temp[0]
                 i = i + 1 
             k = k + 1    
-        #print("RSS", rss_all)
+        print("RSS", rss_all)
         return True
 
     def get_curr_state(self):

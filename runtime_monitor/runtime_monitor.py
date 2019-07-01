@@ -17,23 +17,21 @@ cntrl_q = queue.Queue(maxsize=1)
 resp_q = queue.Queue(maxsize=1)
 
 class Rmonitor():
-    model_objs = []
-    config = None
-    osocket = ""
-    isocket = ""
-    lsocket = ""
-    #cntrl_cond = threading.Condition() 
-    #work_cond = threading.Condition() 
-    #can_change = False
-    #can_work = True
-    stop_work = False
-    stop_cntrl = False
-
-    rank = 0
-    mpi_comm = MPI.COMM_SELF
-    starttime = None
-
     def __init__(self, mpicomm):
+        self.model_objs = []
+        self.config = None
+        self.osocket = ""
+        self.isocket = ""
+        self.lsocket = ""
+        #self.cntrl_cond = threading.Condition() 
+        #self.work_cond = threading.Condition() 
+        #self.can_change = False
+        #self.can_work = True
+        self.stop_work = False
+        self.stop_cntrl = False
+        self.rank = 0
+        self.mpi_comm = MPI.COMM_SELF
+        self.starttime = None
         
         # Can setup other things before the thread starts
         self.mpi_comm = mpicomm
@@ -45,8 +43,8 @@ class Rmonitor():
         self.osocket = self.config.protocol + "://" + self.config.oaddr + ":" + str(self.config.oport) 
         self.isocket = self.config.protocol + "://" + self.config.iaddr + ":" + str(self.config.iport)
         self.lsocket = self.config.protocol + "://" + self.config.iaddr + ":" + str(self.config.iport + 1)
-        rank = self.config.rank
-        mpi_comm = self.config.mpi_comm
+        self.rank = self.config.rank
+        self.mpi_comm = self.config.mpi_comm
  
     def config_models(self):
         model_strs = list(self.config.perf_models.keys())
@@ -103,17 +101,17 @@ class Rmonitor():
         for mdls in self.model_objs:
             action = numpy.zeros(1) 
             g_action = numpy.zeros(1) 
-            action[0] = 1 if mdls.suggest_action == True else 0
+            action[0] = 1 if mdls.if_urgent_update() == True else 0
             g_action[0] = 0
             self.config.mpi_comm.Reduce(action, g_action, op=MPI.SUM)
             
             if g_action[0] > 0:
-                print("sending update for ", mdls.name) 
-                request = self.get_update(mdls.name, timestamp, mdls.get_curr_state(), "req:action")
+                print("sending update for ", mdls.get_model_name()) 
+                request = self.get_update(mdls.get_model_name(), timestamp, mdls.get_curr_state(), "req:action")
                 self.send_req_or_res(socket, request)
                 message = socket.recv()
             mdls.suggest_action = False
-        print("Done with updates") 
+        #print("Done with updates") 
     
     def perform_iteration(self): 
         if (self.config.begin_next_step()): 

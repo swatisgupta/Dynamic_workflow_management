@@ -2,12 +2,9 @@ from mpi4py import MPI
 import abc
          
 class model(abc.ABC):
-     suggest_action = False
-     name = "abstract"
 
-     @abc.abstractmethod 
      def __init__(self, config):
-         pass 
+         pass
 
      @abc.abstractmethod 
      def update_curr_state(self):
@@ -21,5 +18,11 @@ class model(abc.ABC):
      def get_curr_state(self):
          pass   
 
+     @abc.abstractmethod 
+     def get_model_name(self):
+         pass   
 
+     @abc.abstractmethod 
+     def if_urgent_update(self):
+         pass   
 

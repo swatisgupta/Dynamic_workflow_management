@@ -63,25 +63,7 @@ def argument_parser():
     return args
 
 
-class configuration(object):
-    res_map = {} #mapping of each node to adios2 connections and ranks
-    local_res_map = {} #mapping of each node to adios2 connections and ranks
-    rev_map = {} #mapping of each adios2 connection to nodes
-    hc_lib = 'papi'
-    adios2_c_objs = {}
-    adios2_c_engs = {}
-    adios2_c_strs = []
-    perf_models = {} #list of models to be computed
-    cpu_model = ""  
-    mpi_comm = MPI.COMM_SELF  
-    adios2_c_awranks = {}
-    blocks_to_read = {}
-    procs_per_cstr = {}
-    tau_one_file = False
-    tau_file_type = "trace"
-    nprocs = 1
-    rank = 0
-    c_sub_set = {}
+class configuration():
      
     # CPU model info to configure architecture specific settings if needed by any model 
     def __get_cpuinfo_model(self):
@@ -125,11 +107,11 @@ class configuration(object):
             mpi_comm = self.mpi_comm
 
         i = self.rank
-        print(all_nodes)
-        print(self.rank, len(all_nodes))
-        print(self.res_map)
+        #print(all_nodes)
+        #print(self.rank, len(all_nodes))
+        #print(self.res_map)
         while i < len(all_nodes):
-            print("Assigned node", all_nodes[i])
+            #print("Assigned node", all_nodes[i])
             self.local_res_map[all_nodes[i]] = self.res_map[all_nodes[i]]   
             c_strs = self.res_map[all_nodes[i]]
             for c_str in c_strs.keys(): 
@@ -149,15 +131,34 @@ class configuration(object):
             for c_str in list(n_cstrs.keys()): 
                 c_set = self.c_sub_set[c_str]
                 for c_str1 in c_set:
-                    print(self.blocks_to_read[c_str])
+                    #print(self.blocks_to_read[c_str])
                     adios2_obj = adios2_conn(c_str1,  self.adios2_c_engs[c_str], mpi_comm, self.blocks_to_read[c_str], self.tau_file_type)
                     self.adios2_c_objs[c_str].append(adios2_obj)
-        print(self.adios2_c_objs)   
+        #print(self.adios2_c_objs)   
 
 
     def __init__(self, mpi_comm):
+        self.res_map = {} #mapping of each node to adios2 connections and ranks
+        self.local_res_map = {} #mapping of each node to adios2 connections and ranks
+        self.rev_map = {} #mapping of each adios2 connection to nodes
+        self.hc_lib = 'papi'
+        self.adios2_c_objs = {}
+        self.adios2_c_engs = {}
+        self.adios2_c_strs = []
+        self.perf_models = {} #list of models to be computed
+        self.cpu_model = ""  
+        self.mpi_comm = MPI.COMM_SELF  
+        self.adios2_c_awranks = {}
+        self.blocks_to_read = {}
+        self.procs_per_cstr = {}
+        self.tau_one_file = False
+        self.tau_file_type = "trace"
+        self.nprocs = 1
+        self.rank = 0
+        self.c_sub_set = {}
+
         args = argument_parser()
-        print(args.bind_outaddr) 
+        #print(args.bind_outaddr) 
         # for two-way communication with Savanna
         self.iport = int(args.bind_inport[0])
         self.oport = int(args.bind_outport[0])
@@ -238,6 +239,7 @@ class configuration(object):
             else:
                 c_set = [c_str]
             self.c_sub_set[c_str] = c_set
+            #print("C_set for c_str ", c_set) 
             j = j + 1 
 
         

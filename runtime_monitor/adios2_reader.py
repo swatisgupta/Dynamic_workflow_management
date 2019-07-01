@@ -4,32 +4,28 @@ import sys
 import numpy as np
 import re
 
-class adios2_conn(object):
-     inputfile = ""
-     eng_name = "BPFile"
-     mpi_comm = MPI.COMM_SELF
-     size = 1
-     conn = None
-     cstep_avail_vars = None
-     cstep_avail_attrs = None
-     cstep_map_vars = {}
-     cstep = None
-     data_counters = {}
-     event_counters = {}
-     is_step = False
-     tau_file_type = "trace"     
-     blocks_to_read = []
-     is_open = False
+class adios2_conn():
  
      def __init__(self, infile, eng, mpi_comm, blocks_to_read=0, tau_ftype = "trace"):
          self.inputfile = infile     
          self.eng_name = eng
          self.mpi_comm = mpi_comm
          self.blocks_to_read = blocks_to_read
-         tau_file_type = tau_ftype
+         self.tau_file_type = tau_ftype
+         self.size = 1
+         self.conn = None
+         self.cstep_avail_vars = None
+         self.cstep_avail_attrs = None
+         self.cstep_map_vars = {}
+         self.cstep = None
+         self.data_counters = {}
+         self.event_counters = {}
+         self.is_step = False
+         self.is_open = False  
 
      def open(self):
          if self.is_open == False:
+             #print("Opening file ", self.inputfile) 
              self.conn = adios2.open(self.inputfile, "r", self.mpi_comm, self.eng_name)
              self.is_open = True
          return self.is_open
@@ -65,16 +61,16 @@ class adios2_conn(object):
              self.is_step = False
          except:
              #print("Unexpected error:", sys.exc_info()[0])
-             print("No more steps!!")
+             #print("No more steps!!")
              self.is_step = False
          return self.is_step    
                       
-     def read_var(self, measure, procs):
+     def read_var(self, measure, procs, threads=[0]):
          var_data = {}
          if self.is_step == True: 
               if self.tau_file_type == "trace":
-                  print("Getting measure", measure) 
-                  return self.get_trace_var(measure, procs)
+                  #print("Getting measure", measure) 
+                  return self.get_trace_var(measure, procs, threads)
          return False, var_data
 
      def read_trace_data(self):
@@ -82,9 +78,10 @@ class adios2_conn(object):
              for b in self.blocks_to_read:
                  #print("Reading block...", b)
                  self.data_counters[b] = self.cstep.read("counter_values", block_id = b)
+                 #print(self.data_counters[b]) 
                  #self.data_timers[b] = self.cstep.read("event_timestamps", b)
          
-     def get_trace_var(self, measure, procs):
+     def get_trace_var(self, measure, procs, threads):
          var_data = {}
          all_measures = self.cstep_map_vars.keys()
          #print(all_measures)         
@@ -100,16 +97,23 @@ class adios2_conn(object):
          #print(res_match) 
          for mesr in res_match:
              for b in procs:
-                 print("Reading block", b , "from ", self.inputfile) 
+                 #print("Reading block", b , "from ", self.inputfile) 
                  if self.cstep_map_vars[mesr][0] == "counter":
                      #print(self.data_counters)
                      vdata = self.data_counters[b][self.data_counters[b][:,3] == int(self.cstep_map_vars[mesr][1])]           
                  else:
                      vdata = self.data_timers[b][self.data_timers[b][:,3] == int(self.cstep_map_vars[mesr][1])]           
+                 vtdata = None
+                 for t in threads:
+                     if vtdata is None:
+                         vtdata = vdata[vdata[:,2] == t]
+                     else:
+                         vtdata = np.concatenate((vdata[vdata[:,2] == t], vtdata ), axis=0)
+
                  if b not in var_data.keys():
-                     var_data[b] = vdata
+                     var_data[b] = vtdata
                  else:
-                     var_data[b] = np.concatenate((var_data[b], vdata), axis=0)
+                     var_data[b] = np.concatenate((var_data[b], vtdata), axis=0)
          return True, var_data              
 
      def end_step(self):
