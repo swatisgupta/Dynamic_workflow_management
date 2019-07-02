@@ -3,6 +3,14 @@ from mpi4py import MPI
 import sys
 import numpy as np
 import re
+from enum import Enum 
+
+class TraceID(Enum):
+    PROC = 1
+    THREAD = 2
+    MEASURE = 3
+    VALUE = 4
+    TIMESTAMP = 5
 
 class adios2_conn():
  
@@ -80,7 +88,8 @@ class adios2_conn():
                  self.data_counters[b] = self.cstep.read("counter_values", block_id = b)
                  #print(self.data_counters[b]) 
                  #self.data_timers[b] = self.cstep.read("event_timestamps", b)
-         
+     
+     # returns data as a map of np array . Map index is process number. Numpy array has columns (thread, value, timestamp)    
      def get_trace_var(self, measure, procs, threads):
          var_data = {}
          all_measures = self.cstep_map_vars.keys()
@@ -93,27 +102,30 @@ class adios2_conn():
          #print(res_match)
          if len(res_match) == 0 :
              return False, var_data
-
+   
          #print(res_match) 
          for mesr in res_match:
              for b in procs:
                  #print("Reading block", b , "from ", self.inputfile) 
                  if self.cstep_map_vars[mesr][0] == "counter":
                      #print(self.data_counters)
-                     vdata = self.data_counters[b][self.data_counters[b][:,3] == int(self.cstep_map_vars[mesr][1])]           
+                     #print(TraceID.MEASURE.value)
+                     vdata = self.data_counters[b][self.data_counters[b][:,TraceID.MEASURE.value] == int(self.cstep_map_vars[mesr][1])]           
                  else:
-                     vdata = self.data_timers[b][self.data_timers[b][:,3] == int(self.cstep_map_vars[mesr][1])]           
+                     vdata = self.data_timers[b][self.data_timers[b][:,TraceID.MEASURE.value] == int(self.cstep_map_vars[mesr][1])]           
                  vtdata = None
                  for t in threads:
                      if vtdata is None:
-                         vtdata = vdata[vdata[:,2] == t]
+                         vtdata = vdata[vdata[:,TraceID.THREAD.value] == t]
                      else:
-                         vtdata = np.concatenate((vdata[vdata[:,2] == t], vtdata ), axis=0)
+                         vtdata = np.concatenate((vdata[vdata[:,TraceID.THREAD.value] == t], vtdata ), axis=0)
+                 vtdata = vtdata[:, [TraceID.THREAD.value, TraceID.VALUE.value, TraceID.TIMESTAMP.value]]
 
                  if b not in var_data.keys():
                      var_data[b] = vtdata
                  else:
                      var_data[b] = np.concatenate((var_data[b], vtdata), axis=0)
+                 #print(var_data)
          return True, var_data              
 
      def end_step(self):

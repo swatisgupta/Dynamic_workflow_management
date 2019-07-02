@@ -11,7 +11,7 @@ class model(abc.ABC):
          pass
 
      @abc.abstractmethod 
-     def refresh_model_conf(self, config):   
+     def update_model_conf(self, config):   
          pass
 
      @abc.abstractmethod 
