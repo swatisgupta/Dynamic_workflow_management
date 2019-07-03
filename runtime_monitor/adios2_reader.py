@@ -12,7 +12,7 @@ class TraceID(Enum):
     VALUE = 4
     TIMESTAMP = 5
 
-class adios2_conn():
+class adios2_tr_reader():
  
      def __init__(self, infile, eng, mpi_comm, blocks_to_read=0, tau_ftype = "trace"):
          self.inputfile = infile     
@@ -33,9 +33,11 @@ class adios2_conn():
 
      def open(self):
          if self.is_open == False:
-             #print("Opening file ", self.inputfile) 
-             self.conn = adios2.open(self.inputfile, "r", self.mpi_comm, self.eng_name)
-             self.is_open = True
+             try: 
+                 self.conn = adios2.open(self.inputfile, "r", self.mpi_comm, self.eng_name)
+                 self.is_open = True
+             except:
+                 self.is_open = False
          return self.is_open
 
      def get_trace_map(self):
@@ -61,7 +63,7 @@ class adios2_conn():
              self.is_step = True 
              if self.tau_file_type == "trace":
                  if self.cstep.current_step() == 0: 
-                     self.get_trace_map()
+                     self.get_trace_map() # only reads counters for now
                  self.read_trace_data()
          except ValueError as e:
              print(e)
@@ -86,30 +88,21 @@ class adios2_conn():
              for b in self.blocks_to_read:
                  #print("Reading block...", b)
                  self.data_counters[b] = self.cstep.read("counter_values", block_id = b)
-                 #print(self.data_counters[b]) 
-                 #self.data_timers[b] = self.cstep.read("event_timestamps", b)
-     
+                 # TO DO: read events as well!!!
+
      # returns data as a map of np array . Map index is process number. Numpy array has columns (thread, value, timestamp)    
      def get_trace_var(self, measure, procs, threads):
          var_data = {}
          all_measures = self.cstep_map_vars.keys()
-         #print(all_measures)         
-         #search_str = measure + "*"
-         #m_cond = re.compile(search_str)
-         #res_match = list(filter(m_cond.match, all_measures))
          res_match = [ x for x in all_measures if bool(measure in x)]   
 
-         #print(res_match)
          if len(res_match) == 0 :
              return False, var_data
-   
-         #print(res_match) 
+
          for mesr in res_match:
              for b in procs:
                  #print("Reading block", b , "from ", self.inputfile) 
                  if self.cstep_map_vars[mesr][0] == "counter":
-                     #print(self.data_counters)
-                     #print(TraceID.MEASURE.value)
                      vdata = self.data_counters[b][self.data_counters[b][:,TraceID.MEASURE.value] == int(self.cstep_map_vars[mesr][1])]           
                  else:
                      vdata = self.data_timers[b][self.data_timers[b][:,TraceID.MEASURE.value] == int(self.cstep_map_vars[mesr][1])]           
@@ -125,12 +118,14 @@ class adios2_conn():
                      var_data[b] = vtdata
                  else:
                      var_data[b] = np.concatenate((var_data[b], vtdata), axis=0)
-                 #print(var_data)
          return True, var_data              
 
      def end_step(self):
          if self.is_step == True:
-             self.conn.end_step()
-             self.is_step = False
-
+             try: 
+                 self.conn.end_step()
+                 self.is_step = False
+             except:
+                 self.is_step = False
+                
 

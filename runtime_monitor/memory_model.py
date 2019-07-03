@@ -139,10 +139,10 @@ class memory(abstract_model.model):
         return self.urgent_update
 
     def update_model_conf(self, config):
-        self.adios2_active_conns = config.adios2_c_objs
+        self.adios2_active_conns = config.adios2_active_reader_objs
         self.r_map = config.local_res_map
-        self.procs_per_ctr = config.procs_per_cstr
-        self.blocks_to_read = config.blocks_to_read
+        self.procs_per_ctr = config.adios2_reader_procs
+        self.blocks_to_read = config.adios2_reader_blocks
 
     def __get_agg_values_for(self, adios_conc, cntr, cntr_map, index, by_last=0, procs=[0], threads=[0]):
         is_valid, val_ar = adios_conc.read_var(cntr, procs, threads)
@@ -170,43 +170,46 @@ class memory(abstract_model.model):
         cyc_val = {}
         ''' 
         k = 0 
-        p_ctrs = list(self.blocks_to_read.values())
-        keys = list(self.adios2_active_conns.keys()) 
         #print(keys)
-        for concs in self.adios2_active_conns.values():
-            rss_val[keys[k]] = [] 
-            '''
-            llcm_val[keys[k]] = [] 
-            llcr_val[keys[k]] = [] 
-            lds_val[keys[k]] = [] 
-            ins_val[keys[k]] = [] 
-            cyc_val[keys[k]] = []
-            ''' 
-            thread_l1 = [0]
-            thread_l = [0,1,2,3]
-            for conc in concs:
+        nodes = self.adios2_active_conns.keys()
+        for node in nodes:
+            rss_val[node] = {}
+            streams = list(self.adios2_active_conns[node].keys())
+            for stream in streams:
+                procs = list(self.blocks_to_read[node][stream])
+                rss_val[node][stream] = [] 
+                '''
+                llcm_val[node][stream] = [] 
+                llcr_val[node][stream] = [] 
+                lds_val[node][stream] = [] 
+                ins_val[node][stream] = [] 
+                cyc_val[node][stream] = []
+                ''' 
+                thread_l1 = [0]
+                thread_l = [0,1,2,3]
+                for active_conc in self.adios2_active_conns[node][stream]:
                 #read RSS
-                rss_val = self.__get_agg_values_for(conc, self.rss_m, rss_val, keys[k], 0, p_ctrs[k], thread_l1)
-                '''
-                vms_val = self.__get_agg_values_for(conc, self.vms_m, vms_val, keys[k], 0, p_ctrs[k], thread_l1)
-                for met in self.metric_func:
-                    if met == "ld_stall_per":
-                        #read No of Load Stalls
-                        lds_val = self.__get_agg_values_for(conc, self.hd_counters['ld_stalls'], lds_val, keys[k], 1, p_ctrs[k], thread_l)
-                    else if met == "llc_miss_per":
-                        #read No of L3 misses
-                        llcm_val = self.__get_agg_values_for(conc, self.hd_counters['llc_misses'], llcm_val, keys[k], 1, p_ctrs[k], thread_l)
-                        #read No of L3 references
-                        llcr_val = self.__get_agg_values_for(conc, self.hd_counters['llc_refs'], llcr_val, keys[k], 1, p_ctrs[k], thread_l)
-                    else if met == "ipc":
-                        #read No of Instruction
-                        ins_val = self.__get_agg_values_for(conc, self.hd_counters['inst_ret'], ins_val, keys[k], 1, p_ctrs[k], thread_l)
-                    if met == "ld_stalls_per" or met == "ipc":
-                        #read No of CPU cycles
-                        cyc_val = self.__get_agg_values_for(conc, self.hd_counters['cpu_cyc'], cyc_val, keys[k], 1, p_ctrs[k], thread_l)
-                '''
-            k = k + 1    
-        print("RSS val", rss_val)
+                    rss_val[node] = self.__get_agg_values_for(active_conc, self.rss_m, rss_val[node], stream, 0, procs, thread_l1)
+                    '''
+                    vms_val[node] = self.__get_agg_values_for(active_conc, self.vms_m, vms_val[node], stream, 0, procs, thread_l1)
+                    for met in self.metric_func:
+                        if met == "ld_stall_per":
+                            #read No of Load Stalls
+                            lds_val[node] = self.__get_agg_values_for(active_conc, self.hd_counters['ld_stalls'], lds_val[node], stream, 1, procs, thread_l)
+                        else if met == "llc_miss_per":
+                            #read No of L3 misses
+                            llcm_val[node] = self.__get_agg_values_for(active_conc, self.hd_counters['llc_misses'], llcm_val[node], stream, 1, procs, thread_l)
+                            #read No of L3 references
+                            llcr_val[node] = self.__get_agg_values_for(active_conc, self.hd_counters['llc_refs'], llcr_val[node], stream, 1, procs, thread_l)
+                        else if met == "ipc":
+                            #read No of Instruction
+                            ins_val[node] = self.__get_agg_values_for(active_conc, self.hd_counters['inst_ret'], ins_val[node], stream, 1, procs, thread_l)
+                        if met == "ld_stalls_per" or met == "ipc":
+                            #read No of CPU cycles
+                            cyc_val[node] = self.__get_agg_values_for(active_conc, self.hd_counters['cpu_cyc'], cyc_val[node], stream, 1, procs, thread_l)
+                   '''
+                k = k + 1    
+            print("RSS val", rss_val[node])
         return True
 
     def get_curr_state(self):
