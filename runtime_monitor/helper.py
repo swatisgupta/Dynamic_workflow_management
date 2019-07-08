@@ -165,8 +165,8 @@ class configuration():
         self.tau_file_type = "trace"
 
         self.perf_models = {} #list of models to be computed
-        self.cpu_model = ""  
-
+        self.cpu_model = self.__get_cpuinfo_model()
+        print(self.cpu_model)
         self.mpi_comm = MPI.COMM_SELF  
         self.nprocs = 1
         self.rank = 0
@@ -184,7 +184,6 @@ class configuration():
      
         self.tau_file_type = args.tau_file_type.lower()
         self.hc_lib = args.hc_lib.lower()
-        self.cpu_model = self.__get_cpuinfo_model()
 
         self.mpi_comm = mpi_comm
         self.nprocs = mpi_comm.Get_size() 
@@ -227,6 +226,7 @@ class configuration():
                         ret =  True
         return ret
   
+
     # Calls endstep on all active (local) adios2 streams
     def end_current_step(self):
         for nodes in self.adios2_active_reader_objs.keys():

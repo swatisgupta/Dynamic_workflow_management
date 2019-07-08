@@ -40,6 +40,9 @@ class adios2_tr_reader():
                  self.is_open = False
          return self.is_open
 
+     def get_step_number(self):
+         return self.cstep.current_step()
+
      def get_trace_map(self):
          self.cstep_avail_vars = self.cstep.available_variables()
          self.cstep_avail_attrs = self.cstep.available_attributes() 

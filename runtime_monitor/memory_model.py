@@ -9,6 +9,8 @@ import datetime as dt
 import numpy
 import pandas as pd
 from collections import Counter
+from collections import OrderedDict
+from enum import Enum
 
 likwid_counters = {}
 
@@ -18,7 +20,7 @@ papi_counters['Intel(R) Xeon(R) CPU E5-2680 v2 @ 2.80GHz'].append({
               'llc_misses': 'PAPI_NATIVE_LAST_LEVEL_CACHE_MISSES',
               'llc_refs': 'PAPI_NATIVE_LAST_LEVEL_CACHE_REFERENCES',
               'ld_stalls':'PAPI_NATIVE_CYCLE_ACTIVITY:STALLS_LDM_PENDING',
-              'ins_ret': 'PAPI_NATIVE_INSTRUCTIONS_RETIRED',
+              'inst_ret': 'PAPI_NATIVE_INSTRUCTIONS_RETIRED',
               'st_stalls' : 'PAPI_NATIVE_RESOURCE_STALLS:SB',
               'cpu_cyc' : 'PAPI_NATIVE_ix86arch::UNHALTED_CORE_CYCLES' })
 
@@ -27,6 +29,26 @@ metric['Intel(R) Xeon(R) CPU E5-2680 v2 @ 2.80GHz'] = []
 metric['Intel(R) Xeon(R) CPU E5-2680 v2 @ 2.80GHz'].append('llc_miss_per')
 metric['Intel(R) Xeon(R) CPU E5-2680 v2 @ 2.80GHz'].append('ld_stalls_per')
 metric['Intel(R) Xeon(R) CPU E5-2680 v2 @ 2.80GHz'].append('ipc')
+
+class MetricID(Enum):
+    RSS = 0
+    VMS = 1
+    LLCM = 2 
+    LLCR = 3
+    LDS = 4
+    INS = 5
+    CYC = 6
+
+
+class OrderedCounter(Counter, OrderedDict):
+     'Counter that remembers the order elements are first encountered'
+
+     def __repr__(self):
+         return '%s(%r)' % (self.__class__.__name__, OrderedDict(self))
+
+     def __reduce__(self):
+         return self.__class__, (OrderedDict(self),)
+
 
 def _fix_ranges_(func, val_l, val_tot):
     if len(val_l) != len(val_tot):
@@ -75,23 +97,43 @@ def _sub_(func, nprocs, val_l):
 class memory(abstract_model.model):
 
     def __init__(self, config):
-        self.hd_counters = []
+        self.iter = 0
+        self.hd_counters = {} 
         self.rss_m = "Memory Footprint (VmRSS) (KB)"
         self.vms_m = "Peak Memory Usage Resident Set Size (VmHWM) (KB)"
         self.metric_func = []
         self.adios2_active_conns = []
         self.r_map = None
         self.name = "memory"
+        self.frequency = '1S'
         self.m_status_abs = {} 
         self.m_status_avg = {} 
         self.m_status_inc = {} 
-        self.m_status_dec = {} 
+        self.m_status_dec = {}
+        self.avg_window = 60 
+        self.max_window = 60
+        self.max_history = 120
+        '''
+        pdf = pd.DataFrame(data=ini_val, index=ini_time, columns=["value"]) 
+        pdf = pdf.groupby(pd.Grouper(freq=self.frequency)).last()
+        ''' 
+        self.last_rcd = {}
+        self.rss = {}
+        self.vms = {}
+        self.ldsp = {}
+        self.llcp = {}
+        self.ipc = {}
+        self.fltrd_rss = {}
+        self.fltrd_vms = {}
+        self.fltrd_ldsp = {}
+        self.fltrd_llcp = {}
+        self.fltrd_ipc = {}
+ 
         self.urgent_update = False
-        self.frequency = '1S'
  
         if config.hc_lib  == 'papi':
-            hd_counters = papi_counters[config.cpu_model]
-            metric_func = metric[config.cpu_model]
+            self.hd_counters = papi_counters[config.cpu_model][0]
+            self.metric_func = metric[config.cpu_model]
         self.update_model_conf(config)    
 
     def __compute_llc_miss_per(self, nprocs, llc_miss, llc_refs):
@@ -129,8 +171,8 @@ class memory(abstract_model.model):
         else:
             pdf = pdf.groupby(pd.Grouper(freq=self.frequency)).last()
         pdf = pdf["value"].fillna(method='ffill')
-        #print(pdf["value"])  
-        return pdf.to_dict()
+        #print(pdf)  
+        return pdf #.to_dict()
 
     def get_model_name(self):
         return self.name
@@ -143,8 +185,37 @@ class memory(abstract_model.model):
         self.r_map = config.local_res_map
         self.procs_per_ctr = config.adios2_reader_procs
         self.blocks_to_read = config.adios2_reader_blocks
+        ini_val = 0 #need a postive value for the counter
+        ini_time = dt.datetime.now()
+        pdf = pd.DataFrame(data=[ini_val], index=[ini_time], columns=["value"])
+        pdf = pdf.groupby(pd.Grouper(freq=self.frequency)).last()  
+        obj = pdf["value"] #numpy.array([[ini_time, ini_val]])
+        nodes = self.adios2_active_conns.keys()
+        for node in nodes:
+            self.ldsp[node] = {}
+            self.llcp[node] = {}
+            self.ipc[node] = {}
+            self.fltrd_ldsp[node] = {}
+            self.fltrd_llcp[node] = {}
+            self.fltrd_ipc[node] = {}
+            self.last_rcd[node] = {} 
+            streams = list(self.adios2_active_conns[node].keys())
+            for stream in streams:
+                procs = list(self.blocks_to_read[node][stream])
+                #obj = OrderedCounter(pdf["value"].to_dict()) #numpy.array([[ini_time, ini_val]])
+                #obj[ini_time] = ini_val
+                self.last_rcd[node][stream] = {}
+                for i in range(0,7):
+                    self.last_rcd[node][stream][i] = obj 
+                self.ldsp[node][stream] = None 
+                self.fltrd_ldsp[node][stream] = None 
+                self.llcp[node][stream] = None 
+                self.fltrd_ldsp[node][stream] = None 
+                self.ipc[node][stream] = None 
+                self.fltrd_ipc[node][stream] = None 
 
-    def __get_agg_values_for(self, adios_conc, cntr, cntr_map, index, by_last=0, procs=[0], threads=[0]):
+
+    def __get_agg_values_for(self, adios_conc, cntr, cntr_map, last_rcd, by_last=0, procs=[0], threads=[0], diff_idx=-1):
         is_valid, val_ar = adios_conc.read_var(cntr, procs, threads)
         if is_valid == True:
             for proc in procs:
@@ -152,65 +223,115 @@ class memory(abstract_model.model):
                     val_tmp = val_ar[proc]
                     tmp_ar = val_tmp[val_tmp[:,0] == th] 
                     if tmp_ar.size != 0:
-                        #print(tmp_ar)  
                         tmp_ar = tmp_ar[:,[1,2]]
                         cntr_df = self.__group_by_frequency(tmp_ar, by_last)
-                        A = Counter(cntr_map[index])
-                        B = Counter(cntr_df) 
-                        cntr_map[index]= dict(A + B) 
-        return cntr_map
+                        if diff_idx != -1:
+                             temp_df = last_rcd[diff_idx] 
+                             cntr_df = temp_df.append(cntr_df)
+                             last_rcd[diff_idx] = cntr_df[-1:]
+                             cntr_df = cntr_df.diff()[1:]
+                        if cntr_map is None:
+                            cntr_map = cntr_df
+                            #print("Was None ", cntr_map )
+                        else:
+                            cntr_map.append(cntr_df)
+                            if by_last == 1:
+                                cntr_map = cntr_map.groupby(pd.Grouper(freq=self.frequency)).last()
+                            else:
+                                cntr_map= cntr_map.groupby(pd.Grouper(freq=self.frequency)).sum()
+        return cntr_map, last_rcd
 
     def update_curr_state(self):
         rss_val = {}
-        ''' 
+        vms_val = {}
         llcr_val = {} 
         llcm_val = {} 
         lds_val = {} 
         ins_val = {} 
         cyc_val = {}
-        ''' 
         k = 0 
-        #print(keys)
         nodes = self.adios2_active_conns.keys()
+        print("Update for step ::", self.iter)
+        self.iter = self.iter + 1  
         for node in nodes:
-            rss_val[node] = {}
+            rss_val = None
+            vms_val = None
             streams = list(self.adios2_active_conns[node].keys())
             for stream in streams:
                 procs = list(self.blocks_to_read[node][stream])
-                rss_val[node][stream] = [] 
-                '''
-                llcm_val[node][stream] = [] 
-                llcr_val[node][stream] = [] 
-                lds_val[node][stream] = [] 
-                ins_val[node][stream] = [] 
-                cyc_val[node][stream] = []
-                ''' 
+                llcm_val = None
+                llcr_val = None
+                lds_val = None
+                ins_val = None
+                cyc_val = None
                 thread_l1 = [0]
                 thread_l = [0,1,2,3]
                 for active_conc in self.adios2_active_conns[node][stream]:
                 #read RSS
-                    rss_val[node] = self.__get_agg_values_for(active_conc, self.rss_m, rss_val[node], stream, 0, procs, thread_l1)
-                    '''
-                    vms_val[node] = self.__get_agg_values_for(active_conc, self.vms_m, vms_val[node], stream, 0, procs, thread_l1)
+                    rss_val, self.last_rcd[node][stream] = self.__get_agg_values_for(active_conc, self.rss_m, rss_val, self.last_rcd[node][stream], 1, procs, thread_l1)
+                    #print(rss_val)
+                    vms_val, self.last_rcd[node][stream] = self.__get_agg_values_for(active_conc, self.vms_m, vms_val, self.last_rcd[node][stream], 1, procs, thread_l1)
+                    #print(self.metric_func)
                     for met in self.metric_func:
-                        if met == "ld_stall_per":
-                            #read No of Load Stalls
-                            lds_val[node] = self.__get_agg_values_for(active_conc, self.hd_counters['ld_stalls'], lds_val[node], stream, 1, procs, thread_l)
-                        else if met == "llc_miss_per":
-                            #read No of L3 misses
-                            llcm_val[node] = self.__get_agg_values_for(active_conc, self.hd_counters['llc_misses'], llcm_val[node], stream, 1, procs, thread_l)
-                            #read No of L3 references
-                            llcr_val[node] = self.__get_agg_values_for(active_conc, self.hd_counters['llc_refs'], llcr_val[node], stream, 1, procs, thread_l)
-                        else if met == "ipc":
-                            #read No of Instruction
-                            ins_val[node] = self.__get_agg_values_for(active_conc, self.hd_counters['inst_ret'], ins_val[node], stream, 1, procs, thread_l)
                         if met == "ld_stalls_per" or met == "ipc":
                             #read No of CPU cycles
-                            cyc_val[node] = self.__get_agg_values_for(active_conc, self.hd_counters['cpu_cyc'], cyc_val[node], stream, 1, procs, thread_l)
-                   '''
-                k = k + 1    
-            print("RSS val", rss_val[node])
+                            cyc_val, self.last_rcd[node][stream] = self.__get_agg_values_for(active_conc, self.hd_counters['cpu_cyc'], cyc_val, self.last_rcd[node][stream], 0, procs, thread_l1, MetricID.CYC.value)
+                        if met == "ld_stall_per":
+                            #read No of Load Stalls
+                            lds_val, self.last_rcd[node][stream] = self.__get_agg_values_for(active_conc, self.hd_counters['ld_stalls'], lds_val, self.last_rcd[node][stream], 0, procs, thread_l1, MetricID.LDS.value)
+                        elif met == "llc_miss_per":
+                            #read No of L3 misses
+                            #print(self.hd_counters['llc_misses'])
+                            llcm_val, self.last_rcd[node][stream] = self.__get_agg_values_for(active_conc, self.hd_counters['llc_misses'], llcm_val, self.last_rcd[node][stream], 0, procs, thread_l1, MetricID.LLCM.value)
+                            #print(llcm_val)
+                            #read No of L3 references
+                            llcr_val, self.last_rcd[node][stream] = self.__get_agg_values_for(active_conc, self.hd_counters['llc_refs'], llcr_val, self.last_rcd[node][stream], 0, procs, thread_l1, MetricID.LLCR.value)
+                        elif met == "ipc":
+                            #read No of Instruction
+                            ins_val, self.last_rcd[node][stream] = self.__get_agg_values_for(active_conc, self.hd_counters['inst_ret'], ins_val, self.last_rcd[node][stream], 0, procs, thread_l1, MetricID.INS.value)
+                for met in self.metric_func:
+                    if met == "llc_miss_per" and llcm_val is not None:
+                        self.llcp[node][stream] = self.llcp[node][stream] is  None if llcm_val.div(llcr_val, axis=1, fill_value=0).mul(100, axis=1) else self.llcp[node][stream].append(llcm_val.div(llcr_val, axis=1, fill_value=0).mul(100, axis=1))
+                        self.llcp[node][stream] = self.llcp[node][stream][-self.max_history:]
+                        self.fltrd_llcp[node][stream] = self.__compute_max(self.__compute_avg(self.llcp[node][stream]))
+                        print("Filtered LLCP[", node, "][", stream ,"]:: \n", self.fltrd_llcp[node][stream])
+                    if met == "ld_stall_per" and lds_val is not None:
+                        self.lds[node][stream] = self.lds[node][stream].append(lds_val.div(cyc_val, axis=1, fill_value=0).mul(100, axis=1))
+                        self.lds[node][stream] = self.lds[node][stream][-self.max_history:]
+                        self.fltrd_lds[node][stream] = self.__compute_max(self.__compute_avg(self.lds[node][stream]))
+                        print("Filtered LDSP[", node, "][", stream ,"]:: \n", self.fltrd_ldsp[node][stream])
+                    if met == "ipc" and ins_val is not None:
+                        self.ipc[node][stream] = self.ipc[node][stream].append(ins_val.div(cyc_val, axis=1, fill_value=0))
+                        self.ipc[node][stream] = self.ipc[node][stream][-self.max_history:]
+                        self.fltrd_ipc[node][stream] = self.__compute_max(self.__compute_avg(self.ipc[node][stream]))
+                        print("Filtered IPC[", node, "][", stream ,"]:: \n", self.fltrd_ipc[node][stream])
+            # keep only last X records
+            if node not in self.rss.keys():
+                 self.rss[node] = rss_val
+            else: 
+                 self.rss[node] = self.rss[node].append(rss_val)
+            self.rss[node] = self.rss[node][-self.max_history:]
+            if node not in self.vms.keys():
+                 self.vms[node] = vms_val
+            else: 
+                 self.vms[node] = self.vms[node].append(vms_val)
+            self.vms[node] = self.vms[node][-self.max_history:]
+            #print("Original::\n", self.rss[node])
+            #print("Original::\n", self.vms[node])
+            # update the new state
+            self.fltrd_rss[node] = self.__compute_max(self.__compute_avg(self.rss[node]))
+            print("Filtered RSS::\n", self.fltrd_rss[node])
+            self.fltrd_vms[node] = self.__compute_max(self.__compute_avg(self.vms[node]))
+            print("Filtered VMS::\n", self.fltrd_vms[node])
         return True
+
+    def __compute_avg(self, df):
+        df_avg = df.rolling(self.avg_window, min_periods=1).mean()       
+        return df_avg
+    
+    def __compute_max(self, df):
+        df_max = df.rolling(self.max_window, min_periods=1).max()       
+        return df_max
 
     def get_curr_state(self):
         j_data = {}
