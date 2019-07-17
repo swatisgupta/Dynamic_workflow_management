@@ -11,7 +11,7 @@ import pandas as pd
 from collections import Counter
 from collections import OrderedDict
 from enum import Enum
-
+import math
 likwid_counters = {}
 
 papi_counters = {}
@@ -23,7 +23,8 @@ papi_counters['Intel(R) Xeon(R) CPU E5-2680 v2 @ 2.80GHz'].append({
               'inst_ret': 'PAPI_NATIVE_INSTRUCTIONS_RETIRED',
               'st_stalls' : 'PAPI_NATIVE_RESOURCE_STALLS:SB',
               'cpu_cyc' : 'PAPI_NATIVE_ix86arch::UNHALTED_CORE_CYCLES' })
-
+memory_size={}
+memory_size['Intel(R) Xeon(R) CPU E5-2680 v2 @ 2.80GHz'] = 120 #size in GB
 metric = {}
 metric['Intel(R) Xeon(R) CPU E5-2680 v2 @ 2.80GHz'] = []
 metric['Intel(R) Xeon(R) CPU E5-2680 v2 @ 2.80GHz'].append('llc_miss_per')
@@ -106,10 +107,14 @@ class memory(abstract_model.model):
         self.r_map = None
         self.name = "memory"
         self.frequency = '1S'
-        self.m_status_abs = {} 
-        self.m_status_avg = {} 
-        self.m_status_inc = {} 
-        self.m_status_dec = {}
+        self.m_status_rss_max = {} 
+        self.m_status_vms_max = {} 
+        self.m_status_ipc_max = {} 
+        self.m_status_ldsp_max = {} 
+        self.m_status_llcp_max = {} 
+        self.m_status_ipc_dec = {} 
+        self.m_status_ldsp_inc = {} 
+        self.m_status_llcp_inc = {} 
         self.avg_window = 60 
         self.max_window = 60
         self.max_history = 120
@@ -134,6 +139,7 @@ class memory(abstract_model.model):
         if config.hc_lib  == 'papi':
             self.hd_counters = papi_counters[config.cpu_model][0]
             self.metric_func = metric[config.cpu_model]
+            self.rss_thresh = math.ceil(.90 * memory_size[config.cpu_model])
         self.update_model_conf(config)    
 
     def __compute_llc_miss_per(self, nprocs, llc_miss, llc_refs):
@@ -198,14 +204,31 @@ class memory(abstract_model.model):
             self.fltrd_ldsp[node] = {}
             self.fltrd_llcp[node] = {}
             self.fltrd_ipc[node] = {}
-            self.last_rcd[node] = {} 
+            self.last_rcd[node] = {}
+            self.m_status_rss_max[node] = []
+            self.m_status_vms_max[node] = []
+
+            self.m_status_ldsp_max[node] = {}
+            self.m_status_llcp_max[node] = {}
+            self.m_status_ipc_max[node] = {}
+            self.m_status_ldsp_inc[node] = {}
+            self.m_status_llcp_inc[node] = {}
+            self.m_status_ipc_dec[node] = {}
+              
             streams = list(self.adios2_active_conns[node].keys())
             for stream in streams:
                 procs = list(self.blocks_to_read[node][stream])
                 #obj = OrderedCounter(pdf["value"].to_dict()) #numpy.array([[ini_time, ini_val]])
                 #obj[ini_time] = ini_val
+                self.m_status_ldsp_max[node][stream] = []
+                self.m_status_llcp_max[node][stream] = []
+                self.m_status_ipc_max[node][stream] = []
+                self.m_status_ldsp_inc[node][stream] = []
+                self.m_status_llcp_inc[node][stream] = []
+                self.m_status_ipc_dec[node][stream] = []
+
                 self.last_rcd[node][stream] = {}
-                for i in range(0,7):
+                for i in range(0,7): #for each metrics
                     self.last_rcd[node][stream][i] = obj 
                 self.ldsp[node][stream] = None 
                 self.fltrd_ldsp[node][stream] = None 
@@ -250,6 +273,9 @@ class memory(abstract_model.model):
         ins_val = {} 
         cyc_val = {}
         k = 0 
+        c_pressure = False
+        b_pressure = False
+        flag_llc = flag_lds = flag_ipc = False 
         nodes = self.adios2_active_conns.keys()
         print("Update for step ::", self.iter)
         self.iter = self.iter + 1  
@@ -293,18 +319,32 @@ class memory(abstract_model.model):
                     if met == "llc_miss_per" and llcm_val is not None:
                         self.llcp[node][stream] = self.llcp[node][stream] is  None if llcm_val.div(llcr_val, axis=1, fill_value=0).mul(100, axis=1) else self.llcp[node][stream].append(llcm_val.div(llcr_val, axis=1, fill_value=0).mul(100, axis=1))
                         self.llcp[node][stream] = self.llcp[node][stream][-self.max_history:]
-                        self.fltrd_llcp[node][stream] = self.__compute_max(self.__compute_avg(self.llcp[node][stream]))
+                        self.fltrd_llcp[node][stream] = self.__compute_rmax(self.__compute_ravg(self.llcp[node][stream]))
                         print("Filtered LLCP[", node, "][", stream ,"]:: \n", self.fltrd_llcp[node][stream])
+                        self.m_status_llcp_max[node][stream].append(self.__compute_max(self.fltrd_llcp[node][stream]))
+                        self.m_status_llcp_inc[node][stream].append(self.__compute_inc(self.m_status_llcp_max[node][stream]))
+                        if self.m_status_llcp_inc[node][stream][-1] >= 20:
+                            flag_llc = True
                     if met == "ld_stall_per" and lds_val is not None:
                         self.lds[node][stream] = self.lds[node][stream].append(lds_val.div(cyc_val, axis=1, fill_value=0).mul(100, axis=1))
                         self.lds[node][stream] = self.lds[node][stream][-self.max_history:]
-                        self.fltrd_lds[node][stream] = self.__compute_max(self.__compute_avg(self.lds[node][stream]))
+                        self.fltrd_lds[node][stream] = self.__compute_rmax(self.__compute_ravg(self.lds[node][stream]))
                         print("Filtered LDSP[", node, "][", stream ,"]:: \n", self.fltrd_ldsp[node][stream])
+                        self.m_status_ldsp_max[node][stream].append(self.__compute_max(self.fltrd_lds[node][stream]))
+                        self.m_status_lds_inc[node][stream].append(self.__compute_inc(self.m_status_lds_max[node][stream]))
+                        if self.m_status_llcp_inc[node][stream][-1] >= 20:
+                            flag_lds = True
                     if met == "ipc" and ins_val is not None:
                         self.ipc[node][stream] = self.ipc[node][stream].append(ins_val.div(cyc_val, axis=1, fill_value=0))
                         self.ipc[node][stream] = self.ipc[node][stream][-self.max_history:]
-                        self.fltrd_ipc[node][stream] = self.__compute_max(self.__compute_avg(self.ipc[node][stream]))
+                        self.fltrd_ipc[node][stream] = self.__compute_rmax(self.__compute_ravg(self.ipc[node][stream]))
                         print("Filtered IPC[", node, "][", stream ,"]:: \n", self.fltrd_ipc[node][stream])
+                        self.m_status_ipc_max[node][stream].append(self.__compute_min(self.fltrd_ipc[node][stream]))
+                        self.m_status_ipc_dec[node][stream].append(self.__compute_dec(self.m_status_ipc_max[node][stream]))
+                        if self.m_status_llcp_inc[node][stream][-1] >= 20:
+                            flag_ipc = True
+                    if flag_llc and flag_lds and flag_ipc:
+                        b_pressure == True
             # keep only last X records
             if node not in self.rss.keys():
                  self.rss[node] = rss_val
@@ -316,24 +356,74 @@ class memory(abstract_model.model):
             else: 
                  self.vms[node] = self.vms[node].append(vms_val)
             self.vms[node] = self.vms[node][-self.max_history:]
-            #print("Original::\n", self.rss[node])
-            #print("Original::\n", self.vms[node])
             # update the new state
-            self.fltrd_rss[node] = self.__compute_max(self.__compute_avg(self.rss[node]))
+            self.fltrd_rss[node] = self.__compute_rmax(self.__compute_ravg(self.rss[node]))
+            self.m_status_rss_max[node].append(self.__compute_max(self.fltrd_rss[node]))
             print("Filtered RSS::\n", self.fltrd_rss[node])
-            self.fltrd_vms[node] = self.__compute_max(self.__compute_avg(self.vms[node]))
+            self.fltrd_vms[node] = self.__compute_rmax(self.__compute_ravg(self.vms[node]))
+            self.m_status_vms_max[node].append(self.__compute_max(self.fltrd_vms[node]))
             print("Filtered VMS::\n", self.fltrd_vms[node])
+            self.m_status_vms_max[node].append(self.__compute_max(self.fltrd_vms[node]))
+
+            if int(math.ceil(self.m_status_rss_max[node][-1]/(1024*1024))) >= self.rss_thresh or int(math.ceil(self.m_status_vms_max[node][-1])) > 0:
+                c_pressure = True
+                print("RSS is high", self.m_status_rss_max[node][-1], ">=", self.rss_thresh) 
+                print("VMS is high", self.m_status_vms_max[node][-1], ">=", 0) 
+
+            if c_pressure or b_pressure:
+                self.urgent_update = True         
         return True
 
-    def __compute_avg(self, df):
+    def __compute_ravg(self, df):
         df_avg = df.rolling(self.avg_window, min_periods=1).mean()       
         return df_avg
     
-    def __compute_max(self, df):
+    def __compute_rmax(self, df):
         df_max = df.rolling(self.max_window, min_periods=1).max()       
         return df_max
 
+    def __compute_max(self, df):
+        #print(df.head())
+        df_max = df.max()
+        return df_max
+
+    def __compute_min(self, df):
+        #print(df.head())
+        df_min = df.min()
+        return df_min
+
+    def __compute_inc(self, lst):
+        val_n = lst[-1]
+        val_o = lst[-2]
+        return ((val_n - val_o)/val_o) * 100 
+
+    def __compute_dec(self, lst):
+        val_n = lst[-1]
+        val_o = lst[-2]
+        return ((val_o - val_n)/val_o) * 100 
+
     def get_curr_state(self):
         j_data = {}
-        print("To be implemented \n");
+        nodes = self.adios2_active_conns.keys()
+        for node in nodes:
+            j_data[node] = {}
+            j_data[node]['RSS'] = self.m_status_rss_max[node][-1] 
+            j_data[node]['VMS'] = self.m_status_vms_max[node][-1] 
+            j_data[node]['LLC'] = {}
+            j_data[node]['LDS'] = {}
+            j_data[node]['IPC'] = {}
+            streams = list(self.adios2_active_conns[node].keys())
+            for stream in streams:
+                if len(self.m_status_llcp_inc[node][stream]) == 0:
+                    j_data[node]['LLC'][stream] = []
+                else:  
+                    j_data[node]['LLC'][stream] = self.m_status_llcp_inc[node][stream][-1] 
+                if len(self.m_status_ldsp_inc[node][stream]) == 0:
+                    j_data[node]['LDS'][stream] = []
+                else:  
+                    j_data[node]['LDS'][stream] = self.m_status_ldsp_inc[node][stream][-1] 
+                if len(self.m_status_ipc_dec[node][stream]) == 0:
+                    j_data[node]['IPC'][stream] = []
+                else:  
+                    j_data[node]['IPC'][stream] = self.m_status_ipc_dec[node][stream][-1] 
         return j_data  

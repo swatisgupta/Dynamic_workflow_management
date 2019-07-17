@@ -81,6 +81,7 @@ class configuration():
             data = json.load(json_file) 
             for nodes in data['node']:
                 node = nodes['name']
+                print(node)
                 self.global_res_map[node] = {} 
                 for nmap in nodes['mapping']:
                     stream_nm = nmap['stream_nm'] 
@@ -251,16 +252,17 @@ class configuration():
             else:
                 self.adios2_stream_engs[stream_nm] = "BPFile"
 
-            if self.tau_one_file is False:
-                self.mpi_comm = MPI.COMM_SELF
-                for node in self.global_rev_res_map[stream_nm].keys():
+            for node in self.global_rev_res_map[stream_nm].keys():
+                print("rev:", node)    
+                if self.tau_one_file is False:
+                    self.mpi_comm = MPI.COMM_SELF
                     for rank in self.global_rev_res_map[stream_nm][node]:
                         conn_streams_set.append(stream_nm.split('.')[0] + "-" + str(rank) + stream_nm[(stream_nm.find('.')):]) 
-            else:
-                conn_streams_set = [stream_nm]
-            if node not in self.actual_streams_map.keys():
-                self.actual_streams_map[node] = {}
-            self.actual_streams_map[node][stream_nm] = conn_streams_set
-            j = j + 1 
+                else:
+                    conn_streams_set = [stream_nm]
+                if node not in self.actual_streams_map.keys():
+                    self.actual_streams_map[node] = {}
+                self.actual_streams_map[node][stream_nm] = conn_streams_set
+                j = j + 1 
 
         

@@ -11,7 +11,7 @@ import zmq
 import numpy
 import json
 import queue
-
+import sys
 
 cntrl_q = queue.Queue(maxsize=1)
 resp_q = queue.Queue(maxsize=1)
@@ -211,8 +211,9 @@ class Rmonitor():
 if __name__ == "__main__":
     appID = 10
     mpi_comm = MPI.COMM_WORLD.Split(appID, MPI.COMM_WORLD.Get_rank()) 
+    print(MPI.COMM_WORLD.Get_rank())
+    sys.stdout.flush()
     r_monitor = Rmonitor(mpi_comm)
-
     worker_thread = threading.Thread(target=r_monitor.worker)
     worker_thread.start()
     r_monitor.controller()
