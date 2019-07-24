@@ -3,8 +3,8 @@
 
 from mpi4py import MPI
 import os
-import helper
-from memory_model import memory
+from runtime_monitor import helper
+from runtime_monitor.memory_model import memory
 import threading
 from datetime import datetime
 import zmq
@@ -209,16 +209,6 @@ class Rmonitor():
                self.send_ack(g_socket, "OK")
                continue
           
-if __name__ == "__main__":
-    appID = 10
-    
-    mpi_comm = MPI.COMM_WORLD.Split(appID, MPI.COMM_WORLD.Get_rank()) 
-    r_monitor = Rmonitor(mpi_comm)
-
-    worker_thread = threading.Thread(target=r_monitor.worker)
-    worker_thread.start()
-    r_monitor.controller()
-    worker_thread.join()
    
    
 

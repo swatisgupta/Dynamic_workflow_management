@@ -1,0 +1,15 @@
+#!/usr/bin/env python3
+
+from mpi4py import MPI
+from runtime_monitor.runtime_monitor import Rmonitor
+
+if __name__ == "__main__":
+    appID = 10
+    
+    mpi_comm = MPI.COMM_WORLD.Split(appID, MPI.COMM_WORLD.Get_rank()) 
+    r_monitor = Rmonitor(mpi_comm)
+
+    worker_thread = threading.Thread(target=r_monitor.worker)
+    worker_thread.start()
+    r_monitor.controller()
+    worker_thread.join()

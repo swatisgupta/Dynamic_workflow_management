@@ -2,7 +2,7 @@ import json
 from mpi4py import MPI
 import argparse
 import os
-from adios2_reader import adios2_conn
+from runtime_monitor.adios2_reader import adios2_conn
 import socket
 
 def argument_parser():

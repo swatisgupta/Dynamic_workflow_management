@@ -1,7 +1,7 @@
-import helper
+import runtime_monitor.helper
 import json
 from collections import deque
-import abstract_model
+from runtime_monitor import abstract_model
 
 likwid_counters = {}
 
