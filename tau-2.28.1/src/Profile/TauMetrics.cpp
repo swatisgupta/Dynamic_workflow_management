@@ -32,6 +32,8 @@
 #include "Profile/KtauCounters.h"
 #endif //TAUKTAU_SHCTR
 
+#include <Profile/TauPluginInternals.h>
+
 #ifdef TAU_WINDOWS
 #define strcasecmp stricmp
 #endif
@@ -945,6 +947,9 @@ void TauMetrics_finalize() {
 	}
 }
 
+// Used when the timestamp is 0, but we need it for the plugin processing
+extern "C" x_uint64 TauTraceGetTimeStamp(int tid);
+
 /*********************************************************************
  * Trigger atomic events for each metric
  ********************************************************************/
@@ -952,11 +957,21 @@ void TauMetrics_triggerAtomicEvents(unsigned long long timestamp,
 		double *values, int tid) {
 	int i;
 #ifndef TAU_EPILOG
-	for (i = 1; i < nmetrics; i++) {
-		TauTraceEvent(traceCounterEvents[i]->GetId(), (long long) values[i],
-				tid, timestamp, 1, TAU_TRACE_EVENT_KIND_USEREVENT);
-		// 1 in the last parameter is for use timestamp
-	}
+    for (i = 1; i < nmetrics; i++) {
+        // 1 in the last parameter is for use timestamp
+        TauTraceEvent(traceCounterEvents[i]->GetId(), (long long) values[i],
+                tid, timestamp, 1, TAU_TRACE_EVENT_KIND_USEREVENT);
+          /*Invoke plugins only if both plugin path and plugins are specified*/
+        /* and only output the counter if it's not a context counter */
+        if(Tau_plugins_enabled.atomic_event_trigger) {
+            Tau_plugin_event_atomic_event_trigger_data_t plugin_data;
+            plugin_data.counter_name = TauMetrics_getMetricName(i);
+            plugin_data.tid = tid;
+            plugin_data.timestamp = (timestamp == 0 ? TauTraceGetTimeStamp(tid) : timestamp);
+            plugin_data.value = (uint64_t)values[i];
+            Tau_util_invoke_callbacks(TAU_PLUGIN_EVENT_ATOMIC_EVENT_TRIGGER, &plugin_data);
+        }
+    }
 #endif /* TAU_EPILOG */
 }
 

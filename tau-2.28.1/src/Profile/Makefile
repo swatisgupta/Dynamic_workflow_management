@@ -15,7 +15,7 @@
 #**      Documentation   : See http://www.cs.uoregon.edu/research/tau       **
 #****************************************************************************
 
-TAUROOT=/homes/ssinghal/tau-2.28.1
+TAUROOT=/gpfs/alpine/scratch/ssinghal/csc143/Dynamic_workflow_management/tau-2.28.1
 include $(TAUROOT)/include/Makefile
 
 MKDIR = mkdir -p
@@ -126,14 +126,14 @@ TAU_SAMPLING_O = TauSampling.o TauSampling_hpctoolkit.o TauSampling_stackwalker.
 #############################################
 # Python Binding OBJECTS
 #############################################
-PYTHON_O  = PyGroups.o PyExceptions.o PyDatabase.o PyBindings.o PyTimer.o PyTau.o PyMemory.o ctau_impl.o #ENDIF##PYTHON#
+#PYTHON#PYTHON_O  = PyGroups.o PyExceptions.o PyDatabase.o PyBindings.o PyTimer.o PyTau.o PyMemory.o ctau_impl.o #ENDIF#
 #CUPTI#TAU_CUPTI_COUNTER_OBJS=CuptiLayer40.o #ENDIF#
 #CUPTI_ACTIVITY#TAU_CUPTI_COUNTER_OBJS=CuptiLayer.o CudaSass.o #ENDIF#
 
 #############################################
 # OTF2 OBJECTS
 #############################################
-OTF2_O = TracerOTF2.o TauCollectives.o #ENDIF##OTF2#
+#OTF2#OTF2_O = TracerOTF2.o TauCollectives.o #ENDIF#
 
 #############################################
 # ROCPROFILER OBJECTS
@@ -215,12 +215,12 @@ TAU_MPI_OBJS = TauMpi.o TauRequest.o TauTranslateRank.o ClockSync.o $(FWRAPPER) 
 MPI_INSTALL   = $(INSTALLDEST)/libTauMpi$(TAU_CONFIG)$(LSX)  #ENDIF##MPI#
 ##############################################
 
-EXTRA_LIBS += $(MPI_WRAPPER) #ENDIF##PYTHON#
+#PYTHON#EXTRA_LIBS += $(MPI_WRAPPER) #ENDIF#
 
 ##############################################
 # For building TauLinuxTimers with gcc
 ##############################################
-#IBM64LINUX#GCC_ABI	     = -m64 		  #ENDIF#
+GCC_ABI	     = -m64 		  #ENDIF##IBM64LINUX#
 #PPC64XLC#GCC_ABI	     = -m32 		  #ENDIF#
 #ARCH_WIDTH_32#GCC_ABI	     = -m32 		  #ENDIF#
 
@@ -297,9 +297,9 @@ TAU_SHLIB	= libTAUsh$(TAU_CONFIG)$(TAU_SHLIBX)
 #DYNINST# TAU_SHLIB_INSTALL = $(INSTALLDEST)/$(TAU_SHLIB) #ENDIF#
 #USE_DECCXX# EXTRAOBJS=cxx_repository/*.o #ENDIF#
 #BGP#TAU_IBM_BG_HWP_OBJS=TauBgHwpCounters.o #ENDIF#
-PYTAU = pytau$(TAU_SHLIBX) #ENDIF##PYTHON#
-PYTAU_INSTALL = $(TAU_SHAREDDIR)/pytau$(TAU_SHLIBX) #ENDIF##PYTHON#
-CTAU_IMPL = ctau_impl$(TAU_SHLIBX) #ENDIF##PYTHON#
+#PYTHON#PYTAU = pytau$(TAU_SHLIBX) #ENDIF#
+#PYTHON#PYTAU_INSTALL = $(TAU_SHAREDDIR)/pytau$(TAU_SHLIBX) #ENDIF#
+#PYTHON#CTAU_IMPL = ctau_impl$(TAU_SHLIBX) #ENDIF#
 # Python on OS X expects .so files, not .dylib files
 #APPLECXX#PYTAU = pytau.so #ENDIF#
 #APPLECXX#PYTAU_INSTALL = $(TAU_SHAREDDIR)/pytau.so #ENDIF#

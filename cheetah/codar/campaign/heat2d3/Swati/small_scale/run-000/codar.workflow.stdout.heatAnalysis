@@ -1,0 +1,7 @@
+Not enough arguments
+Usage: heatAnalysis  input  output N  M 
+  input:   name of input data file/stream
+  output:  name of output data file/stream
+  N:       number of processes in X dimension
+  M:       number of processes in Y dimension
+

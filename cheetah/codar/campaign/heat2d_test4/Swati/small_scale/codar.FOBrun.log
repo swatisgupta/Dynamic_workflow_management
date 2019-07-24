@@ -1,0 +1,18 @@
+2018-08-22 12:31:38,371:DEBUG:starting pipeline run-000, free nodes 10 -> 7
+2018-08-22 12:31:38,373:DEBUG:run-000:heatAnalysis LD_LIBRARY_PATH=/Users/Swati/Documents/INSTALLS/lib
+2018-08-22 12:31:38,381:DEBUG:run-000:heatAnalysis _run_basic_callbacks
+2018-08-22 12:31:38,382:INFO:run-000:heatAnalysis start pid=35355 pgid=35355 args=['/usr/local/bin/mpiexec', '-n', '1', '/Users/Swati/Documents/Projects/Dynamic_workflow/heat2d/cpp/heatAnalysis', 'sim.bp', 'heat_res.bp', '1', '1']
+2018-08-22 12:31:38,604:DEBUG:run-000:heatAnalysis _pgroup_wait max delay 120
+2018-08-22 12:31:38,605:INFO:run-000:heatAnalysis done 35355 0
+2018-08-22 12:31:38,606:DEBUG:run-000:heatAnalysis _run_callbacks
+2018-08-22 12:31:38,606:DEBUG:finished run, free nodes 7 -> 8
+2018-08-22 12:31:38,606:WARNING:run-000 run heatAnalysis was not killed intentionally
+2018-08-22 12:31:43,379:DEBUG:run-000:heatSimulation LD_LIBRARY_PATH=/Users/Swati/Documents/INSTALLS/lib
+2018-08-22 12:31:43,384:DEBUG:run-000:heatSimulation _run_basic_callbacks
+2018-08-22 12:31:43,385:INFO:run-000:heatSimulation start pid=35357 pgid=35357 args=['/usr/local/bin/mpiexec', '-n', '2', '/Users/Swati/Documents/Projects/Dynamic_workflow/heat2d/cpp/heatSimulation', 'sim.bp', '2', '1', '40', '50', '100000', '100000']
+2018-08-22 12:31:43,513:DEBUG:run-000:heatSimulation _pgroup_wait max delay 120
+2018-08-22 12:31:43,513:INFO:run-000:heatSimulation done 35357 0
+2018-08-22 12:31:43,514:DEBUG:run-000:heatSimulation _run_callbacks
+2018-08-22 12:31:43,515:DEBUG:finished run, free nodes 8 -> 10
+2018-08-22 12:31:43,515:WARNING:run-000 run heatSimulation was not killed intentionally
+2018-08-22 12:31:43,515:DEBUG:run-000 _execute_done_callbacks

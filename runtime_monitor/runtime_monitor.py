@@ -10,24 +10,28 @@ from datetime import datetime
 import zmq
 import numpy
 import json
+import queue
+import sys
+
+cntrl_q = queue.Queue(maxsize=1)
+resp_q = queue.Queue(maxsize=1)
 
 class Rmonitor():
-    model_objs = []
-    config = None
-    osocket = ""
-    isocket = ""
-    lsocket = ""
-    cntrl_cond = threading.Condition() 
-    work_cond = threading.Condition() 
-    can_change = False
-    can_work = True
-    stop_work = False
-
-    rank = 0
-    mpi_comm = MPI.COMM_SELF
-    starttime = None
-
     def __init__(self, mpicomm):
+        self.model_objs = []
+        self.config = None
+        self.osocket = ""
+        self.isocket = ""
+        self.lsocket = ""
+        #self.cntrl_cond = threading.Condition() 
+        #self.work_cond = threading.Condition() 
+        #self.can_change = False
+        #self.can_work = True
+        self.stop_work = False
+        self.stop_cntrl = False
+        self.rank = 0
+        self.mpi_comm = MPI.COMM_SELF
+        self.starttime = None
         
         # Can setup other things before the thread starts
         self.mpi_comm = mpicomm
@@ -39,8 +43,8 @@ class Rmonitor():
         self.osocket = self.config.protocol + "://" + self.config.oaddr + ":" + str(self.config.oport) 
         self.isocket = self.config.protocol + "://" + self.config.iaddr + ":" + str(self.config.iport)
         self.lsocket = self.config.protocol + "://" + self.config.iaddr + ":" + str(self.config.iport + 1)
-        rank = self.config.rank
-        mpi_comm = self.config.mpi_comm
+        self.rank = self.config.rank
+        self.mpi_comm = self.config.mpi_comm
  
     def config_models(self):
         model_strs = list(self.config.perf_models.keys())
@@ -74,12 +78,12 @@ class Rmonitor():
     def open_connections(self):
         self.config.open_connections()
 
-    def send_ack(self, socket, ack_type):
+    def send_req_or_res(self, socket, req_or_res):
         if self.rank == 0 :
-            socket.send_string(ack_type)
+            socket.send_string(req_or_res)
         self.mpi_comm.Barrier()
          
-    def send_update(self, socket, model_name, timestamp, local_state, req_type):
+    def get_update(self, model_name, timestamp, local_state, req_type):
         global_state = self.mpi_comm.gather(local_state, root=0)
         request = {}
         if self.rank == 0 : 
@@ -88,24 +92,26 @@ class Rmonitor():
             request["msg_type"] = req_type
             request["message"] = global_state
             j_data = json.dumps(request)
-            socket.send_string(j_data)
         self.mpi_comm.Barrier()
-
+        return j_data
+ 
     def if_send_update(self, socket):
         timestamp = datetime.now() - self.starttime
         timestamp = list(divmod(timestamp.total_seconds(), 60))   
         for mdls in self.model_objs:
             action = numpy.zeros(1) 
             g_action = numpy.zeros(1) 
-            action[0] = 1 if mdls.suggest_action else 0
+            action[0] = 1 if mdls.if_urgent_update() == True else 0
             g_action[0] = 0
             self.config.mpi_comm.Reduce(action, g_action, op=MPI.SUM)
+            
             if g_action[0] > 0:
-                print("sending update for ", mdls.name) 
-                #self.send_update(socket, mdls.name, timestamp, mdls.get_curr_state(), "req:action")
+                print("sending update for ", mdls.get_model_name()) 
+                request = self.get_update(mdls.get_model_name(), timestamp, mdls.get_curr_state(), "req:action")
+                self.send_req_or_res(socket, request)
                 message = socket.recv()
-            mdls.suggest_action == False
-        print("Done with updates") 
+            mdls.suggest_action = False
+        #print("Done with updates") 
     
     def perform_iteration(self): 
         if (self.config.begin_next_step()): 
@@ -119,7 +125,6 @@ class Rmonitor():
     def worker(self):
         context = None
         socket = None
-
         if self.rank == 0:
             context = zmq.Context()
             socket = context.socket(zmq.REQ)
@@ -128,19 +133,20 @@ class Rmonitor():
         do_work = True
 
         while do_work == True:
-            with self.work_cond:
-                if self.stop_work == True:
-                    do_work = False
-                else :
-                    while not self.can_work:
-                        self.work_cond.wait()
+            if self.stop_work == True:
+                do_work = False
+                if self.rank == 0: 
+                    socket.send_string("done")
+                    msg = socket.recv()
+                    print("Done!!")
+            else :
                 if do_work == True: 
                     self.perform_iteration() 
                     self.if_send_update(socket)
-                #self.can_work = False
-                with self.cntrl_cond:
-                   self.can_change = True
-                   self.cntrl_cond.notify() 
+                if cntrl_q.empty() == False:
+                    message = cntrl_q.get(block=False)
+                    self.process_request(message)
+                    cntrl_q.task_done()
 
     def controller(self):
         l_socket = None
@@ -180,34 +186,27 @@ class Rmonitor():
                j_data = message[msg:]
 
            request = json.loads(j_data)
-           print(j_data)        
-           if request["msg_type"] == "req:get_update":
-               timestamp = datetime.now() - self.starttime
-               timestamp = list(divmod(timestamp.total_seconds(), 60))   
-               with self.work_cond:
-                   self.can_work = False
-                
-               with self.cntrl_cond:
-                   while not self.can_change:
-                       self.cntrl_cond.wait()
-                   mdls = self.config.perf_models[request["model"]] 
-                   self.send_update(g_socket, mdls.name, timestamp, mdls.get_curr_state(), "req:action")
-                   self.can_change = False
-                   with self.work_cond:
-                       self.can_work = True
-                       self.work_cond.notify()
-
-           elif request["msg_type"] == "req:stop":
+           cntrl_q.put(request)
+           response = resp_q.get()
+           self.send_req_or_res(g_socket, response)
+           if self.stop_cntrl == True:
+               print("Recieved stop request")
                if_stop = True
-               with self.work_cond:
-                   self.can_work = True
-                   self.stop_work = True
-                   self.work_cond.notify()
-               self.send_ack(g_socket, "OK")
-           else:
-               # Change model or change mapping
-               self.send_ack(g_socket, "OK")
-               continue
+ 
+    def process_request(self, request):
+         if request["msg_type"] == "req:get_update":
+             timestamp = datetime.now() - self.starttime
+             timestamp = list(divmod(timestamp.total_seconds(), 60))   
+             mdls = self.config.perf_models[request["model"]] 
+             response = self.get_update(mdls.name, timestamp, mdls.get_curr_state(), "res:update")
+         elif request["msg_type"] == "req:stop":
+             self.stop_work = True
+             self.stop_cntrl = True
+             response = "OK"
+         else:
+             # Change model or change mapping
+             response = "OK"
+         resp_q.put(response)
           
    
    

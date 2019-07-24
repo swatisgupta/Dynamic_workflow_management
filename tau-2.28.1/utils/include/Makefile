@@ -12,13 +12,13 @@
 #######################################################################
  
 ########### Automatically modified by the configure script ############
-CONFIG_ARCH=x86_64
+CONFIG_ARCH=ibm64linux
 PDT_CXX=
-TAU_PREFIX_INSTALL_DIR=/lustre/ssinghal/tau2-install
+TAU_PREFIX_INSTALL_DIR=/ccs/home/ssinghal/tau2-install
 VTFDIR=
-OTFDIR=/lustre/ssinghal/tau2-install/x86_64/otf2-gcc
-OTFLIB=/lustre/ssinghal/tau2-install/x86_64/otf2-gcc/lib
-OTFINC=/lustre/ssinghal/tau2-install/x86_64/otf2-gcc/include
+OTFDIR=
+OTFLIB=
+OTFINC=
 PDTDIR=
 DYNINST_INC_DIR=$(DYNINST_ROOT)/include
 DYNINST_LIB_DIR=$(DYNINST_ROOT)/lib
@@ -103,19 +103,19 @@ INSTALLTRACE2PROFILE	= $(INSTALLDEST)/trace2profile
 #TRACE#INSTALLTAU_TIMECORRECT	= $(INSTALLDEST)/tau_timecorrect #ENDIF#
 #VTF#TAU2VTF 	= tau2vtf #ENDIF#
 #OTF#TAU2OTF 	= tau2otf #ENDIF#
-TAU2OTF 	= tau2otf2 #ENDIF##OTF2#
+#OTF2#TAU2OTF 	= tau2otf2 #ENDIF#
 #OTF2_1_1#TAU_OTF2_1_1_FLAGS 	= -DTAU_OTF2_1_1 #ENDIF#
 #OTF2_1_2#TAU_OTF2_1_2_FLAGS 	= -DTAU_OTF2_1_2 #ENDIF#
 #VTF#VTF2PROFILE 	= vtfconverter/vtf2profile #ENDIF#
 #VTF#INSTALLTAU2VTF 	= $(INSTALLDEST)/tau2vtf #ENDIF#
 #VTF#INSTALLVTF2PROFILE 	= $(INSTALLDEST)/vtf2profile #ENDIF#
 #OTF#INSTALLTAU2OTF 	= $(INSTALLDEST)/tau2otf #ENDIF#
-INSTALLTAU2OTF 	= $(INSTALLDEST)/tau2otf2 #ENDIF##OTF2#
+#OTF2#INSTALLTAU2OTF 	= $(INSTALLDEST)/tau2otf2 #ENDIF#
 #OTF#OTFLIBS 	= -L$(OTFDIR)/$(TAU_ARCH)/lib64 -L$(OTFLIB) -lotf -Wl,-rpath,$(OTFLIB) $(TAU_TRACE_INPUT_LIB) -lz #ENDIF#
 #OTFLIB_LONGNAME#OTFLIBS 	= -L$(OTFDIR)/$(TAU_ARCH)/lib64 -L$(OTFLIB) -lopen-trace-format -Wl,-rpath,$(OTFLIB) $(TAU_TRACE_INPUT_LIB) -lz #ENDIF#
 #OTFSRC#OTFLIBS 	= -L$(OTFDIR)/lib64 -L$(OTFDIR)/lib -lotf $(TAU_TRACE_INPUT_LIB) -Wl,-rpath,$(OTFDIR)/lib -lz #ENDIF#
 #-lrt can only be used when TAU detects it. Provided by TAU_LINKER_OPT16
-OTFLIBS 	= -L$(OTFDIR)/lib64 -L$(OTFDIR)/lib -lotf2 $(TAU_TRACE_INPUT_LIB) -Wl,-rpath,$(OTFDIR)/lib -L$(OTFDIR)/src $(TAU_LINKER_OPT16)  -lz#ENDIF##OTF2#
+#OTF2#OTFLIBS 	= -L$(OTFDIR)/lib64 -L$(OTFDIR)/lib -lotf2 $(TAU_TRACE_INPUT_LIB) -Wl,-rpath,$(OTFDIR)/lib -L$(OTFDIR)/src $(TAU_LINKER_OPT16)  -lz#ENDIF#
 #EBS2OTF#INSTALL_EBS2OTF = $(INSTALLLIBDEST)/ebs2otf.so #ENDIF#
 #TAU2EPILOG#TAU2ELG = elgconverter/tau2elg #ENDIF#
 #TAU2EPILOG#INSTALLTAU2ELG = $(INSTALLDEST)/tau2elg #ENDIF#

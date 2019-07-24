@@ -1,0 +1,32 @@
+function getStatus() {
+  var xhttp = new XMLHttpRequest();
+  var urlname = "http://localhost:9000/?q=getstatus";
+  xhttp.open("GET", urlname, true);
+// xhttp.overrideMimeType("application/json");
+  xhttp.onreadystatechange = function() {
+    if (xhttp.readyState == 4 && xhttp.status == 200) {
+       var jasonResponse = JSON.parse(this.responseText);
+       jsonTable(jasonResponse, "current-pipelines");
+    }
+  };
+  //var data = new FormData();
+  //data.append('query', 'get-status');
+  //xhttp.setRequestHeader("Content-Type", "application/json");
+  xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;");
+  xhttp.send("query=getstatus&to=hell");
+}
+
+function change_runtime() {
+  var xhttp = new XMLHttpRequest();
+  xhttp.overrideMimeType("application/json");
+  xhttp.onreadystatechange = function() {
+    if (xhttp.readyState == 4 && xhttp.status == 200) {
+       document.getElementById("server-response").innerHtml = xhttp.responseText;
+    }
+  };
+  xhttp.open("POST", urlname, true);
+  var form = document.getElementByClassName('form1')[0];
+  var Jdata = getFormDataAsJSON(form);
+  xhttp.send(JSON.stringify(Jdata));
+}
+

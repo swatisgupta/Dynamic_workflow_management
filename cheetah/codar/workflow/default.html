@@ -1,0 +1,44 @@
+<html>
+<head>
+<title>Dynamic workflow Manager</title>
+<meta charset="utf-8"/>
+</head>
+<body>
+  <script
+			  src="https://code.jquery.com/jquery-3.3.1.min.js"
+			  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+			  crossorigin="anonymous">
+  </script>
+
+  <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"
+        integrity="sha256-xNjb53/rY+WmG+4L6tTl9m6PpqknWZvRt0rO1SRnJzw="
+        crossorigin="anonymous">
+  </script>
+
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/tabulator/3.5.3/css/tabulator.min.css" rel="stylesheet">
+  <table>
+   <tr> <h1><b> Current running pipelines </><h1> </tr>
+   <tr> <div id="current-pipelines"></tr>
+  <tr> <button type="button" value="status val" id="refresh-status"> Refresh status</button> </tr>
+  </table>
+  <table>
+       <tr> <td><h1><b> Dynamic control </b></h1></td></tr>
+       <tr> <td> <form id="form1" action="/">
+                 Operation : <select name="query"> 
+                               <option value="addproc"> Add processes</option>
+                               <option value="termproc"> Terminate processes</option>
+                 </select> <br>
+                 Enter Pipeline :  <input type="text" id="pipe" value="enter pipeline id" name="pipe"><br> 
+		 Enter component :  <input type="text" id="compname" value="enter run name" name="comp-name"><br>
+		 Change arguments :  <input type="text" style="font-size: 14px;width:220px;height: 25px;" id="args" value="enter run arguments" name="args"><br>
+		 No of processes to add/terminate : <input type="text" value="1" name="mprocs"> <br> 
+                 <button type="submit" id="dynamic-change" value="submit">Change runtime</button> 
+                 </form>
+       </td> </tr> <br>
+       <tr> <td><div id="server-response" style="font-size:20px; color:red"></div> </td></tr>
+  </table>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tabulator/3.5.3/js/tabulator.min.js"></script>
+  <script type="text/javascript" src="js/dynamic.js"></script>
+
+</body>
+</html>

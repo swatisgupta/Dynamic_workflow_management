@@ -1,1 +1,1 @@
-#define TAUROOT "/lustre/ssinghal/tau2-install"
+#define TAUROOT "/ccs/home/ssinghal/tau2-install"
