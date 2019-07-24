@@ -24,6 +24,7 @@ cat ex_json.js
 Run the runtime monitoring demon as:
 ```
 python3 r_monitor --bind_inport 8085 --bind_outaddr 10.103.128.13 --bind_outport 8080 --adios2_streams tau-metrics.bp  --adios2_stream_eng SST --rmap_file ex_json.js --tau_one_file=False --tau_file_type="trace" --memory 
+```
 
 Run the decision component as:
 ```
