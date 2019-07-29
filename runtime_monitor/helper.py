@@ -2,7 +2,7 @@ import json
 from mpi4py import MPI
 import argparse
 import os
-from runtime_monitor.adios2_reader import adios2_conn
+from runtime_monitor.adios2_reader import adios2_tr_reader
 import socket
 
 def argument_parser():
@@ -50,10 +50,11 @@ def argument_parser():
     args = parser.parse_args()
 
     if args.adios2_stream_engs is not None:
-       if len(args.adios2_stream_engs) != len(args.adios2_streams):
+       if len(args.adios2_stream_engs[0]) != len(args.adios2_streams[0]):
            print("--adios2_stream_engs: adios2 engines should be defined for all adios2 connection strings") 
            exit    
-       for i in args.adios2_stream_engs:
+       for i in args.adios2_stream_engs[0]:
+           print("Engine under test ", i)
            if i in available_adios2_engines:
                continue
            else:
@@ -84,7 +85,8 @@ class configuration():
                 print(node)
                 self.global_res_map[node] = {} 
                 for nmap in nodes['mapping']:
-                    stream_nm = nmap['stream_nm'] 
+                    stream_nm = nmap['stream_nm']
+                    print("Looking for ", stream_nm, " in ADIOS2 streams : ", args.adios2_streams[0]) 
                     if stream_nm in args.adios2_streams[0]:   
                         self.global_res_map[node][stream_nm] = []
                         self.global_res_map[node][stream_nm] = list(map(int, nmap['ranks']))  
@@ -183,8 +185,9 @@ class configuration():
         self.iaddr = socket.gethostbyname(socket.gethostname())
 
      
-        self.tau_file_type = args.tau_file_type.lower()
-        self.hc_lib = args.hc_lib.lower()
+        self.tau_file_type = args.tau_file_type[0].lower()
+        print(args.hc_lib[0])
+        self.hc_lib = args.hc_lib[0].lower()
 
         self.mpi_comm = mpi_comm
         self.nprocs = mpi_comm.Get_size() 
