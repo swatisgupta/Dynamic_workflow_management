@@ -347,26 +347,35 @@ class memory(abstract_model.model):
                     if flag_llc and flag_lds and flag_ipc:
                         b_pressure == True
             # keep only last X records
-            if node not in self.rss.keys():
-                 self.rss[node] = rss_val
-            else: 
-                 self.rss[node] = self.rss[node].append(rss_val)
-            self.rss[node] = self.rss[node][-self.max_history:]
-            if node not in self.vms.keys():
-                 self.vms[node] = vms_val
-            else: 
-                 self.vms[node] = self.vms[node].append(vms_val)
-            self.vms[node] = self.vms[node][-self.max_history:]
+            if rss_val is not None: 
+                 if node not in self.rss.keys():
+                     self.rss[node] = rss_val
+                 else: 
+                     self.rss[node] = self.rss[node].append(rss_val)
+            else:
+                self.rss[node] = None 
+            if self.rss[node] is not None:
+                self.rss[node] = self.rss[node][-self.max_history:]
+            if vms_val is not None:
+                 if node not in self.vms.keys():
+                     self.vms[node] = vms_val
+                 else: 
+                     self.vms[node] = self.vms[node].append(vms_val)
+            else:
+                self.vms[node] = None 
+            if self.vms[node] is not None:
+                self.vms[node] = self.vms[node][-self.max_history:]
             # update the new state
             self.fltrd_rss[node] = self.__compute_rmax(self.__compute_ravg(self.rss[node]))
-            self.m_status_rss_max[node].append(self.__compute_max(self.fltrd_rss[node]))
+            if self.fltrd_rss[node] is not None:
+                self.m_status_rss_max[node].append(self.__compute_max(self.fltrd_rss[node]))
             print("Filtered RSS::\n", self.fltrd_rss[node])
             self.fltrd_vms[node] = self.__compute_rmax(self.__compute_ravg(self.vms[node]))
-            self.m_status_vms_max[node].append(self.__compute_max(self.fltrd_vms[node]))
+            if self.fltrd_vms[node] is not None:
+                self.m_status_vms_max[node].append(self.__compute_max(self.fltrd_vms[node]))
             print("Filtered VMS::\n", self.fltrd_vms[node])
-            self.m_status_vms_max[node].append(self.__compute_max(self.fltrd_vms[node]))
 
-            if int(math.ceil(self.m_status_rss_max[node][-1]/(1024*1024))) >= self.rss_thresh or int(math.ceil(self.m_status_vms_max[node][-1])) > 0:
+            if ( len(self.m_status_rss_max[node]) != 0 and int(math.ceil(self.m_status_rss_max[node][-1]/(1024*1024))) >= self.rss_thresh ) or ( len(self.m_status_vms_max[node]) != 0 and int(math.ceil(self.m_status_vms_max[node][0])) > 0 ):
                 c_pressure = True
                 print("RSS is high", self.m_status_rss_max[node][-1], ">=", self.rss_thresh) 
                 print("VMS is high", self.m_status_vms_max[node][-1], ">=", 0) 
@@ -376,29 +385,41 @@ class memory(abstract_model.model):
         return True
 
     def __compute_ravg(self, df):
+        if df is None:
+            return None 
         df_avg = df.rolling(self.avg_window, min_periods=1).mean()       
         return df_avg
     
     def __compute_rmax(self, df):
+        if df is None:
+            return None 
         df_max = df.rolling(self.max_window, min_periods=1).max()       
         return df_max
 
     def __compute_max(self, df):
+        if df is None:
+            return None 
         #print(df.head())
         df_max = df.max()
         return df_max
 
     def __compute_min(self, df):
+        if df is None:
+            return None 
         #print(df.head())
         df_min = df.min()
         return df_min
 
     def __compute_inc(self, lst):
+        if lst is None:
+            return 0 
         val_n = lst[-1]
         val_o = lst[-2]
         return ((val_n - val_o)/val_o) * 100 
 
     def __compute_dec(self, lst):
+        if lst is None:
+            return 0 
         val_n = lst[-1]
         val_o = lst[-2]
         return ((val_o - val_n)/val_o) * 100 

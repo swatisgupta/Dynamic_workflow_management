@@ -5,6 +5,7 @@ from mpi4py import MPI
 import os
 from runtime_monitor import helper
 from runtime_monitor.memory_model import memory
+from runtime_monitor.outstep_model import outsteps
 import threading
 from datetime import datetime
 import zmq
@@ -70,6 +71,8 @@ class Rmonitor():
         model = None
         if mdl_str == "memory":
             model = memory(self.config)
+        elif mdl_str == "outsteps":
+            model = outsteps(self.config)
         else:
             return
         self.model_objs.append(model)
@@ -114,14 +117,17 @@ class Rmonitor():
         #print("Done with updates") 
     
     def perform_iteration(self): 
-        if (self.config.begin_next_step()): 
+        if (self.config.begin_next_step()):
+            print("Reading stream!!")  
             for mdls in self.model_objs:
                 mdls.update_curr_state()
                 self.config.end_current_step()
             return True
         return False
 
- 
+    def close_connections(self):
+        self.config.close_connections()
+
     def worker(self):
         context = None
         socket = None
@@ -135,15 +141,19 @@ class Rmonitor():
         while do_work == True:
             if self.stop_work == True:
                 do_work = False
+                self.close_connections()
                 if self.rank == 0: 
                     socket.send_string("done")
                     msg = socket.recv()
                     print("Done!!")
             else :
                 if do_work == True: 
-                    self.perform_iteration() 
+                    print("Doing next iteration...")
+                    self.perform_iteration()
+                    print("Done next iteration...") 
                     self.if_send_update(socket)
                 if cntrl_q.empty() == False:
+                    print("Got a queue request...")
                     message = cntrl_q.get(block=False)
                     self.process_request(message)
                     cntrl_q.task_done()

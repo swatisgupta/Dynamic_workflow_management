@@ -2,7 +2,7 @@ import json
 from mpi4py import MPI
 import argparse
 import os
-from runtime_monitor.adios2_reader import adios2_tr_reader
+from runtime_monitor.adios2_reader import adios2_tau_reader
 import socket
 
 def argument_parser():
@@ -25,10 +25,11 @@ def argument_parser():
                                                      Posible values are : papi | likwid ''', default="papi")
 
     parser.add_argument("--memory", "-M", help="Enable model for measuring memory bandwidth and capacity pressure", default="False", action="store_true")
+    parser.add_argument("--outsteps", "-O", help="Count number of output steps", default="False", action="store_true")
 
     #parser.add_argument("--mpi", "-m", help="Enable model for measuring MPI performance", default="False", action="store_true")
 
-    #parser.add_argument("--adios2", "-a", help="Enable model for measuring ADIOS2 performance", default="False", action="store_true")
+    parser.add_argument("--adios2_steps", "-a", help="Enable model for measuring ADIOS2 performance", default="False", action="store_true")
 
     parser.add_argument("--adios2_streams", help=''' Space seperated list of adios2 connection strings. For example,
                                                               this could be a BPFile name or runtime SST file ''', action="append", nargs='+', required=True )
@@ -96,7 +97,7 @@ class configuration():
                            self.global_rev_res_map[stream_nm][node] = []
                            self.global_rev_res_map[stream_nm][node] = list(map(int, nmap['ranks']))
                     else: 
-                        print("Connection string ", map['stream_nm'], " was not defined through --adios2_streams option")
+                        print("Connection string ", nmap['stream_nm'], " was not defined through --adios2_streams option")
                         exit
 
     
@@ -136,8 +137,12 @@ class configuration():
 
                 conn_streams_set = self.actual_streams_map[asg_node][stream_nm]
                 for stream_nm1 in conn_streams_set:
-                    #print(self.adios2_reader_blocks[stream_nm])
-                    adios2_obj = adios2_tr_reader(stream_nm1,  self.adios2_stream_engs[stream_nm], mpi_comm, self.adios2_reader_blocks[asg_node][stream_nm], self.tau_file_type)
+                    #create  an adios2 object based on model
+                    if "outsteps" not in self.perf_models.keys():
+                        adios2_obj = adios2_tau_reader(stream_nm1,  self.adios2_stream_engs[stream_nm], mpi_comm, self.adios2_reader_blocks[asg_node][stream_nm], self.tau_file_type)
+                    else:
+                        adios2_obj = adios2_generic_reader(stream_nm1,  self.adios2_stream_engs[stream_nm], mpi_comm, self.adios2_reader_blocks[asg_node][stream_nm])
+
                     if asg_node not in self.adios2_active_reader_objs.keys():
                         self.adios2_active_reader_objs[asg_node] = {}
                     if stream_nm not in self.adios2_active_reader_objs[asg_node].keys():
@@ -199,6 +204,12 @@ class configuration():
         if args.memory == True:
             self.perf_models["memory"] = []         
 
+        if args.outsteps == True:
+            self.perf_models["outsteps"] = []         
+
+        if args.adios2_steps == True:
+            self.perf_models["adios2_steps"] = []
+         
         #if args.adios2 == True:
         #    print("Adios2 performance modelling has yet to be added \n")
         #    self.perf_models.append("adios2")     
@@ -217,7 +228,16 @@ class configuration():
         for nodes in self.adios2_active_reader_objs.keys():
             for streams in self.adios2_active_reader_objs[nodes].keys():
                 for conc in self.adios2_active_reader_objs[nodes][streams]:
+                    print("Trying to open .....", conc )
                     conc.open() 
+
+    # Close all active (local) adios2 streams
+    def close_connections(self):
+        #print(self.adios2_active_reader_objs.items())
+        for nodes in self.adios2_active_reader_objs.keys():
+            for streams in self.adios2_active_reader_objs[nodes].keys():
+                for conc in self.adios2_active_reader_objs[nodes][streams]:
+                    conc.close() 
 
     
     # Calls beginstep on all active (local) adios2 streams
@@ -226,8 +246,10 @@ class configuration():
         for nodes in self.adios2_active_reader_objs.keys():
             for streams in self.adios2_active_reader_objs[nodes].keys():
                 for conc in self.adios2_active_reader_objs[nodes][streams]:
+                    print("Reading step from..", conc.inputfile)
                     if conc.advance_step() == True:
                         ret =  True
+                    print("Read step from..", conc.inputfile, " ... ret ", ret)
         return ret
   
 
@@ -260,7 +282,9 @@ class configuration():
                 if self.tau_one_file is False:
                     self.mpi_comm = MPI.COMM_SELF
                     for rank in self.global_rev_res_map[stream_nm][node]:
-                        conn_streams_set.append(stream_nm.split('.')[0] + "-" + str(rank) + stream_nm[(stream_nm.find('.')):]) 
+                        str_split = stream_nm.split('.bp')
+                        conn_streams_set.append(str_split[0] + "-" + str(rank) + ".bp")
+                        print(str_split[0] + "-" + str(rank) + ".bp")   
                 else:
                     conn_streams_set = [stream_nm]
                 if node not in self.actual_streams_map.keys():
@@ -268,4 +292,4 @@ class configuration():
                 self.actual_streams_map[node][stream_nm] = conn_streams_set
                 j = j + 1 
 
-        
+       
