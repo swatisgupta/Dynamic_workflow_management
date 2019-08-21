@@ -14,7 +14,7 @@ class TraceID(Enum):
     VALUE = 4
     TIMESTAMP = 5
 
-class adios2_tr_reader():
+class adios2_tau_reader():
  
      def __init__(self, infile, eng, mpi_comm, blocks_to_read=0, tau_ftype = "trace"):
          self.inputfile = infile     

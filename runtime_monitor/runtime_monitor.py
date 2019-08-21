@@ -5,7 +5,7 @@ from mpi4py import MPI
 import os
 from runtime_monitor import helper
 from runtime_monitor.memory_model import memory
-from runtime_monitor.outstep_model import outsteps
+from runtime_monitor.outstep2_model import outsteps2
 import threading
 from datetime import datetime
 import zmq
@@ -48,35 +48,31 @@ class Rmonitor():
         self.mpi_comm = self.config.mpi_comm
  
     def config_models(self):
-        model_strs = list(self.config.perf_models.keys())
-        for mdl_str in model_strs:
-            print("Loading model: ", mdl_str) 
+        mdl_str = self.config.perf_model
+        print("Loading model: ", mdl_str) 
+        self.__add_model(mdl_str)
+
+    def remove_model(self, mdl_str):
+        current_model_str = self.config.perf_model 
+        if mdl_str == current_model_str:
+            self.model_objs.remove(current_model_str)
+            config.perf_model = ""
+
+    def add_model(self, mdl_str):  
+        current_model_str = self.config.perf_model 
+        if mdl_str != current_model_str:
             self.__add_model(mdl_str)
-
-    def remove_models(self, mdl_strs):
-        current_model_strs = list(self.config.perf_models.keys()) 
-        for mdl in mdl_strs:
-            if mdl in current_model_strs:
-               model = self.config.perf_models[mdl_str] 
-               self.model_objs.remove(model)
-               del config.perf_models[mdl_str] 
-
-    def add_models(self, mdl_strs):  
-        current_model_strs = list(self.config.perf_models.keys()) 
-        for mdl in mdl_strs:
-            if mdl not in current_model_strs:
-                self.__add_model(mdl)
 
     def __add_model(self, mdl_str):
         model = None
         if mdl_str == "memory":
             model = memory(self.config)
-        elif mdl_str == "outsteps":
-            model = outsteps(self.config)
+        elif mdl_str == "outsteps2":
+            model = outsteps2(self.config)
         else:
             return
         self.model_objs.append(model)
-        self.config.perf_models[mdl_str] = model
+        self.config.perf_model = mdl_str
         
     def open_connections(self):
         self.config.open_connections()
@@ -116,9 +112,10 @@ class Rmonitor():
             mdls.suggest_action = False
         #print("Done with updates") 
     
-    def perform_iteration(self): 
-        if (self.config.begin_next_step()):
-            print("Reading stream!!")  
+    def perform_iteration(self):
+        sys.stdout.flush() 
+        if self.config.begin_next_step():
+            #print("Reading stream!!")  
             for mdls in self.model_objs:
                 mdls.update_curr_state()
                 self.config.end_current_step()
@@ -148,15 +145,15 @@ class Rmonitor():
                     print("Done!!")
             else :
                 if do_work == True: 
-                    print("Doing next iteration...")
+                    #print("Doing next iteration...")
                     self.perform_iteration()
-                    print("Done next iteration...") 
-                    self.if_send_update(socket)
-                if cntrl_q.empty() == False:
-                    print("Got a queue request...")
-                    message = cntrl_q.get(block=False)
-                    self.process_request(message)
-                    cntrl_q.task_done()
+                    #print("Done next iteration...") 
+                #if cntrl_q.empty() == False:
+                #    print("Got a queue request...")
+                #    message = cntrl_q.get(block=False)
+                #    self.process_request(message)
+                #    cntrl_q.task_done()
+                #self.if_send_update(socket)
 
     def controller(self):
         l_socket = None

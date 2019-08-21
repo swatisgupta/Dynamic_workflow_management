@@ -3,8 +3,8 @@ import json
 from collections import deque
 from runtime_monitor import abstract_model
 from functools import partial
-from pandas.tseries.frequencies import to_offset
-from pandas import Timestamp
+#from pandas.tseries.frequencies import to_offset
+#from pandas import Timestamp
 import datetime as dt
 import numpy
 import pandas as pd
@@ -160,11 +160,11 @@ class memory(abstract_model.model):
         dateconv = numpy.vectorize(dt.datetime.fromtimestamp)
         date1 = dateconv(ts_in_ms)
         return date1.tolist()
-
+    '''
     def round(t, freq_v):
         freq = to_offset(freq_v)
         return pd.Timestamp((t.value // freq.delta.value) * freq.delta.value)
-
+    '''
     def __group_by_frequency(self, narray, by_last=0): #Replace S with U for microsecond 
         #print(narray)  
         narray_v = narray[:,0] # get the value
@@ -188,10 +188,10 @@ class memory(abstract_model.model):
         return self.urgent_update
 
     def update_model_conf(self, config):
-        self.adios2_active_conns = config.adios2_active_reader_objs
+        self.adios2_active_conns = config.active_reader_objs
         self.r_map = config.local_res_map
-        self.procs_per_ctr = config.adios2_reader_procs
-        self.blocks_to_read = config.adios2_reader_blocks
+        self.procs_per_ctr = config.reader_procs
+        self.blocks_to_read = config.reader_blocks
         ini_val = 0 #need a postive value for the counter
         ini_time = dt.datetime.now()
         pdf = pd.DataFrame(data=[ini_val], index=[ini_time], columns=["value"])
