@@ -22,6 +22,7 @@ class outsteps2(abstract_model.model):
         self.stream_ndigits = {} 
         self.stream_ext = {} 
         self.update_model_conf(config, True)  
+        self.name = "outsteps2"
 
     def update_curr_state(self):
         #print(self.active_conns) 
@@ -34,31 +35,29 @@ class outsteps2(abstract_model.model):
                 next_step += self.stream_out_freq[node][stream_nm] 
                 new_stream = stream_nm.strip() + "{:0{}d}".format(next_step, self.stream_ndigits[node][stream_nm]) + self.stream_ext[node][stream_nm]
                 new_stream = new_stream.strip() 
-                print("Processing stream", new_stream, "stream")
+                #print("Processing stream", new_stream, "stream")
                 sys.stdout.flush()
                 if os.path.isfile(new_stream) == True:
                     self.stream_cur_steps[node][stream_nm] += self.stream_out_freq[node][stream_nm]
                     self.stream_global_steps[node][stream_nm] += self.stream_out_freq[node][stream_nm]
                     self.stream_local_steps[node][stream_nm] += self.stream_out_freq[node][stream_nm]
-                    print("found ", new_stream, " local steps ", self.stream_local_steps[node][stream_nm], " global steps ", self.stream_global_steps[node][stream_nm])
+                    #print("found ", new_stream, " local steps ", self.stream_local_steps[node][stream_nm], " global steps ", self.stream_global_steps[node][stream_nm])
                 else:
-                    new_stream = stream_nm.strip() + '*' 
+                    new_stream = stream_nm.strip() + '*' + self.stream_ext[node][stream_nm] 
                     all_files = glob.glob(new_stream)
                     #print("pattern matches for ", new_stream, " are : ",  all_files)
                     if len(all_files) != 0:
                         print(all_files)    
                         latest_file = sorted(all_files)[-1].split("/")[-1] 
                         steps = int(re.search(r'\d+', latest_file).group()) 
-                        print("For file ",  latest_file, " found integer ", steps) 
-                        if self.stream_cur_steps[node][stream_nm] < steps:
+                        #print("For file ",  latest_file, " found integer ", steps) 
+                        if self.stream_cur_steps[node][stream_nm] + self.stream_out_freq[node][stream_nm] < steps:
                             self.stream_cur_steps[node][stream_nm] = steps
                             self.stream_global_steps[node][stream_nm] += self.stream_out_freq[node][stream_nm]  
-                            self.stream_local_steps[node][stream_nm] = 0
-                    #stream_name = stream_nm[stream.rfind('/') : -1]
+                            self.stream_local_steps[node][stream_nm] = self.stream_out_freq[node][stream_nm] 
                         
                 if self.stream_cur_steps[node][stream_nm] >= self.stream_alert_steps[node][stream_nm]:  
                     self.urgent_update = True
-        #print("done update")       
         sys.stdout.flush()
 
     def update_model_conf(self, config, restart=False):
@@ -98,14 +97,15 @@ class outsteps2(abstract_model.model):
             j_data[node] = {}
             j_data[node]['STEPS'] = {}
             j_data[node]['G_STEPS'] = 0
-            streams = list(self.adios2_active_conns[node].keys())
+            streams = list(self.active_conns[node].keys())
             for stream in streams:
-                j_data[node]['STEPS'][stream] = self.stream_local_steps[node][stream]
+                str = stream.split('/')[1]
+                j_data[node]['STEPS'][str] = self.stream_local_steps[node][stream]
                 j_data[node]['G_STEPS'] += self.stream_global_steps[node][stream]
         return j_data
 
     def get_model_name(self):
-        return "outsteps2"
+        return self.name
 
     def if_urgent_update(self):
         return self.urgent_update 

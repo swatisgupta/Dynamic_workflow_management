@@ -11,11 +11,9 @@ from datetime import datetime
 import zmq
 import numpy
 import json
-import queue
+from queue import Queue
 import sys
 
-cntrl_q = queue.Queue(maxsize=1)
-resp_q = queue.Queue(maxsize=1)
 
 class Rmonitor():
     def __init__(self, mpicomm):
@@ -24,8 +22,8 @@ class Rmonitor():
         self.osocket = ""
         self.isocket = ""
         self.lsocket = ""
-        #self.cntrl_cond = threading.Condition() 
-        #self.work_cond = threading.Condition() 
+        self.msg_cond = threading.Condition()
+        self.msg_queue = []
         #self.can_change = False
         #self.can_work = True
         self.stop_work = False
@@ -85,16 +83,19 @@ class Rmonitor():
     def get_update(self, model_name, timestamp, local_state, req_type):
         global_state = self.mpi_comm.gather(local_state, root=0)
         request = {}
+        j_data = ""
         if self.rank == 0 : 
             request["model"] = model_name
+            request["socket"] = self.config.iport
             request["timestamp"] = timestamp
             request["msg_type"] = req_type
             request["message"] = global_state
             j_data = json.dumps(request)
-        self.mpi_comm.Barrier()
+        #self.mpi_comm.Barrier()
         return j_data
  
     def if_send_update(self, socket):
+        #print("Sending critical update")
         timestamp = datetime.now() - self.starttime
         timestamp = list(divmod(timestamp.total_seconds(), 60))   
         for mdls in self.model_objs:
@@ -105,12 +106,16 @@ class Rmonitor():
             self.config.mpi_comm.Reduce(action, g_action, op=MPI.SUM)
             
             if g_action[0] > 0:
-                print("sending update for ", mdls.get_model_name()) 
+                print("Sending update for ", mdls.get_model_name()) 
                 request = self.get_update(mdls.get_model_name(), timestamp, mdls.get_curr_state(), "req:action")
                 self.send_req_or_res(socket, request)
-                message = socket.recv()
+                if self.rank == 0 :
+                    message = socket.recv()
+                    print("Received ack ", message)
+                    sys.stdout.flush() 
             mdls.suggest_action = False
-        #print("Done with updates") 
+        #print("Done sending important updates")
+        sys.stdout.flush() 
     
     def perform_iteration(self):
         sys.stdout.flush() 
@@ -128,32 +133,54 @@ class Rmonitor():
     def worker(self):
         context = None
         socket = None
+
         if self.rank == 0:
             context = zmq.Context()
             socket = context.socket(zmq.REQ)
             print("Connecting to socket ", self.osocket) 
             socket.connect(self.osocket)
+
         do_work = True
 
         while do_work == True:
-            if self.stop_work == True:
-                do_work = False
-                self.close_connections()
-                if self.rank == 0: 
-                    socket.send_string("done")
-                    msg = socket.recv()
-                    print("Done!!")
-            else :
-                if do_work == True: 
-                    #print("Doing next iteration...")
-                    self.perform_iteration()
-                    #print("Done next iteration...") 
-                #if cntrl_q.empty() == False:
-                #    print("Got a queue request...")
-                #    message = cntrl_q.get(block=False)
-                #    self.process_request(message)
-                #    cntrl_q.task_done()
-                #self.if_send_update(socket)
+            try: 
+                if self.stop_work == True:
+                    do_work = False
+                    self.close_connections()
+                    if self.rank == 0: 
+                        socket.send_string("done")
+                        msg = socket.recv()
+                        print("Done!!")
+                        sys.stdout.flush()
+                else:
+                    print("Worker: Next iteration ...")
+                    sys.stdout.flush()  
+                    if do_work == True: 
+                        self.perform_iteration()
+                        sys.stdout.flush()
+
+                    message = None
+                    with self.msg_cond:
+                        print("Worker: chekcing msg queue ..len ", len(self.msg_queue)) 
+                        while len(self.msg_queue) > 0:
+                            message = self.msg_queue[0]
+                            self.msg_queue.remove(message)
+                            print("Worker: Got a message from queue ", message) 
+                    if message is not None: 
+                        response = self.process_request(message)
+                        if response is not None:
+                            print("Worker: sending a response...", response)
+                            sys.stdout.flush()
+                            self.send_req_or_res(socket, response)
+                            if self.rank == 0 :
+                                message = socket.recv()
+                                print("Received ack ", message)
+                                sys.stdout.flush() 
+                        else:
+                            print("Worker: not sending a response...", response)
+                    self.if_send_update(socket)
+            except Exception as e:
+                print("Worker : Got an exception ..", e)    
 
     def controller(self):
         l_socket = None
@@ -161,6 +188,7 @@ class Rmonitor():
         g_context = None
         g_socket = None
         topic = "control_msg"
+        if_stop = False
 
         l_context = zmq.Context()
         if self.rank == 0:  
@@ -169,51 +197,69 @@ class Rmonitor():
             g_socket.bind(self.isocket)
             print("Listening on socket ", self.isocket)
             l_socket = l_context.socket(zmq.PUB)
-            l_socket.bind(self.lsocket)     
+            l_socket.bind(self.lsocket)
         else:  
             l_socket = l_context.socket(zmq.SUB)
             l_socket.connect(self.lsocket)     
             l_socket.setsockopt(zmq.SUBSCRIBE, topic)
 
-        if_stop = False
         j_data = {}
 
         while if_stop == False:
-           j_data = None
-           message=""
+           try:
+               j_data = None
+               message=""
+               print("Controller : Waiting for new message ")
+               sys.stdout.flush() 
+               if self.rank == 0:     
+                   j_data = g_socket.recv()
+                   print("Got a request from ", self.isocket, " ", j_data) 
+                   j_data1 = j_data.decode("utf-8")
+                   message_bytes = topic + ' ' + j_data1
+                   l_socket.send_string(message_bytes)
+                   print("Publishing request to ", self.lsocket, " ", j_data) 
+                   sys.stdout.flush()
+                
+               else:
+                   message = l_socket.recv()
+                   print("Got a request from ", l_socket, " ", message) 
+                   sys.stdout.flush() 
+                   msg = message.find('{')
+                   j_data = message[msg:]
 
-           if self.rank == 0:     
-               j_data = g_socket.recv()
-               j_data = j_data.decode("utf-8")
-               message_bytes = topic + ' ' + j_data
-               l_socket.send_string(message_bytes)
-           else:
-               message = l_socket.recv()
-               msg = message.find('{')
-               j_data = message[msg:]
+               response = "OK"
+               self.send_req_or_res(g_socket, response)
+               print("Send the ack response to ", g_socket, " ", response) 
+               sys.stdout.flush()
 
-           request = json.loads(j_data)
-           cntrl_q.put(request)
-           response = resp_q.get()
-           self.send_req_or_res(g_socket, response)
-           if self.stop_cntrl == True:
-               print("Recieved stop request")
-               if_stop = True
+               js_data = json.loads(j_data)
+      
+               with self.msg_cond:
+                   self.msg_queue.append(js_data)
  
+               if self.stop_cntrl == True:
+                   print("Recieved stop request")
+                   if_stop = True
+           except Exception as e:
+               print("Contoller : Got an exception ", e)    
+ 
+
     def process_request(self, request):
+         response = None
          if request["msg_type"] == "req:get_update":
+             print("Processing an update request...", request)
              timestamp = datetime.now() - self.starttime
              timestamp = list(divmod(timestamp.total_seconds(), 60))   
-             mdls = self.config.perf_models[request["model"]] 
+             mdls = self.model_objs[-1] #s[request["model"]] 
              response = self.get_update(mdls.name, timestamp, mdls.get_curr_state(), "res:update")
          elif request["msg_type"] == "req:stop":
+             print("Processing an update request...", request)
+             sys.stdout.flush()
              self.stop_work = True
              self.stop_cntrl = True
-             response = "OK"
-         else:
-             # Change model or change mapping
-             response = "OK"
-         resp_q.put(response)
+         print("Send response", response)
+         sys.stdout.flush()
+         return response   
           
    
    

@@ -10,7 +10,7 @@ if __name__ == "__main__":
     mpi_comm = MPI.COMM_WORLD.Split(appID, MPI.COMM_WORLD.Get_rank()) 
     r_monitor = Rmonitor(mpi_comm)
 
-    worker_thread = threading.Thread(target=r_monitor.worker)
-    worker_thread.start()
-    r_monitor.controller()
-    worker_thread.join()
+    control_thread = threading.Thread(target=r_monitor.controller)
+    control_thread.start()
+    r_monitor.worker()
+    control_thread.join()
