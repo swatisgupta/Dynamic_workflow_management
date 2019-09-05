@@ -6,6 +6,7 @@ import os
 from runtime_monitor import helper
 from runtime_monitor.memory_model import memory
 from runtime_monitor.outstep2_model import outsteps2
+from runtime_monitor.outstep1_model import outsteps1
 import threading
 from datetime import datetime
 import zmq
@@ -67,11 +68,14 @@ class Rmonitor():
             model = memory(self.config)
         elif mdl_str == "outsteps2":
             model = outsteps2(self.config)
+        elif mdl_str == "outsteps1":
+            model = outsteps1(self.config)
         else:
             return
         self.model_objs.append(model)
         self.config.perf_model = mdl_str
-        
+        print("added model:", self.config.perf_model)  
+
     def open_connections(self):
         self.config.open_connections()
 
@@ -120,12 +124,13 @@ class Rmonitor():
     def perform_iteration(self):
         sys.stdout.flush() 
         if self.config.begin_next_step():
-            #print("Reading stream!!")  
+            print("Reading stream!!")  
             for mdls in self.model_objs:
                 mdls.update_curr_state()
                 self.config.end_current_step()
             return True
-        return False
+        else:
+            return False
 
     def close_connections(self):
         self.config.close_connections()
@@ -161,7 +166,7 @@ class Rmonitor():
 
                     message = None
                     with self.msg_cond:
-                        print("Worker: chekcing msg queue ..len ", len(self.msg_queue)) 
+                        print("Worker: checking msg queue ..len ", len(self.msg_queue)) 
                         while len(self.msg_queue) > 0:
                             message = self.msg_queue[0]
                             self.msg_queue.remove(message)
@@ -249,7 +254,8 @@ class Rmonitor():
          if request["msg_type"] == "req:get_update":
              print("Processing an update request...", request)
              timestamp = datetime.now() - self.starttime
-             timestamp = list(divmod(timestamp.total_seconds(), 60))   
+             timestamp = list(divmod(timestamp.total_seconds(), 60))
+             print(self.model_objs)   
              mdls = self.model_objs[-1] #s[request["model"]] 
              response = self.get_update(mdls.name, timestamp, mdls.get_curr_state(), "res:update")
          elif request["msg_type"] == "req:stop":

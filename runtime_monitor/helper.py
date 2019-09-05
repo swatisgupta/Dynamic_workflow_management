@@ -2,7 +2,9 @@ import json
 from mpi4py import MPI
 import argparse
 import os
+import sys
 from runtime_monitor.adios2_tau_reader import adios2_tau_reader
+from runtime_monitor.adios2_generic_reader import adios2_generic_reader
 import socket
 
 def argument_parser():
@@ -21,8 +23,8 @@ def argument_parser():
 
     parser.add_argument("--model", help=''' Enable models to compute. Possible values are : memory | outsteps1 | outsteps2. 
                                                   Model params for memory are [tau_one_file, tau_adios2_plugin_type].
-                                                  Model params for outstep1 are [start_step, output_frequency, steps_var, ndigits_in_filename].
-                                                  Model params for outstep2 are [start_step, output_frequency, alert_steps, ndigits_in_filename, file_extenstion].
+                                                  Mode params for outstep1 are [steps_var, file_extention].
+                                                  Model params for outstep2 are [start_step, output_frequency, alert_steps, ndigits_in_filename, file_extention].
                                               ''', nargs=1, default="outsteps2")
    
     parser.add_argument("--rmap_file", help = '''Json file name that defines the mappings of nodes to adios2 connection strings and ranks.
@@ -107,6 +109,13 @@ class configuration():
             if node not in self.reader_config.keys():
                 self.reader_config[node] = {}
             self.reader_config[node][stream] = params_list 
+        if self.perf_model == "outsteps1":
+            if len(params_list) != 2:
+                print("Insufficient model parameters for ",  stream) 
+                exit
+            if node not in self.reader_config.keys():
+                self.reader_config[node] = {}
+            self.reader_config[node][stream] = params_list 
 
     # Assigns nodes to each mpi ranks in round robin manner  
     def distribute_work(self):
@@ -137,7 +146,7 @@ class configuration():
                 if asg_node not in  self.reader_blocks.keys():
                      self.reader_blocks[asg_node] = {}
 
-                if self.perf_model == "outsteps2" or (self.perf_model == memory and self.tau_one_file[asg_node][stream_nm] == False):
+                if self.perf_model == "outsteps2" or (self.perf_model == "memory" and self.tau_one_file[asg_node][stream_nm] == False):
                     self.reader_blocks[asg_node][stream_nm] = [0]
                 else:
                     self.reader_blocks[asg_node][stream_nm] = self.reader_procs[asg_node][stream_nm]
@@ -205,13 +214,14 @@ class configuration():
         self.nprocs = mpi_comm.Get_size() 
         self.rank =  mpi_comm.Get_rank()
 
-        if args.model == "memory":
+        print("args model", args.model)
+
+        if args.model[0] == "memory":
             self.perf_model = "memory"
             if args.hc_lib not in ["papi", "likwid"]:
                 print("Unsupported hardware counter library ", args.hc_lib, ". Possible values for hardware counter libraries are papi and likwid")
                 exit          
-
-        elif args.model == "outsteps1":
+        elif args.model[0] == "outsteps1":
             self.perf_model = "outsteps1"         
 
         self.__compute_resource_mapping(args)
