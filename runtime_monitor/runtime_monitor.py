@@ -91,7 +91,7 @@ class Rmonitor():
         if self.rank == 0 : 
             request["model"] = model_name
             request["socket"] = self.config.iport
-            request["timestamp"] = timestamp
+            request["timestamp"] = str(timestamp)
             request["msg_type"] = req_type
             request["message"] = global_state
             j_data = json.dumps(request)
@@ -127,7 +127,7 @@ class Rmonitor():
             print("Reading stream!!")  
             for mdls in self.model_objs:
                 mdls.update_curr_state()
-                self.config.end_current_step()
+            self.config.end_current_step()
             return True
         else:
             return False
@@ -253,8 +253,8 @@ class Rmonitor():
          response = None
          if request["msg_type"] == "req:get_update":
              print("Processing an update request...", request)
-             timestamp = datetime.now() - self.starttime
-             timestamp = list(divmod(timestamp.total_seconds(), 60))
+             timestamp = datetime.now() # - self.starttime
+             #timestamp = list(divmod(timestamp.total_seconds(), 60))
              print(self.model_objs)   
              mdls = self.model_objs[-1] #s[request["model"]] 
              response = self.get_update(mdls.name, timestamp, mdls.get_curr_state(), "res:update")

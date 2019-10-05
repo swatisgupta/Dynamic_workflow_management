@@ -103,14 +103,14 @@ class configuration():
             else:
                 self.tau_file_type[node][stream] = params_list[1]
         if self.perf_model == "outsteps2":
-            if len(params_list) != 5:
+            if len(params_list) != 10:
                 print("Insufficient model parameters for ",  stream) 
                 exit
             if node not in self.reader_config.keys():
                 self.reader_config[node] = {}
             self.reader_config[node][stream] = params_list 
         if self.perf_model == "outsteps1":
-            if len(params_list) != 2:
+            if len(params_list) != 4:
                 print("Insufficient model parameters for ",  stream) 
                 exit
             if node not in self.reader_config.keys():
@@ -222,7 +222,8 @@ class configuration():
                 print("Unsupported hardware counter library ", args.hc_lib, ". Possible values for hardware counter libraries are papi and likwid")
                 exit          
         elif args.model[0] == "outsteps1":
-            self.perf_model = "outsteps1"         
+            self.perf_model = "outsteps1"        
+            print("Outsteps loaded") 
 
         self.__compute_resource_mapping(args)
         self.__init_streams__(args)
@@ -262,9 +263,10 @@ class configuration():
             for streams in self.active_reader_objs[nodes].keys():
                 for conc in self.active_reader_objs[nodes][streams]:
                     print("Reading step from..", conc.inputfile)
-                    if conc.advance_step() == True:
+                    ret_tmp = conc.advance_step()
+                    if ret_tmp == True:
                         ret =  True
-                    print("Read step from..", conc.inputfile, " ... ret ", ret)
+                    print("Read step fro m..", conc.inputfile, " ... ret ", ret_tmp)
         return ret
   
 

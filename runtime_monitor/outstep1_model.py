@@ -23,7 +23,6 @@ class outsteps1(abstract_model.model):
 
     def update_curr_state(self):
         #print(self.active_conns)
-        time_now = dt.datetime.now() 
         for node in self.active_conns.keys():
             print("Processing node ", node, "connections ", self.active_conns[node] )
             sys.stdout.flush()
@@ -32,9 +31,15 @@ class outsteps1(abstract_model.model):
                 x_steps = adios_conc.read_var(self.stream_step_var[node][stream])
                 if x_steps is None:
                     continue 
-                print("x_steps :: ", x_steps[0])
+                 
+                if adios_conc.get_reset() == True :
+                    self.stream_sum_steptime[node][stream] = 0
+                    self.stream_cur_steps[node][stream] = 0
+                    self.stream_last_timestep[node][stream] = 0
+                time_now = dt.datetime.now() 
+                print("x_steps :: ", x_steps)
                 if x_steps[0] > self.stream_cur_steps[node][stream]:
-                    cur_diff =  self.stream_expected_steptime[node][stream] 
+                    cur_diff =  x_steps[0] * self.stream_expected_steptime[node][stream] 
                     if self.stream_last_timestep[node][stream] != 0:
                         cur_diff = time_now - self.stream_last_timestep[node][stream]
                         cur_diff = cur_diff.total_seconds()
