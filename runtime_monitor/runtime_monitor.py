@@ -86,13 +86,15 @@ class Rmonitor():
 
     def get_connect_msg(self, model_name, timestamp):
         request = {}
+        j_data = ""
         if self.rank == 0 :
             request["model"] = model_name
             request["socket"] = self.config.iport
             request["timestamp"] = timestamp
             request["msg_type"] = "res:connect"
-            request["message"] = self.isocket
-        return request
+            request["message"] = self.config.iaddr
+            j_data = json.dumps(request)
+        return j_data
  
     def get_update(self, model_name, timestamp, local_state, req_type):
         global_state = self.mpi_comm.gather(local_state, root=0)
@@ -150,18 +152,22 @@ class Rmonitor():
         socket = None
 
         if self.rank == 0:
-            context = zmq.Context()
-            socket = context.socket(zmq.REQ)
-            print("Connecting to socket ", self.osocket) 
-            socket.connect(self.osocket)
-            timestamp = datetime.now() - self.starttime
-            timestamp = list(divmod(timestamp.total_seconds(), 60))
-            mdls = self.model_objs[-1] #s[request["model"]] 
-            msg = get_connect_msg(mdls.name, timestamp)
-            print("Sending message to : ", self.osocket)  
-            socket.send_string(msg)
-            res_msg = socket.recv()
-            print("Send connection info : ", msg)  
+            try:
+                context = zmq.Context()
+                socket = context.socket(zmq.REQ)
+                print("Connecting to socket ", self.osocket) 
+                socket.connect(self.osocket)
+                print("Connected to : ", self.osocket)  
+                timestamp = datetime.now() - self.starttime
+                timestamp = list(divmod(timestamp.total_seconds(), 60))
+                msg = self.get_connect_msg("None", timestamp)
+                print("Send message to : ", self.osocket)  
+                socket.send_string(msg)
+                res_msg = socket.recv()
+                print("Send connection info : ", msg) 
+             
+            except Exception as e:
+                print("Worker : Got an exception ..", e)    
 
         do_work = True
 
