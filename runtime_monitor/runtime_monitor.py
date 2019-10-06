@@ -122,12 +122,12 @@ class Rmonitor():
             self.config.mpi_comm.Reduce(action, g_action, op=MPI.SUM)
             
             if g_action[0] > 0:
-                print("Sending update for ", mdls.get_model_name()) 
+                #print("Sending update for ", mdls.get_model_name()) 
                 request = self.get_update(mdls.get_model_name(), timestamp, mdls.get_curr_state(), "req:action")
                 self.send_req_or_res(socket, request)
                 if self.rank == 0 :
                     message = socket.recv()
-                    print("Received ack ", message)
+                    #print("Received ack ", message)
                     sys.stdout.flush() 
             mdls.suggest_action = False
         #print("Done sending important updates")
@@ -136,7 +136,7 @@ class Rmonitor():
     def perform_iteration(self):
         sys.stdout.flush() 
         if self.config.begin_next_step():
-            print("Reading stream!!")  
+            #print("Reading stream!!")  
             for mdls in self.model_objs:
                 mdls.update_curr_state()
             self.config.end_current_step()
@@ -194,16 +194,16 @@ class Rmonitor():
                         while len(self.msg_queue) > 0:
                             message = self.msg_queue[0]
                             self.msg_queue.remove(message)
-                            print("Worker: Got a message from queue ", message) 
+                            #print("Worker: Got a message from queue ", message) 
                     if message is not None: 
                         response = self.process_request(message)
                         if response is not None:
-                            print("Worker: sending a response...", response)
+                            #print("Worker: sending a response...", response)
                             sys.stdout.flush()
                             self.send_req_or_res(socket, response)
                             if self.rank == 0 :
                                 message = socket.recv()
-                                print("Received ack ", message)
+                                #print("Received ack ", message)
                                 sys.stdout.flush() 
                         else:
                             print("Worker: not sending a response...", response)
@@ -243,23 +243,23 @@ class Rmonitor():
                sys.stdout.flush() 
                if self.rank == 0:     
                    j_data = g_socket.recv()
-                   print("Got a request from ", self.isocket, " ", j_data) 
+                   #print("Got a request from ", self.isocket, " ", j_data) 
                    j_data1 = j_data.decode("utf-8")
                    message_bytes = topic + ' ' + j_data1
                    l_socket.send_string(message_bytes)
-                   print("Publishing request to ", self.lsocket, " ", j_data) 
+                   #print("Publishing request to ", self.lsocket, " ", j_data) 
                    sys.stdout.flush()
                 
                else:
                    message = l_socket.recv()
-                   print("Got a request from ", l_socket, " ", message) 
+                   #print("Got a request from ", l_socket, " ", message) 
                    sys.stdout.flush() 
                    msg = message.find('{')
                    j_data = message[msg:]
 
                response = "OK"
                self.send_req_or_res(g_socket, response)
-               print("Send the ack response to ", g_socket, " ", response) 
+               #print("Send the ack response to ", g_socket, " ", response) 
                sys.stdout.flush()
 
                js_data = json.loads(j_data)
@@ -277,18 +277,18 @@ class Rmonitor():
     def process_request(self, request):
          response = None
          if request["msg_type"] == "req:get_update":
-             print("Processing an update request...", request)
+             #print("Processing an update request...", request)
              timestamp = datetime.now() # - self.starttime
              #timestamp = list(divmod(timestamp.total_seconds(), 60))
-             print(self.model_objs)   
+             #print(self.model_objs)   
              mdls = self.model_objs[-1] #s[request["model"]] 
              response = self.get_update(mdls.name, timestamp, mdls.get_curr_state(), "res:update")
          elif request["msg_type"] == "req:stop":
-             print("Processing an update request...", request)
+             #print("Processing an update request...", request)
              sys.stdout.flush()
              self.stop_work = True
              self.stop_cntrl = True
-         print("Send response", response)
+         #print("Send response", response)
          sys.stdout.flush()
          return response   
           
