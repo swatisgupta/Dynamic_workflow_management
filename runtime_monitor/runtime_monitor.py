@@ -83,7 +83,17 @@ class Rmonitor():
         if self.rank == 0 :
             socket.send_string(req_or_res)
         self.mpi_comm.Barrier()
-         
+
+    def get_connect_msg(self, model_name, timestamp):
+        request = {}
+        if self.rank == 0 :
+            request["model"] = model_name
+            request["socket"] = self.config.iport
+            request["timestamp"] = timestamp
+            request["msg_type"] = "res:connect"
+            request["message"] = self.isocket
+        return request
+ 
     def get_update(self, model_name, timestamp, local_state, req_type):
         global_state = self.mpi_comm.gather(local_state, root=0)
         request = {}
@@ -144,6 +154,14 @@ class Rmonitor():
             socket = context.socket(zmq.REQ)
             print("Connecting to socket ", self.osocket) 
             socket.connect(self.osocket)
+            timestamp = datetime.now() - self.starttime
+            timestamp = list(divmod(timestamp.total_seconds(), 60))
+            mdls = self.model_objs[-1] #s[request["model"]] 
+            msg = get_connect_msg(mdls.name, timestamp)
+            print("Sending message to : ", self.osocket)  
+            socket.send_string(msg)
+            res_msg = socket.recv()
+            print("Send connection info : ", msg)  
 
         do_work = True
 
@@ -203,6 +221,7 @@ class Rmonitor():
             print("Listening on socket ", self.isocket)
             l_socket = l_context.socket(zmq.PUB)
             l_socket.bind(self.lsocket)
+            
         else:  
             l_socket = l_context.socket(zmq.SUB)
             l_socket.connect(self.lsocket)     
