@@ -21,6 +21,7 @@ class outsteps2(abstract_model.model):
         self.stream_local_steps = {} 
         self.stream_ndigits = {} 
         self.stream_ext = {} 
+        self.stream_max_step = {} 
         self.update_model_conf(config, True)  
         self.name = "outsteps2"
 
@@ -37,11 +38,15 @@ class outsteps2(abstract_model.model):
                 new_stream = new_stream.strip() 
                 #print("Processing stream", new_stream, "stream")
                 sys.stdout.flush()
+                if self.stream_local_steps[node][stream_nm] >= self.stream_max_step[node][stream_nm]:
+                    self.stream_local_steps[node][stream_nm] = 0    
+                    print("Reset the local steps!!!")
+
                 if os.path.isfile(new_stream) == True:
                     self.stream_cur_steps[node][stream_nm] += self.stream_out_freq[node][stream_nm]
                     self.stream_global_steps[node][stream_nm] += self.stream_out_freq[node][stream_nm]
                     self.stream_local_steps[node][stream_nm] += self.stream_out_freq[node][stream_nm]
-                    #print("found ", new_stream, " local steps ", self.stream_local_steps[node][stream_nm], " global steps ", self.stream_global_steps[node][stream_nm])
+                    print("found ", new_stream, " local steps ", self.stream_local_steps[node][stream_nm], " global steps ", self.stream_global_steps[node][stream_nm])
                 else:
                     new_stream = stream_nm.strip() + '*' + self.stream_ext[node][stream_nm] 
                     all_files = glob.glob(new_stream)
@@ -75,6 +80,7 @@ class outsteps2(abstract_model.model):
             self.stream_ndigits[node] = {}
             self.stream_path[node] = {}
             self.stream_ext[node] = {}
+            self.stream_max_step[node] = {}
             for stream in list(self.active_conns[node].keys()):
                 self.stream_cur_steps[node][stream] = int(self.stream_config[node][stream][0])
                 self.stream_local_steps[node][stream] = 0
@@ -89,7 +95,8 @@ class outsteps2(abstract_model.model):
                 self.stream_alert_steps[node][stream] = int(self.stream_config[node][stream][2]) 
                 self.stream_ndigits[node][stream] = int(self.stream_config[node][stream][3]) 
                 self.stream_ext[node][stream] = self.stream_config[node][stream][4].strip() 
-       
+                self.stream_max_step[node][stream] = int(self.stream_config[node][stream][9])
+
     def get_curr_state(self):
         j_data = {}
         nodes = self.active_conns.keys()

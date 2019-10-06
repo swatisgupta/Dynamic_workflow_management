@@ -23,7 +23,10 @@ class adios2_generic_reader():
          self.is_step = False
          self.is_open = False  
          self.current_step = 0
-
+         self.adios = adios2.ADIOS(mpi_comm)
+         self.ioReader = self.adios.DeclareIO("reader")
+         self.reset = False
+  
      def open(self):
          if self.is_open == False:
              try:
@@ -48,28 +51,32 @@ class adios2_generic_reader():
                  if found == 0:
                     return self.is_open
                  else:
-                     print("opening file ", self.inputfile)
-                     self.conn = adios2.open(self.inputfile, "r", self.mpi_comm, self.eng_name)
+                     self.ioReader.SetEngine(self.eng_name)
+                     self.conn = self.ioReader.Open(self.inputfile, adios2.Mode.Read)
+                     print("opened file ", self.inputfile, flush = True)
                      self.is_open = True
              except Exception as ex:
                  print("Got an exception!!", ex)
                  self.is_open = False
          return self.is_open
+     
+     def get_reset(self):
+         return self.reset 
 
      def close(self):
          if self.is_open == True:
              try: 
-                 self.conn.close()
+                 self.conn.Close()
                  self.is_open = False
              except:
-                 self.is_open = True
+                 self.is_open = False
 
      def get_step_number(self):
-         return self.cstep.current_step()
+         return self.current_step
 
      def get_var_attr_map(self):
-         self.cstep_avail_vars = self.cstep.available_variables()
-         self.cstep_avail_attrs = self.cstep.available_attributes() 
+         self.cstep_avail_vars = self.ioReader.AvailableVariables()
+         self.cstep_avail_attrs = self.ioReader.AvailableAttributes() 
          #for name, info in self.cstep_avail_attrs.items():
          #    if bool("MetaData" in name):
          #        continue 
@@ -85,18 +92,26 @@ class adios2_generic_reader():
 
      def advance_step(self):
          self.is_step = False 
+
          if self.eng_name == "BPFile" or  self.is_open == False:
              self.open()
-
+             self.reset = True
+         else:
+             self.reset = False
+ 
          if self.is_open == False: 
              return self.is_step 
 
          try:
-             self.cstep = next(self.conn)
-             self.is_step = True 
-             if self.current_step % 4 == 0: 
-                self.get_var_attr_map()
-             self.current_step += 1 # self.cstep.current_step()
+             status = self.conn.BeginStep(adios2.StepMode.Read, 2.0)
+             #status = self.conn.BeginStep()
+             if status == adios2.StepStatus.OK:
+                 self.is_step = True 
+                 if self.current_step == 0: 
+                     self.get_var_attr_map()
+                 self.current_step += 1
+             elif status == adios2.StepStatus.EndOfStream:
+                  self.close()
          except ValueError as e:
              print(e)
              print("Unexpected error:", sys.exc_info()[0])
@@ -106,20 +121,42 @@ class adios2_generic_reader():
              self.is_step = False
          return self.is_step    
                       
-     def read_var(self, var):
-         data_var = None 
+     def read_var(self, var_name):
+         var_data = None 
          if self.is_step == True:
-             if var in self.cstep_avail_vars:
-                  data_var = self.cstep.read(var)
-         return data_var
+             var = self.ioReader.InquireVariable(var_name)
+             if var is not None: #self.cstep_avail_vars:
+                 count = tuple(var.Count())
+                 type = var.Type()
+                 print("Var type ...", type, flush = True)
+                 print("Var count ...", count, flush = True)
+                 if type == "int32_t":
+                     if len(count) == 0:
+                         var_data = np.zeros((1), dtype=np.intc)
+                     else:
+                         var_data = np.zeros(count, dtype=np.intc)
+                 elif type == "float":  
+                     if len(count) == 0:
+                         var_data = np.zeros((1), dtype=np.float32)
+                     else:
+                         var_data = np.zeros(count, dtype=np.float32)
+                 elif type == "double":  
+                     if len(count) == 0:
+                         var_data = np.zeros((1), dtype=np.float64)
+                     else:
+                         var_data = np.zeros(count, dtype=np.float64)
+                 else:
+                     var_data = "" 
+                 self.conn.Get(var, var_data)
+         return var_data
 
      def end_step(self):
          if self.is_step == True:
              try: 
-                 self.conn.end_step()
+                 self.conn.EndStep()
                  self.is_step = False
                  if self.eng_name == 'BPFile':
-                     self.conn.close()
+                     self.conn.Close()
                      self.is_open = False
              except Exception as e:
                  print("Caught an exception...", e)
