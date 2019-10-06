@@ -83,7 +83,19 @@ class Rmonitor():
         if self.rank == 0 :
             socket.send_string(req_or_res)
         self.mpi_comm.Barrier()
-         
+
+    def get_connect_msg(self, model_name, timestamp):
+        request = {}
+        j_data = ""
+        if self.rank == 0 :
+            request["model"] = model_name
+            request["socket"] = self.config.iport
+            request["timestamp"] = timestamp
+            request["msg_type"] = "res:connect"
+            request["message"] = self.config.iaddr
+            j_data = json.dumps(request)
+        return j_data
+ 
     def get_update(self, model_name, timestamp, local_state, req_type):
         global_state = self.mpi_comm.gather(local_state, root=0)
         request = {}
@@ -140,10 +152,22 @@ class Rmonitor():
         socket = None
 
         if self.rank == 0:
-            context = zmq.Context()
-            socket = context.socket(zmq.REQ)
-            print("Connecting to socket ", self.osocket) 
-            socket.connect(self.osocket)
+            try:
+                context = zmq.Context()
+                socket = context.socket(zmq.REQ)
+                print("Connecting to socket ", self.osocket) 
+                socket.connect(self.osocket)
+                print("Connected to : ", self.osocket)  
+                timestamp = datetime.now() - self.starttime
+                timestamp = list(divmod(timestamp.total_seconds(), 60))
+                msg = self.get_connect_msg("None", timestamp)
+                print("Send message to : ", self.osocket)  
+                socket.send_string(msg)
+                res_msg = socket.recv()
+                print("Send connection info : ", msg) 
+             
+            except Exception as e:
+                print("Worker : Got an exception ..", e)    
 
         do_work = True
 
@@ -203,6 +227,7 @@ class Rmonitor():
             print("Listening on socket ", self.isocket)
             l_socket = l_context.socket(zmq.PUB)
             l_socket.bind(self.lsocket)
+            
         else:  
             l_socket = l_context.socket(zmq.SUB)
             l_socket.connect(self.lsocket)     
