@@ -90,7 +90,7 @@ class Rmonitor():
         if self.rank == 0 :
             request["model"] = model_name
             request["socket"] = self.config.iport
-            request["timestamp"] = timestamp
+            request["timestamp"] = str(timestamp)
             request["msg_type"] = "res:connect"
             request["message"] = self.config.iaddr
             j_data = json.dumps(request)
@@ -112,8 +112,8 @@ class Rmonitor():
  
     def if_send_update(self, socket):
         #print("Sending critical update")
-        timestamp = datetime.now() - self.starttime
-        timestamp = list(divmod(timestamp.total_seconds(), 60))   
+        timestamp = datetime.now() #- self.starttime
+        #timestamp = list(divmod(timestamp.total_seconds(), 60))   
         for mdls in self.model_objs:
             action = numpy.zeros(1) 
             g_action = numpy.zeros(1) 
@@ -158,8 +158,8 @@ class Rmonitor():
                 print("Connecting to socket ", self.osocket) 
                 socket.connect(self.osocket)
                 print("Connected to : ", self.osocket)  
-                timestamp = datetime.now() - self.starttime
-                timestamp = list(divmod(timestamp.total_seconds(), 60))
+                timestamp = datetime.now() # - self.starttime
+                #timestamp = list(divmod(timestamp.total_seconds(), 60))
                 msg = self.get_connect_msg("None", timestamp)
                 print("Send message to : ", self.osocket)  
                 socket.send_string(msg)

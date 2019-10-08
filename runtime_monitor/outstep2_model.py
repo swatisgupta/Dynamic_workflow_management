@@ -63,6 +63,7 @@ class outsteps2(abstract_model.model):
                         
                 if self.stream_cur_steps[node][stream_nm] >= self.stream_alert_steps[node][stream_nm]:  
                     self.urgent_update = True
+            break 
         sys.stdout.flush()
 
     def update_model_conf(self, config, restart=False):
@@ -96,7 +97,8 @@ class outsteps2(abstract_model.model):
                 self.stream_ndigits[node][stream] = int(self.stream_config[node][stream][3]) 
                 self.stream_ext[node][stream] = self.stream_config[node][stream][4].strip() 
                 self.stream_max_step[node][stream] = int(self.stream_config[node][stream][9])
-
+            #break
+ 
     def get_curr_state(self):
         j_data = {}
         nodes = self.active_conns.keys()
@@ -109,6 +111,7 @@ class outsteps2(abstract_model.model):
                 str = stream.split('/')[1]
                 j_data[node]['STEPS'][str] = self.stream_local_steps[node][stream]
                 j_data[node]['G_STEPS'] += self.stream_global_steps[node][stream]
+            break
         return j_data
 
     def get_model_name(self):
