@@ -239,6 +239,8 @@ class configuration():
                 for conc in self.active_reader_objs[nodes][streams]:
                     print("Trying to open .....", conc )
                     conc.open() 
+            if self.perf_model == "outsteps1":
+               return
 
     # Close all active (local) adios2 streams
     def close_connections(self):
@@ -250,6 +252,8 @@ class configuration():
             for streams in self.active_reader_objs[nodes].keys():
                 for conc in self.active_reader_objs[nodes][streams]:
                     conc.close() 
+            if self.perf_model == "outsteps1":
+               return
 
     
     # Calls beginstep on all active (local) adios2 streams
@@ -267,6 +271,8 @@ class configuration():
                     if ret_tmp == True:
                         ret =  True
                     print("Read step fro m..", conc.inputfile, " ... ret ", ret_tmp)
+            if self.perf_model == "outsteps1":
+               return ret
         return ret
   
 
@@ -278,6 +284,8 @@ class configuration():
             for streams in self.active_reader_objs[nodes].keys():
                 for conc in self.active_reader_objs[nodes][streams]:
                     conc.end_step() 
+            if self.perf_model == "outsteps1":
+               return
     
 
     # Initialize adios2 connections, set engines and 

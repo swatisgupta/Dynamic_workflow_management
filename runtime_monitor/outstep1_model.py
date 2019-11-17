@@ -28,25 +28,29 @@ class outsteps1(abstract_model.model):
             sys.stdout.flush()
             for stream in list(self.active_conns[node].keys()):
                 adios_conc = self.active_conns[node][stream][0] 
-                x_steps = adios_conc.read_var(self.stream_step_var[node][stream])
-                if x_steps is None:
-                    continue 
-                 
                 if adios_conc.get_reset() == True :
                     self.stream_sum_steptime[node][stream] = 0
                     self.stream_cur_steps[node][stream] = 0
-                    self.stream_last_timestep[node][stream] = 0
+                    self.stream_last_timestep[node][stream] = adios_conc.get_open_timestamp()
+  
+                x_steps = adios_conc.read_var(self.stream_step_var[node][stream])
+
+                if x_steps is None:
+                    continue 
+                 
                 time_now = dt.datetime.now() 
+
                 print("x_steps :: ", x_steps)
+
                 if x_steps[0] > self.stream_cur_steps[node][stream]:
                     cur_diff =  x_steps[0] * self.stream_expected_steptime[node][stream] 
-                    if self.stream_last_timestep[node][stream] != 0:
-                        cur_diff = time_now - self.stream_last_timestep[node][stream]
-                        cur_diff = cur_diff.total_seconds()
+                    if self.stream_last_timestep[node][stream] == 0:
+                        self.stream_last_timestep[node][stream] = adios_conc.get_open_timestamp()
+                    cur_diff = time_now - adios_conc.get_open_timestamp() 
+                    cur_diff = cur_diff.total_seconds()
                     self.stream_sum_steptime[node][stream] += cur_diff
                     self.stream_cur_steps[node][stream] = int(x_steps[0])
-                    self.stream_last_timestep[node][stream] = time_now
-                     
+            return         
         #sys.stdout.flush()
 
     def update_model_conf(self, config, restart=False):
@@ -88,7 +92,8 @@ class outsteps1(abstract_model.model):
                 if self.stream_cur_steps[node][stream] != 0 :
                     j_data[node]['AVG_STEP_TIME'][str] = float(self.stream_sum_steptime[node][stream]/self.stream_cur_steps[node][stream])  
                 else:
-                    j_data[node]['AVG_STEP_TIME'][str] = 0
+                    j_data[node]['AVG_STEP_TIME'][str] = float(self.stream_sum_steptime[node][stream])
+            break
         return j_data
 
     def get_model_name(self):

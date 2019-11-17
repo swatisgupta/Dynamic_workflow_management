@@ -6,6 +6,7 @@ import re
 from enum import Enum 
 import time
 import os
+import datetime as dt
 
 class adios2_generic_reader():
  
@@ -26,6 +27,8 @@ class adios2_generic_reader():
          self.adios = adios2.ADIOS(mpi_comm)
          self.ioReader = self.adios.DeclareIO("reader")
          self.reset = False
+         self.timestamp = None
+
   
      def open(self):
          if self.is_open == False:
@@ -55,6 +58,7 @@ class adios2_generic_reader():
                      self.conn = self.ioReader.Open(self.inputfile, adios2.Mode.Read)
                      print("opened file ", self.inputfile, flush = True)
                      self.is_open = True
+                     self.timestamp = dt.datetime.now()
              except Exception as ex:
                  print("Got an exception!!", ex)
                  self.is_open = False
@@ -62,6 +66,9 @@ class adios2_generic_reader():
      
      def get_reset(self):
          return self.reset 
+
+     def get_open_timestamp(self):
+         return self.timestamp
 
      def close(self):
          if self.is_open == True:
@@ -116,9 +123,11 @@ class adios2_generic_reader():
              print(e)
              print("Unexpected error:", sys.exc_info()[0])
              self.is_step = False
+             self.close()
          except Exception as e:
              print("Caught an exception...", e)
              self.is_step = False
+             self.close()
          return self.is_step    
                       
      def read_var(self, var_name):
@@ -132,9 +141,14 @@ class adios2_generic_reader():
                  print("Var count ...", count, flush = True)
                  if type == "int32_t":
                      if len(count) == 0:
-                         var_data = np.zeros((1), dtype=np.intc)
+                         var_data = np.zeros((1), dtype=np.int32)
                      else:
-                         var_data = np.zeros(count, dtype=np.intc)
+                         var_data = np.zeros(count, dtype=np.int32)
+                 elif type == "int64_t":
+                     if len(count) == 0:
+                         var_data = np.zeros((1), dtype=np.int64)
+                     else:
+                         var_data = np.zeros(count, dtype=np.int64)
                  elif type == "float":  
                      if len(count) == 0:
                          var_data = np.zeros((1), dtype=np.float32)
