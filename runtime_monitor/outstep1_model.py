@@ -17,6 +17,7 @@ class outsteps1(abstract_model.model):
         self.stream_sum_steptime = {} 
         self.stream_step_var = {} 
         self.stream_last_timestep = {} 
+        self.stream_n_steps = {} 
         self.stream_ext = {} 
         self.update_model_conf(config, True)  
         self.name = "outsteps1"
@@ -32,6 +33,7 @@ class outsteps1(abstract_model.model):
                     self.stream_sum_steptime[node][stream] = 0
                     self.stream_cur_steps[node][stream] = 0
                     self.stream_last_timestep[node][stream] = adios_conc.get_open_timestamp()
+                    self.stream_n_steps[node][stream] = 0 
   
                 x_steps = adios_conc.read_var(self.stream_step_var[node][stream])
 
@@ -42,14 +44,21 @@ class outsteps1(abstract_model.model):
 
                 print("x_steps :: ", x_steps)
 
+
                 if x_steps[0] > self.stream_cur_steps[node][stream]:
                     cur_diff =  x_steps[0] * self.stream_expected_steptime[node][stream] 
                     if self.stream_last_timestep[node][stream] == 0:
                         self.stream_last_timestep[node][stream] = adios_conc.get_open_timestamp()
-                    cur_diff = time_now - adios_conc.get_open_timestamp() 
+                        self.stream_sum_steptime[node][stream] = 0
+                    cur_diff = time_now - self.stream_last_timestep[node][stream] #adios_conc.get_open_timestamp() 
                     cur_diff = cur_diff.total_seconds()
                     self.stream_sum_steptime[node][stream] += cur_diff
                     self.stream_cur_steps[node][stream] = int(x_steps[0])
+                    self.stream_n_steps[node][stream] += 1
+                     
+                if self.stream_n_steps[node][stream] == 5:
+                    self.stream_last_timestep[node][stream] = time_now  
+                    self.stream_n_steps[node][stream] = 0
             return         
         #sys.stdout.flush()
 
@@ -67,6 +76,7 @@ class outsteps1(abstract_model.model):
             self.stream_ext[node] = {}
             self.stream_step_var[node] = {}
             self.stream_last_timestep[node] = {}
+            self.stream_n_steps[node] = {}
             for stream in list(self.active_conns[node].keys()):
                 self.stream_cur_steps[node][stream] = 0
                 self.stream_sum_steptime[node][stream] = 0
@@ -75,10 +85,12 @@ class outsteps1(abstract_model.model):
                 self.stream_expected_steptime[node][stream] = int(self.stream_config[node][stream][1].strip()) 
                 self.stream_ext[node][stream] = self.stream_config[node][stream][2].strip() 
                 self.stream_last_timestep[node][stream] = 0
+                self.stream_n_steps[node][stream] = 0
        
     def get_curr_state(self):
         j_data = {}
         nodes = self.active_conns.keys()
+        time_now = dt.datetime.now() 
         for node in nodes:
             print("Outsteps1: Preparing an update for node ", node)
             j_data[node] = {}
@@ -89,8 +101,13 @@ class outsteps1(abstract_model.model):
                 str = stream.split('/')[1]
                 print("Outsteps1: Preparing an update for node ", node, " stream ", str)
                 j_data[node]['N_STEPS'][str] = self.stream_cur_steps[node][stream]
+                if self.stream_last_timestep[node][stream] == 0:
+                    cur_diff = time_now - adios_conc.get_open_timestamp() 
+                    cur_diff = cur_diff.total_seconds()
+                    self.stream_sum_steptime[node][stream] = cur_diff
                 if self.stream_cur_steps[node][stream] != 0 :
-                    j_data[node]['AVG_STEP_TIME'][str] = float(self.stream_sum_steptime[node][stream]/self.stream_cur_steps[node][stream])  
+                    #j_data[node]['AVG_STEP_TIME'][str] = float(self.stream_sum_steptime[node][stream]/self.stream_cur_steps[node][stream])  
+                    j_data[node]['AVG_STEP_TIME'][str] = float(self.stream_sum_steptime[node][stream]/5)  
                 else:
                     j_data[node]['AVG_STEP_TIME'][str] = float(self.stream_sum_steptime[node][stream])
             break
