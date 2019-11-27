@@ -135,15 +135,15 @@ class Rmonitor():
     
     def perform_iteration(self):
         sys.stdout.flush() 
+        ret = False
         if self.config.begin_next_step():
+            ret = True  
             #print("Reading stream!!")  
-            for mdls in self.model_objs:
-                mdls.update_curr_state()
-            self.config.end_current_step()
-            return True
-        else:
-            return False
-
+        for mdls in self.model_objs:
+            mdls.update_curr_state()
+        self.config.end_current_step()
+        return ret
+ 
     def close_connections(self):
         self.config.close_connections()
 
