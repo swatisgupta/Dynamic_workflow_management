@@ -36,27 +36,27 @@ class adios2_generic_reader():
                  i = 0
                  found = 0
                  while i < 1:
-                     print("Looking for..", self.inputfile) 
+                     #print("Looking for..", self.inputfile) 
                      if os.path.isfile(self.inputfile):
-                         print("found file ", self.inputfile)
+                         #print("found file ", self.inputfile)
                          found = 1
                          break
                      else:
-                         print("Looking for..", self.inputfile + ".sst") 
+                         #print("Looking for..", self.inputfile + ".sst") 
                          if os.path.isfile(self.inputfile + ".sst"):
-                             print("found file ", self.inputfile, ".sst")
+                             #print("found file ", self.inputfile, ".sst")
                              found = 1
                              break
                      #time.sleep(1)
                      i += 1
-                 print("Found ? ", found) 
+                 #print("Found ? ", found) 
 
                  if found == 0:
                     return self.is_open
                  else:
                      self.ioReader.SetEngine(self.eng_name)
                      self.conn = self.ioReader.Open(self.inputfile, adios2.Mode.Read)
-                     print("opened file ", self.inputfile, flush = True)
+                     #print("opened file ", self.inputfile, flush = True)
                      self.is_open = True
                      self.timestamp = dt.datetime.now()
              except Exception as ex:
@@ -137,8 +137,8 @@ class adios2_generic_reader():
              if var is not None: #self.cstep_avail_vars:
                  count = tuple(var.Count())
                  type = var.Type()
-                 print("Var type ...", type, flush = True)
-                 print("Var count ...", count, flush = True)
+                 #print("Var type ...", type, flush = True)
+                 #print("Var count ...", count, flush = True)
                  if type == "int32_t":
                      if len(count) == 0:
                          var_data = np.zeros((1), dtype=np.int32)

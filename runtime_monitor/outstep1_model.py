@@ -31,7 +31,7 @@ class outsteps1(abstract_model.model):
     def update_curr_state(self):
         #print(self.active_conns)
         for node in self.active_conns.keys():
-            print("Processing node ", node, "connections ", self.active_conns[node] )
+            #print("Processing node ", node, "connections ", self.active_conns[node] )
             sys.stdout.flush()
             for stream in list(self.active_conns[node].keys()):
                 adios_conc = self.active_conns[node][stream][0] 
@@ -57,7 +57,7 @@ class outsteps1(abstract_model.model):
                 x_total = x_read + x_write + x_connect + x_process 
                 time_now = dt.datetime.now() 
 
-                print("x_steps :: ", x_steps)
+                #print("x_steps :: ", x_steps)
 
 
                 if x_steps[0] > self.stream_cur_steps[node][stream]:
@@ -89,7 +89,7 @@ class outsteps1(abstract_model.model):
         self.active_conns = config.active_reader_objs
         self.r_map = config.local_res_map
         self.stream_config = config.reader_config
-        print(config.reader_config, " next ", self.stream_config)
+        #print(config.reader_config, " next ", self.stream_config)
         ini_time = dt.datetime.now()
         for node in self.active_conns.keys():
             self.stream_cur_steps[node] = {}
@@ -127,7 +127,7 @@ class outsteps1(abstract_model.model):
         nodes = self.active_conns.keys()
         time_now = dt.datetime.now() 
         for node in nodes:
-            print("Outsteps1: Preparing an update for node ", node)
+            #print("Outsteps1: Preparing an update for node ", node)
             j_data[node] = {}
             j_data[node]['N_STEPS'] = {}
             j_data[node]['AVG_STEP_TIME'] = {} 

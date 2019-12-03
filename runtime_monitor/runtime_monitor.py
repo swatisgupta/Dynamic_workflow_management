@@ -155,7 +155,7 @@ class Rmonitor():
             try:
                 context = zmq.Context()
                 socket = context.socket(zmq.REQ)
-                print("Connecting to socket ", self.osocket) 
+                #print("Connecting to socket ", self.osocket) 
                 socket.connect(self.osocket)
                 print("Connected to : ", self.osocket)  
                 timestamp = datetime.now() # - self.starttime
@@ -179,10 +179,10 @@ class Rmonitor():
                     if self.rank == 0: 
                         socket.send_string("done")
                         msg = socket.recv()
-                        print("Done!!")
+                        #print("Done!!")
                         sys.stdout.flush()
                 else:
-                    print("Worker: Next iteration ...")
+                    #print("Worker: Next iteration ...")
                     sys.stdout.flush()  
                     if do_work == True: 
                         self.perform_iteration()
@@ -190,7 +190,7 @@ class Rmonitor():
 
                     message = None
                     with self.msg_cond:
-                        print("Worker: checking msg queue ..len ", len(self.msg_queue)) 
+                        #print("Worker: checking msg queue ..len ", len(self.msg_queue)) 
                         while len(self.msg_queue) > 0:
                             message = self.msg_queue[0]
                             self.msg_queue.remove(message)
@@ -239,7 +239,7 @@ class Rmonitor():
            try:
                j_data = None
                message=""
-               print("Controller : Waiting for new message ")
+               #print("Controller : Waiting for new message ")
                sys.stdout.flush() 
                if self.rank == 0:     
                    j_data = g_socket.recv()

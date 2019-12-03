@@ -194,7 +194,7 @@ class configuration():
 
         self.perf_model = "outsteps2" 
         self.cpu_model = self.__get_cpuinfo_model()
-        print(self.cpu_model)
+        #print(self.cpu_model)
         self.mpi_comm = MPI.COMM_SELF  
         self.nprocs = 1
         self.rank = 0
@@ -214,7 +214,7 @@ class configuration():
         self.nprocs = mpi_comm.Get_size() 
         self.rank =  mpi_comm.Get_rank()
 
-        print("args model", args.model)
+        #print("args model", args.model)
 
         if args.model[0] == "memory":
             self.perf_model = "memory"
@@ -233,11 +233,11 @@ class configuration():
     def open_connections(self):
         if self.perf_model == "outsteps2":
             return
-        print("Model is ", self.perf_model)
+        #print("Model is ", self.perf_model)
         for nodes in self.active_reader_objs.keys():
             for streams in self.active_reader_objs[nodes].keys():
                 for conc in self.active_reader_objs[nodes][streams]:
-                    print("Trying to open .....", conc )
+                    #print("Trying to open .....", conc )
                     conc.open() 
             if self.perf_model == "outsteps1":
                return
@@ -260,17 +260,17 @@ class configuration():
     def begin_next_step(self):
         if self.perf_model == "outsteps2":
             return True
-        print("Next iteration begins..")
+        #print("Next iteration begins..")
         sys.stdout.flush() 
         ret = False 
         for nodes in self.active_reader_objs.keys():
             for streams in self.active_reader_objs[nodes].keys():
                 for conc in self.active_reader_objs[nodes][streams]:
-                    print("Reading step from..", conc.inputfile)
+                    #print("Reading step from..", conc.inputfile)
                     ret_tmp = conc.advance_step()
                     if ret_tmp == True:
                         ret =  True
-                    print("Read step fro m..", conc.inputfile, " ... ret ", ret_tmp)
+                    #print("Read step fro m..", conc.inputfile, " ... ret ", ret_tmp)
             if self.perf_model == "outsteps1":
                return ret
         return ret
@@ -306,7 +306,7 @@ class configuration():
                     for rank in self.global_res_map[node][stream_nm]:
                         str_split = stream_nm.split('.bp')
                         conn_streams_set.append(str_split[0] + "-" + str(rank) + ".bp")
-                        print(str_split[0] + "-" + str(rank) + ".bp")   
+                        #print(str_split[0] + "-" + str(rank) + ".bp")   
                 else:
                     conn_streams_set = [stream_nm]
                 self.actual_streams_map[node][stream_nm] = conn_streams_set
