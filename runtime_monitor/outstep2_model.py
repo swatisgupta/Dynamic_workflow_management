@@ -36,10 +36,11 @@ class outsteps2(abstract_model.model):
                 next_step += self.stream_out_freq[node][stream_nm] 
                 new_stream = stream_nm.strip() + "{:0{}d}".format(next_step, self.stream_ndigits[node][stream_nm]) + self.stream_ext[node][stream_nm]
                 new_stream = new_stream.strip() 
-                #print("Processing stream", new_stream, "stream")
+                print("Processing stream", new_stream, "stream")
                 sys.stdout.flush()
                 if self.stream_local_steps[node][stream_nm] >= self.stream_max_step[node][stream_nm]:
                     self.stream_local_steps[node][stream_nm] = 0    
+                    #self.stream_cur_steps[node][stream_nm] = int(self.stream_config[node][stream][0])
                     print("Reset the local steps!!!")
 
                 if os.path.isfile(new_stream) == True:
@@ -60,7 +61,9 @@ class outsteps2(abstract_model.model):
                             self.stream_cur_steps[node][stream_nm] = steps
                             self.stream_global_steps[node][stream_nm] += self.stream_out_freq[node][stream_nm]  
                             self.stream_local_steps[node][stream_nm] = self.stream_out_freq[node][stream_nm] 
-                        
+                    else:
+                        self.stream_cur_steps[node][stream_nm] = int(self.stream_config[node][stream_nm][0])
+    
                 if self.stream_cur_steps[node][stream_nm] >= self.stream_alert_steps[node][stream_nm]:  
                     self.urgent_update = True
             break 
