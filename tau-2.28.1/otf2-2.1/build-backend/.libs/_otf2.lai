@@ -17,7 +17,7 @@ old_library=''
 inherited_linker_flags=''
 
 # Libraries that this one depends upon.
-dependency_libs=' -lrt -lm'
+dependency_libs=' -lm'
 
 # Names of additional weak libraries provided by this library
 weak_library_names=''
@@ -38,4 +38,4 @@ dlopen=''
 dlpreopen=''
 
 # Directory that this library needs to be installed in:
-libdir='/lustre/ssinghal/tau2-install/x86_64/otf2-gcc/lib/python3.5/site-packages/_otf2'
+libdir='/ccs/home/ssinghal/tau2-install/2.8/gcc/ibm64linux/otf2-gcc/lib/python3.7/site-packages/_otf2'

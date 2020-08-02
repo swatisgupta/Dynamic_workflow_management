@@ -42,20 +42,20 @@ otf2_config_get_backend_data( void )
     static otf2_config_data data;
 
     data.m_cc                    = "gcc";
-    data.m_cppflags              = "-I/lustre/ssinghal/tau2-install/x86_64/otf2-gcc/include";
-    data.m_pythonpath            = "${prefix}/lib/python3.5/site-packages";
+    data.m_cppflags              = "-I/ccs/home/ssinghal/tau2-install/2.8/gcc/ibm64linux/otf2-gcc/include";
+    data.m_pythonpath            = "${prefix}/lib/python3.7/site-packages";
 
     string prefix("${prefix}");
     if ( equal(prefix.begin(), prefix.end(), data.m_pythonpath.begin()) )
     {
-        data.m_pythonpath = std::string("/lustre/ssinghal/tau2-install/x86_64/otf2-gcc") + data.m_pythonpath.substr(prefix.size());
+        data.m_pythonpath = std::string("/ccs/home/ssinghal/tau2-install/2.8/gcc/ibm64linux/otf2-gcc") + data.m_pythonpath.substr(prefix.size());
     }
 
     data.m_use_rpath_flag        = 1;
     data.m_rpath_flag_cc         = "$wl-rpath $wl$libdir";
     data.m_wl_flag               = "-Wl,";
     data.m_aix_libpath           = "";
-    data.m_sys_lib_dlsearch_path = "/lib /usr/lib /usr/lib64/atlas /usr/lib64/ctapi /opt/mellanox/hcoll/lib /opt/ibutils/lib64 /opt/mellanox/mxm/lib /usr/lib64/mysql /usr/lib/qt-3.3/lib /usr/lib64/qt-3.3/lib /opt/mellanox/sharp/lib /usr/lib64/tcl8.5 /usr/lib/vmware-tools/lib/libvmGuestLib.so /usr/lib/vmware-tools/lib/libvmGuestLibJava.so /cell_root/software/vmware-tools/8.3.7-341836/sys/lib/vmware-tools/lib32/libvmGuestLib.so /cell_root/software/vmware-tools/8.3.7-341836/sys/lib/vmware-tools/lib64/libvmGuestLib.so /cell_root/software/vmware-tools/8.3.7-341836/sys/lib/vmware-tools/lib32/libvmGuestLibJava.so /cell_root/software/vmware-tools/8.3.7-341836/sys/lib/vmware-tools/lib64/libvmGuestLibJava.so /cell_root/software/vmware-tools/8.3.7-341836/sys/lib/vmware-tools/lib32/libDeployPkg.so /cell_root/software/vmware-tools/8.3.7-341836/sys/lib/vmware-tools/lib64/libDeployPkg.so /usr/lib/vmware-tools/lib/libDeployPkg.so /usr/lib64/xulrunner ";
+    data.m_sys_lib_dlsearch_path = "/lib /usr/lib /opt/mellanox/hcoll/lib /opt/ibutils/lib64 /opt/ibm/spectrum_mpi/jsm_pmix/lib /opt/ibm/spectrum_mpi/lib /usr/lib64/mysql /opt/mellanox/mxm/lib /usr/lib64/libglvnd  /opt/mellanox/sharp/lib /usr/lib64 ";
     data.m_have_sionlib_support  = HAVE_BACKEND_SIONLIB_SUPPORT;
 
     deque<string> libs;

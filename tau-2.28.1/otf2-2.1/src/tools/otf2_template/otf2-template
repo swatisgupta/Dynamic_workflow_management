@@ -29,7 +29,7 @@ class Otf2Version(object):
     def __str__(self):
         return str(self.version)
 
-prefix = '/lustre/ssinghal/tau2-install/x86_64/otf2-gcc'
+prefix = '/ccs/home/ssinghal/tau2-install/2.8/gcc/ibm64linux/otf2-gcc'
 exec_prefix = '${prefix}'
 datarootdir = '${prefix}/share'
 package = 'otf2'

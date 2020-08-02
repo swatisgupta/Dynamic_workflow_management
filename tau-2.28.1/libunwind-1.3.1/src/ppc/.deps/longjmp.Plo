@@ -1,0 +1,3 @@
+ppc/longjmp.lo: ppc/longjmp.S /usr/include/stdc-predef.h
+
+/usr/include/stdc-predef.h:

@@ -1,23 +1,26 @@
 otf2_print-otf2_vector.o: ../src/tools/otf2_print/otf2_vector.c \
- ../src/config.h ../src/config-backend.h ../src/config-common.h \
- ../src/config-custom.h /usr/include/stdlib.h /usr/include/features.h \
- /usr/include/sys/cdefs.h /usr/include/bits/wordsize.h \
- /usr/include/gnu/stubs.h /usr/include/gnu/stubs-64.h \
- /afs/glue.umd.edu/software/gcc/6.1.0/.@sys/lib/gcc/x86_64-pc-linux-gnu/6.1.0/include/stddef.h \
+ /usr/include/stdc-predef.h ../src/config.h ../src/config-backend.h \
+ ../src/config-common.h ../src/config-custom.h /usr/include/stdlib.h \
+ /usr/include/features.h /usr/include/sys/cdefs.h \
+ /usr/include/bits/wordsize.h /usr/include/gnu/stubs.h \
+ /usr/include/gnu/stubs-64-v2.h \
+ /autofs/nccs-svm1_sw/summit/gcc/6.4.0/lib/gcc/powerpc64le-none-linux-gnu/6.4.0/include/stddef.h \
  /usr/include/bits/waitflags.h /usr/include/bits/waitstatus.h \
  /usr/include/endian.h /usr/include/bits/endian.h \
- /usr/include/bits/byteswap.h /usr/include/sys/types.h \
- /usr/include/bits/types.h /usr/include/bits/typesizes.h \
- /usr/include/time.h /usr/include/sys/select.h /usr/include/bits/select.h \
- /usr/include/bits/sigset.h /usr/include/bits/time.h \
- /usr/include/sys/sysmacros.h /usr/include/bits/pthreadtypes.h \
- /usr/include/alloca.h /usr/include/string.h /usr/include/xlocale.h \
- /usr/include/bits/string.h /usr/include/bits/string2.h \
+ /usr/include/bits/byteswap.h /usr/include/bits/types.h \
+ /usr/include/bits/typesizes.h /usr/include/bits/byteswap-16.h \
+ /usr/include/sys/types.h /usr/include/time.h /usr/include/sys/select.h \
+ /usr/include/bits/select.h /usr/include/bits/sigset.h \
+ /usr/include/bits/time.h /usr/include/sys/sysmacros.h \
+ /usr/include/bits/pthreadtypes.h /usr/include/alloca.h \
+ /usr/include/bits/stdlib-float.h /usr/include/string.h \
+ /usr/include/xlocale.h /usr/include/bits/string.h \
+ /usr/include/bits/string2.h \
  ../vendor/common/src/utils/include/UTILS_Error.h \
- /afs/glue.umd.edu/software/gcc/6.1.0/.@sys/lib/gcc/x86_64-pc-linux-gnu/6.1.0/include/stdint.h \
+ /autofs/nccs-svm1_sw/summit/gcc/6.4.0/lib/gcc/powerpc64le-none-linux-gnu/6.4.0/include/stdint.h \
  /usr/include/stdint.h /usr/include/bits/wchar.h \
- /afs/glue.umd.edu/software/gcc/6.1.0/.@sys/lib/gcc/x86_64-pc-linux-gnu/6.1.0/include/stdbool.h \
- /afs/glue.umd.edu/software/gcc/6.1.0/.@sys/lib/gcc/x86_64-pc-linux-gnu/6.1.0/include/stdarg.h \
+ /autofs/nccs-svm1_sw/summit/gcc/6.4.0/lib/gcc/powerpc64le-none-linux-gnu/6.4.0/include/stdbool.h \
+ /autofs/nccs-svm1_sw/summit/gcc/6.4.0/lib/gcc/powerpc64le-none-linux-gnu/6.4.0/include/stdarg.h \
  ../vendor/common/src/utils/include/UTILS_Portability.h \
  ../include/otf2/OTF2_ErrorCodes.h /usr/include/errno.h \
  /usr/include/bits/errno.h /usr/include/linux/errno.h \
@@ -25,6 +28,8 @@ otf2_print-otf2_vector.o: ../src/tools/otf2_print/otf2_vector.c \
  /usr/include/asm-generic/errno-base.h \
  ../vendor/common/src/utils/include/UTILS_Debug.h \
  ../src/tools/otf2_print/otf2_vector.h
+
+/usr/include/stdc-predef.h:
 
 ../src/config.h:
 
@@ -44,9 +49,9 @@ otf2_print-otf2_vector.o: ../src/tools/otf2_print/otf2_vector.c \
 
 /usr/include/gnu/stubs.h:
 
-/usr/include/gnu/stubs-64.h:
+/usr/include/gnu/stubs-64-v2.h:
 
-/afs/glue.umd.edu/software/gcc/6.1.0/.@sys/lib/gcc/x86_64-pc-linux-gnu/6.1.0/include/stddef.h:
+/autofs/nccs-svm1_sw/summit/gcc/6.4.0/lib/gcc/powerpc64le-none-linux-gnu/6.4.0/include/stddef.h:
 
 /usr/include/bits/waitflags.h:
 
@@ -58,11 +63,13 @@ otf2_print-otf2_vector.o: ../src/tools/otf2_print/otf2_vector.c \
 
 /usr/include/bits/byteswap.h:
 
-/usr/include/sys/types.h:
-
 /usr/include/bits/types.h:
 
 /usr/include/bits/typesizes.h:
+
+/usr/include/bits/byteswap-16.h:
+
+/usr/include/sys/types.h:
 
 /usr/include/time.h:
 
@@ -80,6 +87,8 @@ otf2_print-otf2_vector.o: ../src/tools/otf2_print/otf2_vector.c \
 
 /usr/include/alloca.h:
 
+/usr/include/bits/stdlib-float.h:
+
 /usr/include/string.h:
 
 /usr/include/xlocale.h:
@@ -90,15 +99,15 @@ otf2_print-otf2_vector.o: ../src/tools/otf2_print/otf2_vector.c \
 
 ../vendor/common/src/utils/include/UTILS_Error.h:
 
-/afs/glue.umd.edu/software/gcc/6.1.0/.@sys/lib/gcc/x86_64-pc-linux-gnu/6.1.0/include/stdint.h:
+/autofs/nccs-svm1_sw/summit/gcc/6.4.0/lib/gcc/powerpc64le-none-linux-gnu/6.4.0/include/stdint.h:
 
 /usr/include/stdint.h:
 
 /usr/include/bits/wchar.h:
 
-/afs/glue.umd.edu/software/gcc/6.1.0/.@sys/lib/gcc/x86_64-pc-linux-gnu/6.1.0/include/stdbool.h:
+/autofs/nccs-svm1_sw/summit/gcc/6.4.0/lib/gcc/powerpc64le-none-linux-gnu/6.4.0/include/stdbool.h:
 
-/afs/glue.umd.edu/software/gcc/6.1.0/.@sys/lib/gcc/x86_64-pc-linux-gnu/6.1.0/include/stdarg.h:
+/autofs/nccs-svm1_sw/summit/gcc/6.4.0/lib/gcc/powerpc64le-none-linux-gnu/6.4.0/include/stdarg.h:
 
 ../vendor/common/src/utils/include/UTILS_Portability.h:
 

@@ -15,7 +15,7 @@
 #**      Documentation   : See http://www.cs.uoregon.edu/research/tau       **
 #****************************************************************************
 
-TAUROOT=/gpfs/alpine/scratch/ssinghal/csc143/Dynamic_workflow_management/tau-2.28.1
+TAUROOT=/gpfs/alpine/scratch/ssinghal/csc299/Dynamic_workflow_management/tau-2.28.1
 include $(TAUROOT)/include/Makefile
 
 MKDIR = mkdir -p
@@ -133,7 +133,7 @@ TAU_SAMPLING_O = TauSampling.o TauSampling_hpctoolkit.o TauSampling_stackwalker.
 #############################################
 # OTF2 OBJECTS
 #############################################
-#OTF2#OTF2_O = TracerOTF2.o TauCollectives.o #ENDIF#
+OTF2_O = TracerOTF2.o TauCollectives.o #ENDIF##OTF2#
 
 #############################################
 # ROCPROFILER OBJECTS

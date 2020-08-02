@@ -1,21 +1,20 @@
 lib_otf2_la-otf2_anchor_file_timestamp.lo: \
- ../src/otf2_anchor_file_timestamp.c ../src/config.h \
- ../src/config-backend.h ../src/config-common.h ../src/config-custom.h \
- /usr/include/stdlib.h /usr/include/features.h /usr/include/sys/cdefs.h \
- /usr/include/bits/wordsize.h /usr/include/gnu/stubs.h \
- /usr/include/gnu/stubs-64.h \
- /afs/glue.umd.edu/software/gcc/6.1.0/.@sys/lib/gcc/x86_64-pc-linux-gnu/6.1.0/include/stddef.h \
- /usr/include/stdio.h /usr/include/bits/types.h \
- /usr/include/bits/typesizes.h /usr/include/libio.h \
- /usr/include/_G_config.h /usr/include/wchar.h \
- /afs/glue.umd.edu/software/gcc/6.1.0/.@sys/lib/gcc/x86_64-pc-linux-gnu/6.1.0/include/stdarg.h \
+ ../src/otf2_anchor_file_timestamp.c /usr/include/stdc-predef.h \
+ ../src/config.h ../src/config-backend.h ../src/config-common.h \
+ ../src/config-custom.h /usr/include/stdlib.h /usr/include/features.h \
+ /usr/include/sys/cdefs.h /usr/include/bits/wordsize.h \
+ /usr/include/gnu/stubs.h /usr/include/gnu/stubs-64-v2.h \
+ /autofs/nccs-svm1_sw/summit/gcc/6.4.0/lib/gcc/powerpc64le-none-linux-gnu/6.4.0/include/stddef.h \
+ /usr/include/bits/stdlib-float.h /usr/include/stdio.h \
+ /usr/include/bits/types.h /usr/include/bits/typesizes.h \
+ /usr/include/libio.h /usr/include/_G_config.h /usr/include/wchar.h \
+ /autofs/nccs-svm1_sw/summit/gcc/6.4.0/lib/gcc/powerpc64le-none-linux-gnu/6.4.0/include/stdarg.h \
  /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h \
  /usr/include/bits/stdio.h /usr/include/string.h \
  /usr/include/bits/string.h /usr/include/bits/string2.h \
- /usr/include/endian.h /usr/include/bits/endian.h \
- /afs/glue.umd.edu/software/gcc/6.1.0/.@sys/lib/gcc/x86_64-pc-linux-gnu/6.1.0/include/stdint.h \
+ /autofs/nccs-svm1_sw/summit/gcc/6.4.0/lib/gcc/powerpc64le-none-linux-gnu/6.4.0/include/stdint.h \
  /usr/include/stdint.h /usr/include/bits/wchar.h /usr/include/inttypes.h \
- /afs/glue.umd.edu/software/gcc/6.1.0/.@sys/lib/gcc/x86_64-pc-linux-gnu/6.1.0/include/stdbool.h \
+ /autofs/nccs-svm1_sw/summit/gcc/6.4.0/lib/gcc/powerpc64le-none-linux-gnu/6.4.0/include/stdbool.h \
  /usr/include/time.h /usr/include/bits/time.h ../include/otf2/otf2.h \
  ../include/otf2/OTF2_Reader.h ../include/otf2/OTF2_ErrorCodes.h \
  /usr/include/errno.h /usr/include/bits/errno.h \
@@ -47,6 +46,8 @@ lib_otf2_la-otf2_anchor_file_timestamp.lo: \
  ../vendor/common/src/utils/include/UTILS_Debug.h \
  ../vendor/common/hash/jenkins_hash.h
 
+/usr/include/stdc-predef.h:
+
 ../src/config.h:
 
 ../src/config-backend.h:
@@ -65,9 +66,11 @@ lib_otf2_la-otf2_anchor_file_timestamp.lo: \
 
 /usr/include/gnu/stubs.h:
 
-/usr/include/gnu/stubs-64.h:
+/usr/include/gnu/stubs-64-v2.h:
 
-/afs/glue.umd.edu/software/gcc/6.1.0/.@sys/lib/gcc/x86_64-pc-linux-gnu/6.1.0/include/stddef.h:
+/autofs/nccs-svm1_sw/summit/gcc/6.4.0/lib/gcc/powerpc64le-none-linux-gnu/6.4.0/include/stddef.h:
+
+/usr/include/bits/stdlib-float.h:
 
 /usr/include/stdio.h:
 
@@ -81,7 +84,7 @@ lib_otf2_la-otf2_anchor_file_timestamp.lo: \
 
 /usr/include/wchar.h:
 
-/afs/glue.umd.edu/software/gcc/6.1.0/.@sys/lib/gcc/x86_64-pc-linux-gnu/6.1.0/include/stdarg.h:
+/autofs/nccs-svm1_sw/summit/gcc/6.4.0/lib/gcc/powerpc64le-none-linux-gnu/6.4.0/include/stdarg.h:
 
 /usr/include/bits/stdio_lim.h:
 
@@ -95,11 +98,7 @@ lib_otf2_la-otf2_anchor_file_timestamp.lo: \
 
 /usr/include/bits/string2.h:
 
-/usr/include/endian.h:
-
-/usr/include/bits/endian.h:
-
-/afs/glue.umd.edu/software/gcc/6.1.0/.@sys/lib/gcc/x86_64-pc-linux-gnu/6.1.0/include/stdint.h:
+/autofs/nccs-svm1_sw/summit/gcc/6.4.0/lib/gcc/powerpc64le-none-linux-gnu/6.4.0/include/stdint.h:
 
 /usr/include/stdint.h:
 
@@ -107,7 +106,7 @@ lib_otf2_la-otf2_anchor_file_timestamp.lo: \
 
 /usr/include/inttypes.h:
 
-/afs/glue.umd.edu/software/gcc/6.1.0/.@sys/lib/gcc/x86_64-pc-linux-gnu/6.1.0/include/stdbool.h:
+/autofs/nccs-svm1_sw/summit/gcc/6.4.0/lib/gcc/powerpc64le-none-linux-gnu/6.4.0/include/stdbool.h:
 
 /usr/include/time.h:
 

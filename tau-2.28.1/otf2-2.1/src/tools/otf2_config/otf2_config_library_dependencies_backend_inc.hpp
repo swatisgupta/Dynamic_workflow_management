@@ -7,14 +7,13 @@ void backend_dependency_1( std::deque<std::string>& libs, std::deque<std::string
     ldflags.clear();
     rpaths.clear();
     dependency_las.clear();
-    libs.push_back( "-lrt" );
     libs.push_back( "-lm" );
     if ( la_objects->find( "libotf2" ) == la_objects->end() )
     {
         (*la_objects)[ "libotf2" ] =
             la_object( "libotf2",
-                       "/homes/ssinghal/tau-2.28.1/otf2-2.1/build-backend",
-                       "/lustre/ssinghal/tau2-install/x86_64/otf2-gcc/lib",
+                       "/gpfs/alpine/scratch/ssinghal/csc299/Dynamic_workflow_management/tau-2.28.1/otf2-2.1/build-backend",
+                       "/ccs/home/ssinghal/tau2-install/2.8/gcc/ibm64linux/otf2-gcc/lib",
                        libs,
                        ldflags,
                        rpaths,

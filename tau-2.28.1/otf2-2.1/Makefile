@@ -83,7 +83,7 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
-build_triplet = x86_64-pc-linux-gnu
+build_triplet = powerpc64le-unknown-linux-gnu
 DIST_COMMON = $(srcdir)/vendor/common/build-config/Makefile.inc.am \
 	$(srcdir)/doc/Makefile.inc.am \
 	$(srcdir)/vendor/common/build-config/platforms.am \
@@ -119,7 +119,7 @@ DIST_COMMON = $(srcdir)/vendor/common/build-config/Makefile.inc.am \
 ##am__append_1 = beautify-recursive
 #am__append_2 = doc/doxygen-project-number.cfg
 #am__append_3 = doc/doxygen-user-html.cfg doc/doxygen-user-at-make-time.cfg doxygen.err
-#am__append_4 = doc/sphinx_project_number.py
+##am__append_4 = doc/sphinx_project_number.py
 am__append_5 = $(srcdir)/build-frontend/configure.ac \
               $(srcdir)/build-frontend/aclocal.m4   \
               $(srcdir)/build-frontend/Makefile.am  \
@@ -301,15 +301,15 @@ distuninstallcheck_listfiles = find . -type f -print
 am__distuninstallcheck_listfiles = $(distuninstallcheck_listfiles) \
   | sed 's|^\./|$(prefix)/|' | grep -v '$(infodir)/dir$$'
 distcleancheck_listfiles = find . -type f -print
-pkglibexecdir = /lustre/ssinghal/tau2-install/x86_64/otf2-gcc/libexec/otf2
-ACLOCAL = ${SHELL} /homes/ssinghal/tau-2.28.1/otf2-2.1/build-config/missing aclocal-1.13
+pkglibexecdir = /ccs/home/ssinghal/tau2-install/2.8/gcc/ibm64linux/otf2-gcc/libexec/otf2
+ACLOCAL = ${SHELL} /gpfs/alpine/scratch/ssinghal/csc299/Dynamic_workflow_management/tau-2.28.1/otf2-2.1/build-config/missing aclocal-1.13
 AFS_PACKAGE_NAME = OTF2
 AFS_PACKAGE_name = otf2
 AMTAR = $${TAR-tar}
 AM_DEFAULT_VERBOSITY = 0
-AUTOCONF = ${SHELL} /homes/ssinghal/tau-2.28.1/otf2-2.1/build-config/missing autoconf
-AUTOHEADER = ${SHELL} /homes/ssinghal/tau-2.28.1/otf2-2.1/build-config/missing autoheader
-AUTOMAKE = ${SHELL} /homes/ssinghal/tau-2.28.1/otf2-2.1/build-config/missing automake-1.13
+AUTOCONF = ${SHELL} /gpfs/alpine/scratch/ssinghal/csc299/Dynamic_workflow_management/tau-2.28.1/otf2-2.1/build-config/missing autoconf
+AUTOHEADER = ${SHELL} /gpfs/alpine/scratch/ssinghal/csc299/Dynamic_workflow_management/tau-2.28.1/otf2-2.1/build-config/missing autoheader
+AUTOMAKE = ${SHELL} /gpfs/alpine/scratch/ssinghal/csc299/Dynamic_workflow_management/tau-2.28.1/otf2-2.1/build-config/missing automake-1.13
 AWK = gawk
 CYGPATH_W = echo
 DEFS = -DPACKAGE_NAME=\"OTF2\" -DPACKAGE_TARNAME=\"otf2\" -DPACKAGE_VERSION=\"2.1\" -DPACKAGE_STRING=\"OTF2\ 2.1\" -DPACKAGE_BUGREPORT=\"support@score-p.org\" -DPACKAGE_URL=\"\" -DSCOREP_IN_PRODUCTION=/\*\*/ -DPACKAGE=\"otf2\" -DVERSION=\"2.1\" -DHAVE_PLATFORM_LINUX=1 -DHAVE_OTF2_NO_ASSERT=0
@@ -317,7 +317,7 @@ DOXYGEN = /usr/bin/doxygen
 ECHO_C = 
 ECHO_N = -n
 ECHO_T = 
-INSTALL = /usr/local/bin/ginstall -c
+INSTALL = /usr/bin/install -c
 INSTALL_DATA = ${INSTALL} -m 644
 INSTALL_PROGRAM = ${INSTALL}
 INSTALL_SCRIPT = ${INSTALL}
@@ -328,8 +328,8 @@ LIBRARY_CURRENT = 8
 LIBRARY_REVISION = 0
 LIBS = 
 LTLIBOBJS = 
-MAKEINFO = ${SHELL} /homes/ssinghal/tau-2.28.1/otf2-2.1/build-config/missing makeinfo
-MKDIR_P = /usr/local/bin/gmkdir -p
+MAKEINFO = ${SHELL} /gpfs/alpine/scratch/ssinghal/csc299/Dynamic_workflow_management/tau-2.28.1/otf2-2.1/build-config/missing makeinfo
+MKDIR_P = /usr/bin/mkdir -p
 PACKAGE = otf2
 PACKAGE_BUGFIX = 0
 PACKAGE_BUGREPORT = support@score-p.org
@@ -347,16 +347,16 @@ PYTHON_EXEC_PREFIX = ${exec_prefix}
 PYTHON_FOR_GENERATOR = /usr/bin/python2
 PYTHON_PLATFORM = linux2
 PYTHON_PREFIX = ${prefix}
-PYTHON_VERSION = 2.6
+PYTHON_VERSION = 2.7
 SET_MAKE = 
 SHELL = /bin/sh
-SPHINX = /usr/local/python3/3.5.1/bin/sphinx-build
+SPHINX = :
 STRIP = 
 VERSION = 2.1
-abs_builddir = /homes/ssinghal/tau-2.28.1/otf2-2.1
-abs_srcdir = /homes/ssinghal/tau-2.28.1/otf2-2.1
-abs_top_builddir = /homes/ssinghal/tau-2.28.1/otf2-2.1
-abs_top_srcdir = /homes/ssinghal/tau-2.28.1/otf2-2.1
+abs_builddir = /gpfs/alpine/scratch/ssinghal/csc299/Dynamic_workflow_management/tau-2.28.1/otf2-2.1
+abs_srcdir = /gpfs/alpine/scratch/ssinghal/csc299/Dynamic_workflow_management/tau-2.28.1/otf2-2.1
+abs_top_builddir = /gpfs/alpine/scratch/ssinghal/csc299/Dynamic_workflow_management/tau-2.28.1/otf2-2.1
+abs_top_srcdir = /gpfs/alpine/scratch/ssinghal/csc299/Dynamic_workflow_management/tau-2.28.1/otf2-2.1
 ac_scorep_doxygen_distdir = 
 ac_scorep_have_uncrustify = no
 am__leading_dot = .
@@ -364,26 +364,26 @@ am__tar = tar --format=posix -chf - "$$tardir"
 am__untar = tar -xf -
 ax_config_subdirs =  build-backend
 bindir = ${exec_prefix}/bin
-build = x86_64-pc-linux-gnu
+build = powerpc64le-unknown-linux-gnu
 build_alias = 
-build_cpu = x86_64
+build_cpu = powerpc64le
 build_os = linux-gnu
-build_vendor = pc
+build_vendor = unknown
 builddir = .
 datadir = ${datarootdir}
 datarootdir = ${prefix}/share
 docdir = ${datarootdir}/doc/${PACKAGE_TARNAME}
 dvidir = ${docdir}
 exec_prefix = ${prefix}
-have_dot = yes
-have_doxygen_latex = yes
-have_makeindex = yes
+have_dot = no
+have_doxygen_latex = no
+have_makeindex = no
 have_pdflatex = yes
 host_alias = 
 htmldir = ${docdir}
 includedir = ${prefix}/include
 infodir = ${datarootdir}/info
-install_sh = ${SHELL} /homes/ssinghal/tau-2.28.1/otf2-2.1/build-config/install-sh
+install_sh = ${SHELL} /gpfs/alpine/scratch/ssinghal/csc299/Dynamic_workflow_management/tau-2.28.1/otf2-2.1/build-config/install-sh
 libdir = ${exec_prefix}/lib
 libexecdir = ${exec_prefix}/libexec
 localedir = ${datarootdir}/locale
@@ -394,11 +394,11 @@ oldincludedir = /usr/include
 pdfdir = ${docdir}
 pkgpyexecdir = ${pyexecdir}/otf2
 pkgpythondir = ${pythondir}/otf2
-prefix = /lustre/ssinghal/tau2-install/x86_64/otf2-gcc
+prefix = /ccs/home/ssinghal/tau2-install/2.8/gcc/ibm64linux/otf2-gcc
 program_transform_name = s,x,x,
 psdir = ${docdir}
-pyexecdir = ${exec_prefix}/lib/python2.6/site-packages
-pythondir = ${prefix}/lib/python2.6/site-packages
+pyexecdir = ${exec_prefix}/lib64/python2.7/site-packages
+pythondir = ${prefix}/lib/python2.7/site-packages
 sbindir = ${exec_prefix}/sbin
 sharedstatedir = ${prefix}/com
 srcdir = .
@@ -1999,50 +1999,50 @@ doxygen-uninstall:
 ##doxygen-user:
 ##	@echo "WARNING: doxygen not available. Cannot generate documentation." >&2
 
-#doxygen-user-pdf: doxygen-user
-#	$(AM_V_at)cat doc/doxygen-user-html.cfg > doc/doxygen-user-pdf.cfg
-#	$(AM_V_at)echo "ENABLED_SECTIONS = LATEX" >> doc/doxygen-user-pdf.cfg
-#	$(AM_V_at)echo "GENERATE_HTML    = NO"    >> doc/doxygen-user-pdf.cfg
-#	$(AM_V_at)echo "FILE_PATTERNS    = *.dox" >> doc/doxygen-user-pdf.cfg
-#	$(AM_V_at)cp $(abs_srcdir)/doc/doxygen-user/otf2.sty $(USER_DOC_DIR)/pdf/
-#	$(AM_V_at)cp $(DOC_SRC_DIR)/license.tex $(USER_DOC_DIR)/pdf/
-#	$(AM_V_at)-cp $(DOC_SRC_DIR)/images/project_logo.pdf $(USER_DOC_DIR)/pdf/
-#	$(AM_V_at)if $(AM_V_P); then echo "QUIET = NO"; \
-#	          else               echo "QUIET = YES"; fi >>doc/doxygen-user-pdf.cfg
-#	$(OTF2_V_DOXYGEN)$(DOXYGEN) doc/doxygen-user-pdf.cfg
-#	$(AM_V_at)cd "$(USER_DOC_DIR)/pdf" && \
-#	make $(OTF2_V_DEVNULL) &&   \
-#	mv refman.pdf ../ &&        \
-#	rm -f * &&                  \
-#	mv ../refman.pdf otf2.pdf
-
 ##doxygen-user-pdf: doxygen-user
-##	$(AM_V_at)echo "WARNING: pdflatex not available. Cannot generate doxygen pdf documentation." >&2
-##	$(AM_V_at)if test -d "$(USER_DOC_DIR)/pdf"; then rm -rf "$(USER_DOC_DIR)/pdf"; fi
+##	$(AM_V_at)cat doc/doxygen-user-html.cfg > doc/doxygen-user-pdf.cfg
+##	$(AM_V_at)echo "ENABLED_SECTIONS = LATEX" >> doc/doxygen-user-pdf.cfg
+##	$(AM_V_at)echo "GENERATE_HTML    = NO"    >> doc/doxygen-user-pdf.cfg
+##	$(AM_V_at)echo "FILE_PATTERNS    = *.dox" >> doc/doxygen-user-pdf.cfg
+##	$(AM_V_at)cp $(abs_srcdir)/doc/doxygen-user/otf2.sty $(USER_DOC_DIR)/pdf/
+##	$(AM_V_at)cp $(DOC_SRC_DIR)/license.tex $(USER_DOC_DIR)/pdf/
+##	$(AM_V_at)-cp $(DOC_SRC_DIR)/images/project_logo.pdf $(USER_DOC_DIR)/pdf/
+##	$(AM_V_at)if $(AM_V_P); then echo "QUIET = NO"; \
+##	          else               echo "QUIET = YES"; fi >>doc/doxygen-user-pdf.cfg
+##	$(OTF2_V_DOXYGEN)$(DOXYGEN) doc/doxygen-user-pdf.cfg
+##	$(AM_V_at)cd "$(USER_DOC_DIR)/pdf" && \
+##	make $(OTF2_V_DEVNULL) &&   \
+##	mv refman.pdf ../ &&        \
+##	rm -f * &&                  \
+##	mv ../refman.pdf otf2.pdf
+
+#doxygen-user-pdf: doxygen-user
+#	$(AM_V_at)echo "WARNING: pdflatex not available. Cannot generate doxygen pdf documentation." >&2
+#	$(AM_V_at)if test -d "$(USER_DOC_DIR)/pdf"; then rm -rf "$(USER_DOC_DIR)/pdf"; fi
 
 #sphinx-user-install:
 
-#sphinx-user-generate: sphinx-user sphinx-user-html-compress
+##sphinx-user-generate: sphinx-user sphinx-user-html-compress
 
-#sphinx-project-number: update-revision
-#	$(AM_V_at)echo "version = \"2.1\"" > doc/sphinx_project_number.py
-#	$(AM_V_at)echo "release = \"2.1 (revision `cat $(srcdir)/build-config/REVISION`)\"" >> doc/sphinx_project_number.py
+##sphinx-project-number: update-revision
+##	$(AM_V_at)echo "version = \"2.1\"" > doc/sphinx_project_number.py
+##	$(AM_V_at)echo "release = \"2.1 (revision `cat $(srcdir)/build-config/REVISION`)\"" >> doc/sphinx_project_number.py
 
-#sphinx-user: all sphinx-project-number # Note we depend on all so that we can check if the python bindings were enabled
-#	$(AM_V_at)if test -f "build-backend/_otf2.la" || test -f "build-frontend/_otf2.la"; then \
-#	  OTF2_PYTHON_SPHINX_GENERATOR_RUN=yes PYTHONPATH="$$PYTHONPATH:$(abs_srcdir)/src/python:$$PWD/doc" \
-#	  make -C $(DOC_SRC_DIR)/python SPHINXBUILD=$(SPHINX) BUILDDIR=$$PWD/$(USER_DOC_DIR)/python html; \
-#	else \
-#	  echo "WARNING: python bindings not available, cannot build otf2 python bindings documentation" >&2; \
-#	fi
+##sphinx-user: all sphinx-project-number # Note we depend on all so that we can check if the python bindings were enabled
+##	$(AM_V_at)if test -f "build-backend/_otf2.la" || test -f "build-frontend/_otf2.la"; then \
+##	  OTF2_PYTHON_SPHINX_GENERATOR_RUN=yes PYTHONPATH="$$PYTHONPATH:$(abs_srcdir)/src/python:$$PWD/doc" \
+##	  make -C $(DOC_SRC_DIR)/python SPHINXBUILD=$(SPHINX) BUILDDIR=$$PWD/$(USER_DOC_DIR)/python html; \
+##	else \
+##	  echo "WARNING: python bindings not available, cannot build otf2 python bindings documentation" >&2; \
+##	fi
 
-#sphinx-user-html-compress:
-#	$(AM_V_at)if test -d "$(USER_DOC_DIR)/python"; then                               \
-#	    cd "$(USER_DOC_DIR)"; tar czvf python.tar.gz python; rm -rf python/;    \
-#	fi
+##sphinx-user-html-compress:
+##	$(AM_V_at)if test -d "$(USER_DOC_DIR)/python"; then                               \
+##	    cd "$(USER_DOC_DIR)"; tar czvf python.tar.gz python; rm -rf python/;    \
+##	fi
 
-##sphinx-user-generate:
-##	 echo "WARNING: sphinx-build not available. Cannot generate python documentation." >&2
+#sphinx-user-generate:
+#	 echo "WARNING: sphinx-build not available. Cannot generate python documentation." >&2
 
 doxygen-user-clean:
 

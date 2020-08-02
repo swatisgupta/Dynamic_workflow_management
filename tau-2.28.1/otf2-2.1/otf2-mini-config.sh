@@ -45,7 +45,7 @@ show_targets()
 
 delegate()
 {
-   exec /lustre/ssinghal/tau2-install/x86_64/otf2-gcc/libexec/otf2/otf2-config-$delegate_target $command
+   exec /ccs/home/ssinghal/tau2-install/2.8/gcc/ibm64linux/otf2-gcc/libexec/otf2/otf2-config-$delegate_target $command
 }
 
 frontend=true

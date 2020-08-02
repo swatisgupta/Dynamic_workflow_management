@@ -2,6 +2,6 @@
       C99 compiler used:        gcc
       SIONlib support:          no
       Entropy sources:          clock_gettime getpid sysinfo gethostid
-      Python bindings support:  yes, using /usr/local/python3/3.5.1/bin/python
+      Python bindings support:  yes, using /gpfs/alpine/csc299/scratch/ssinghal/Dynamic_workflow_management/rmonitor/bin/python
       Running tests:            no
         Parallel tests:         yes

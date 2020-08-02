@@ -37,7 +37,7 @@ export TAU_MAKEFILE
 #######################################################################
 
 # See this file for a record of the configuration environment
-CONF_ENV_FILE=/gpfs/alpine/scratch/ssinghal/csc143/Dynamic_workflow_management/tau-2.28.1/.configure_env/b9491ba4d6d24e501219ecc7a95da57b
+CONF_ENV_FILE=/gpfs/alpine/scratch/ssinghal/csc299/Dynamic_workflow_management/tau-2.28.1/.configure_env/cb25b281c8a7f017e06e1d59860a195d
 
 ########### Automatically modified by the configure script ############
 CONFIG_ARCH=ibm64linux
@@ -94,7 +94,7 @@ TAU_LIBEX=lib64#ENDIF##ARCH_WIDTH_64#
 USER_OPT=-O2 -g
 EXTRADIR=
 EXTRADIRCXX=
-TAUROOT=/gpfs/alpine/scratch/ssinghal/csc143/Dynamic_workflow_management/tau-2.28.1
+TAUROOT=/gpfs/alpine/scratch/ssinghal/csc299/Dynamic_workflow_management/tau-2.28.1
 TULIPDIR=
 TAUEXTRASHLIBOPTS=
 TAUGCCLIBOPTS=
@@ -103,7 +103,7 @@ TAUGCCSTDCXXLIBDIR=/sw/summit/gcc/6.4.0/lib64/../lib64/
 IFORTLIBDIR=
 PERFSUITELINK=
 TAUGFORTRANLIBDIR=/autofs/nccs-svm1_sw/summit/gcc/6.4.0/bin/../lib/gcc/powerpc64le-none-linux-gnu/6.4.0/
-PAPIDIR=/ccs/home/ssinghal/papi_install
+PAPIDIR=/ccs/home/ssinghal/papi_install/gcc
 LIKWIDDIR=
 BEACONDIR=
 GPIDIR=
@@ -118,8 +118,8 @@ TAU_BOOSTLIB=
 SOSDIR=
 ADIOSDIR=
 ADIOS2DIR=/ccs/home/ssinghal/ADIOS2-install
-ADIOS2_CXXFLAGS=-std=gnu++11
-ADIOS2_LIBS=-L/ccs/home/ssinghal/ADIOS2-install/lib -ladios2
+ADIOS2_CXXFLAGS=-DADIOS2_USE_MPI -isystem /autofs/nccs-svm1_home1/ssinghal/ADIOS2-install/include
+ADIOS2_LIBS=/autofs/nccs-svm1_home1/ssinghal/ADIOS2-install/lib64/libadios2_cxx11_mpi.so.2.6.0
 CALIPERDIR=
 JDKDIR=
 ANDROID_SDK=
@@ -161,13 +161,13 @@ TAU_SHMEM_INC=
 TAU_SHMEM_LIB=
 TAU_SHMEMMPI_INC=
 TAU_CONFIG=-papi-gnu-mpi-pthread-adios2
-TAU_MPI_INC=-I/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/spectrum-mpi-10.3.0.0-20190419-4um5hjogm3tepg4xe23hrptlrs2y7ez6/include -I/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/spectrum-mpi-10.3.0.0-20190419-4um5hjogm3tepg4xe23hrptlrs2y7ez6/lib
-TAU_MPI_LIB=-L/ccs/home/ssinghal/tau2-install/ibm64linux/lib -lTauMpi$(TAU_CONFIG) -L/ccs/home/ssinghal/tau2-install/ibm64linux/lib -lTauMpi$(TAU_CONFIG) -I/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/spectrum-mpi-10.3.0.0-20190419-4um5hjogm3tepg4xe23hrptlrs2y7ez6/include -pthread -L/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/spectrum-mpi-10.3.0.0-20190419-4um5hjogm3tepg4xe23hrptlrs2y7ez6/lib -lmpiprofilesupport -lmpi_ibm -L/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/spectrum-mpi-10.3.0.0-20190419-4um5hjogm3tepg4xe23hrptlrs2y7ez6/lib -Wl,-rpath,$(TAU_MPILIB_DIR)
-TAU_MPI_FLIB=-L/ccs/home/ssinghal/tau2-install/ibm64linux/lib -lTauMpi$(TAU_CONFIG) -I/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/spectrum-mpi-10.3.0.0-20190419-4um5hjogm3tepg4xe23hrptlrs2y7ez6/include -pthread -I/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/spectrum-mpi-10.3.0.0-20190419-4um5hjogm3tepg4xe23hrptlrs2y7ez6/lib -L/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/spectrum-mpi-10.3.0.0-20190419-4um5hjogm3tepg4xe23hrptlrs2y7ez6/lib -lmpiprofilesupport -lmpi_ibm_usempi -lmpi_ibm_mpifh -lmpi_ibm -L/ccs/home/ssinghal/tau2-install/ibm64linux/lib -lTauMpi$(TAU_CONFIG) -L/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/spectrum-mpi-10.3.0.0-20190419-4um5hjogm3tepg4xe23hrptlrs2y7ez6/lib -Wl,-rpath,$(TAU_MPILIB_DIR)
-TAU_MPILIB_DIR=/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/spectrum-mpi-10.3.0.0-20190419-4um5hjogm3tepg4xe23hrptlrs2y7ez6/lib
-TAU_MPILIB_DIRLIB=-L/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/spectrum-mpi-10.3.0.0-20190419-4um5hjogm3tepg4xe23hrptlrs2y7ez6/lib
-TAU_MPI_NOWRAP_LIB= -L/ccs/home/ssinghal/tau2-install/ibm64linux/lib -lTauMpi$(TAU_CONFIG) -I/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/spectrum-mpi-10.3.0.0-20190419-4um5hjogm3tepg4xe23hrptlrs2y7ez6/include -pthread -L/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/spectrum-mpi-10.3.0.0-20190419-4um5hjogm3tepg4xe23hrptlrs2y7ez6/lib -lmpiprofilesupport -lmpi_ibm -L/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/spectrum-mpi-10.3.0.0-20190419-4um5hjogm3tepg4xe23hrptlrs2y7ez6/lib -Wl,-rpath,$(TAU_MPILIB_DIR)
-TAU_MPI_NOWRAP_FLIB= -I/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/spectrum-mpi-10.3.0.0-20190419-4um5hjogm3tepg4xe23hrptlrs2y7ez6/include -pthread -I/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/spectrum-mpi-10.3.0.0-20190419-4um5hjogm3tepg4xe23hrptlrs2y7ez6/lib -L/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/spectrum-mpi-10.3.0.0-20190419-4um5hjogm3tepg4xe23hrptlrs2y7ez6/lib -lmpiprofilesupport -lmpi_ibm_usempi -lmpi_ibm_mpifh -lmpi_ibm -L/ccs/home/ssinghal/tau2-install/ibm64linux/lib -lTauMpi$(TAU_CONFIG) -L/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/spectrum-mpi-10.3.0.0-20190419-4um5hjogm3tepg4xe23hrptlrs2y7ez6/lib -Wl,-rpath,$(TAU_MPILIB_DIR)
+TAU_MPI_INC=-I/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/spectrum-mpi-10.3.1.2-20200121-awz2q5brde7wgdqqw4ugalrkukeub4eb/include
+TAU_MPI_LIB=-L/ccs/home/ssinghal/tau2-install/2.8/gcc/ibm64linux/lib -lTauMpi$(TAU_CONFIG) -I/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/spectrum-mpi-10.3.1.2-20200121-awz2q5brde7wgdqqw4ugalrkukeub4eb/include -pthread -L/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/spectrum-mpi-10.3.1.2-20200121-awz2q5brde7wgdqqw4ugalrkukeub4eb/lib -lmpiprofilesupport -lmpi_ibm
+TAU_MPI_FLIB=-L/ccs/home/ssinghal/tau2-install/2.8/gcc/ibm64linux/lib -lTauMpi$(TAU_CONFIG) -I/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/spectrum-mpi-10.3.1.2-20200121-awz2q5brde7wgdqqw4ugalrkukeub4eb/include -pthread -I/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/spectrum-mpi-10.3.1.2-20200121-awz2q5brde7wgdqqw4ugalrkukeub4eb/lib -L/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/spectrum-mpi-10.3.1.2-20200121-awz2q5brde7wgdqqw4ugalrkukeub4eb/lib -lmpiprofilesupport -lmpi_ibm_usempi -lmpi_ibm_mpifh -lmpi_ibm
+TAU_MPILIB_DIR=
+TAU_MPILIB_DIRLIB=
+TAU_MPI_NOWRAP_LIB=
+TAU_MPI_NOWRAP_FLIB=
 TAU_ROCM_DIR=
 TAU_ROCPROFILER=
 TAU_ROCPROFILER_INC=
@@ -184,17 +184,17 @@ LOMPLIB=
 #MPC#CONFIG_CC=$(FULL_CC)#ENDIF#
 #MPC#TAU_CXX_FE=$(FULL_CXX)#ENDIF#
 #MPC#CONFIG_CXX=$(FULL_CXX)#ENDIF#
-TAU_PREFIX_INSTALL_DIR=/ccs/home/ssinghal/tau2-install
+TAU_PREFIX_INSTALL_DIR=/ccs/home/ssinghal/tau2-install/2.8/gcc
 
 TAU_BIN_DIR=$(TAU_PREFIX_INSTALL_DIR)/$(CONFIG_ARCH)/bin
 TAU_INC_DIR=$(TAU_PREFIX_INSTALL_DIR)/include
 TAU_LIB_DIR=$(TAU_PREFIX_INSTALL_DIR)/$(CONFIG_ARCH)/lib
 
 UNWIND_FLAG=-DTAU_USE_LIBUNWIND
-UNWIND_INC=/ccs/home/ssinghal/tau2-install/ibm64linux/libunwind-1.3.1-gcc/include
-UNWIND_LIB=/ccs/home/ssinghal/tau2-install/ibm64linux/libunwind-1.3.1-gcc/lib
+UNWIND_INC=/ccs/home/ssinghal/tau2-install/2.8/gcc/ibm64linux/libunwind-1.3.1-gcc/include
+UNWIND_LIB=/ccs/home/ssinghal/tau2-install/2.8/gcc/ibm64linux/libunwind-1.3.1-gcc/lib
 UNWIND_LIB_FLAG=-lunwind -Wl,-rpath,$(UNWIND_LIB)
-UNWIND_EXTRAS=-Wl,-rpath=/ccs/home/ssinghal/tau2-install/ibm64linux/libunwind-1.3.1-gcc/lib
+UNWIND_EXTRAS=-Wl,-rpath=/ccs/home/ssinghal/tau2-install/2.8/gcc/ibm64linux/libunwind-1.3.1-gcc/lib
 
 HOST_SYSROOT=
 
@@ -1142,9 +1142,9 @@ TAU_LINKER_OPT14=$(EXTRA_LINKER_ARGS)
 # Compiler Instrumentation
 ##############################################
 
-BFDLINK=-L/ccs/home/ssinghal/tau2-install/ibm64linux/binutils-2.23.2/lib -L/ccs/home/ssinghal/tau2-install/ibm64linux/binutils-2.23.2/lib64 -Wl,-rpath,/ccs/home/ssinghal/tau2-install/ibm64linux/binutils-2.23.2/lib -Wl,-rpath,/ccs/home/ssinghal/tau2-install/ibm64linux/binutils-2.23.2/lib64
+BFDLINK=-L/ccs/home/ssinghal/tau2-install/2.8/gcc/ibm64linux/binutils-2.23.2/lib -L/ccs/home/ssinghal/tau2-install/2.8/gcc/ibm64linux/binutils-2.23.2/lib64 -Wl,-rpath,/ccs/home/ssinghal/tau2-install/2.8/gcc/ibm64linux/binutils-2.23.2/lib -Wl,-rpath,/ccs/home/ssinghal/tau2-install/2.8/gcc/ibm64linux/binutils-2.23.2/lib64
 BFDLIBS=-lbfd -liberty -lz -ldl
-BFDINCLUDE=-I/ccs/home/ssinghal/tau2-install/ibm64linux/binutils-2.23.2/include -I/ccs/home/ssinghal/tau2-install/ibm64linux/binutils-2.23.2/include/extra
+BFDINCLUDE=-I/ccs/home/ssinghal/tau2-install/2.8/gcc/ibm64linux/binutils-2.23.2/include -I/ccs/home/ssinghal/tau2-install/2.8/gcc/ibm64linux/binutils-2.23.2/include/extra
 
 TAU_BFDLIB=$(BFDLINK) $(BFDLIBS) #ENDIF##TAU_BFD#
 TAU_COMPINST_PTHREAD_OPTIONS= -Dpthread_create=tau_pthread_create -Dpthread_exit=tau_pthread_exit#ENDIF##PTHREAD_AVAILABLE#
@@ -1244,8 +1244,8 @@ PROFILEOPT101 = -DTAU_MPI_EXTENSIONS #ENDIF##MPI2#
 #MPI_T#TAU_MPIT  = TauMpiT.o #ENDIF#
 #BEACON#BEACON_O       	       = TauBeacon.o 	       #ENDIF#
 #PIN#PROFILEOPT104  = -D__PIN__=1 -DPIN_CRT=1 -DTARGET_IA32E -DTARGET_LINUX -DHOST_IA32E -fno-exceptions -funwind-tables  -fasynchronous-unwind-tables -fabi-version=2 -fno-rtti -fno-stack-protector -fomit-frame-pointer -fno-strict-aliasing -isystem $(PIN_ROOT)/source/include/pin -isystem $(PIN_ROOT)/source/include/pin/gen -isystem $(PIN_ROOT)/extras/stlport/include -isystem $(PIN_ROOT)/extras/libstdc++/include -isystem $(PIN_ROOT)/extras/crt/include -isystem $(PIN_ROOT)/extras/crt/include/arch-x86_64 -isystem $(PIN_ROOT)/extras/crt/include/kernel/uapi -isystem $(PIN_ROOT)/extras/crt/include/kernel/uapi/asm-x86  -isystem $(PIN_ROOT)/extras/components/include -isystem $(PIN_ROOT)/extras/xed-intel64/include/xed #ENDIF#
-OTFINC=
-#OTF2#TAU_OTF2_INCLUDE_OPTS = -I$(OTFINC) -DTAU_OTF2 #ENDIF#
+OTFINC=/ccs/home/ssinghal/tau2-install/2.8/gcc/ibm64linux/otf2-gcc/include
+TAU_OTF2_INCLUDE_OPTS = -I$(OTFINC) -DTAU_OTF2 #ENDIF##OTF2#
 #CORESYMBOLICATION#TAU_CORESYMBOLICATION_INCLUDE_OPTS = -DTAU_HAVE_CORESYMBOLICATION #ENDIF#
 TAU_ELF_BFD_PROFILEOPT = -DTAU_ELF_BFD #ENDIF##TAU_ELF_BFD#
 #TAU_DWARF#TAU_DWARF_PROFILEOPT = -DTAU_DWARF #ENDIF#
@@ -1346,8 +1346,8 @@ TAU_INTERNAL_FLAGS = $(TAU_INTERNAL_FLAG1) $(TAU_INTERNAL_FLAG2)
 #PIN#TAU_PIN_LINKER_OPTS= -Wl,--hash-style=sysv $(PIN_ROOT)/intel64/runtime/pincrt/crtbeginS.o -Wl,-Bsymbolic -Wl,--version-script=$(PIN_ROOT)/source/include/pin/pintool.ver -fabi-version=2 -L$(PIN_ROOT)/intel64/runtime/pincrt -L$(PIN_ROOT)/intel64/lib -L$(PIN_ROOT)/intel64/lib-ext -L$(PIN_ROOT)/extras/xed-intel64/lib -lpin -lxed $(PIN_ROOT)/intel64/runtime/pincrt/crtendS.o -lpin3dwarf  -ldl-dynamic -nostdlib -lstlport-dynamic -lm-dynamic -lc-dynamic -lunwind-dynamic #ENDIF#
 #ROCPROFILER#TAU_ROCPROFILER_LINKER_OPTS=$(TAU_ROCPROFILER)/lib/librocprofiler64.so $(TAU_ROCM_DIR)/lib/libhsa-runtime64.so -Wl,-rpath,$(TAU_ROCM_DIR)/lib #ENDIF#
 #ROCTRACER#TAU_ROCTRACER_LINKER_OPTS=-L$(TAU_ROCTRACER)/lib -lroctracer64 -Wl,-rpath,$(TAU_ROCTRACER)/lib #ENDIF#
-OTFLIB=
-#OTF2#TAU_OTF2_LINKER_OPTS = -L$(OTFLIB) -lotf2 -Wl,-rpath,$(OTFLIB) #ENDIF#
+OTFLIB=/ccs/home/ssinghal/tau2-install/2.8/gcc/ibm64linux/otf2-gcc/lib
+TAU_OTF2_LINKER_OPTS = -L$(OTFLIB) -lotf2 -Wl,-rpath,$(OTFLIB) #ENDIF##OTF2#
 #CRAYCNL_PMI#TAU_LINKER_OPT23=$(CRAY_PMI_POST_LINK_OPTS) -lpmi $(CRAY_XPMEM_POST_LINK_OPTS) -lxpmem -L/opt/cray/ugni/default/lib64 -lugni $(CRAY_UDREG_POST_LINK_OPTS) -ludreg $(CRAY_ALPS_POST_LINK_OPTS) -lalpslli -L/opt/cray/wlm_detect/default/lib64 -lwlm_detect -lalpsutil -lugni #ENDIF#
 #CRAYCNL_PMI_FOUND#TAU_LINKER_OPT23=$(CRAY_PMI_POST_LINK_OPTS) -lpmi $(CRAY_XPMEM_POST_LINK_OPTS) -lxpmem -L/opt/cray/ugni/default/lib64 -lugni $(CRAY_UDREG_POST_LINK_OPTS) -ludreg $(CRAY_ALPS_POST_LINK_OPTS) -lalpslli -L/opt/cray/wlm_detect/default/lib64 -lwlm_detect -lalpsutil -lugni #ENDIF#
 #TAU_LIKWID#TAU_LINKER_OPT24=-L$(LIKWIDDIR)/lib -Wl,-rpath,$(LIKWIDDIR)/lib -llikwid #ENDIF#

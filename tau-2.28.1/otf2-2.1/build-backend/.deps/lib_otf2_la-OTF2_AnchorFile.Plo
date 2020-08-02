@@ -1,25 +1,27 @@
-lib_otf2_la-OTF2_AnchorFile.lo: ../src/OTF2_AnchorFile.c ../src/config.h \
- ../src/config-backend.h ../src/config-common.h ../src/config-custom.h \
- /usr/include/stdlib.h /usr/include/features.h /usr/include/sys/cdefs.h \
+lib_otf2_la-OTF2_AnchorFile.lo: ../src/OTF2_AnchorFile.c \
+ /usr/include/stdc-predef.h ../src/config.h ../src/config-backend.h \
+ ../src/config-common.h ../src/config-custom.h /usr/include/stdlib.h \
+ /usr/include/features.h /usr/include/sys/cdefs.h \
  /usr/include/bits/wordsize.h /usr/include/gnu/stubs.h \
- /usr/include/gnu/stubs-64.h \
- /afs/glue.umd.edu/software/gcc/6.1.0/.@sys/lib/gcc/x86_64-pc-linux-gnu/6.1.0/include/stddef.h \
+ /usr/include/gnu/stubs-64-v2.h \
+ /autofs/nccs-svm1_sw/summit/gcc/6.4.0/lib/gcc/powerpc64le-none-linux-gnu/6.4.0/include/stddef.h \
  /usr/include/bits/waitflags.h /usr/include/bits/waitstatus.h \
  /usr/include/endian.h /usr/include/bits/endian.h \
- /usr/include/bits/byteswap.h /usr/include/sys/types.h \
- /usr/include/bits/types.h /usr/include/bits/typesizes.h \
- /usr/include/time.h /usr/include/sys/select.h /usr/include/bits/select.h \
- /usr/include/bits/sigset.h /usr/include/bits/time.h \
- /usr/include/sys/sysmacros.h /usr/include/bits/pthreadtypes.h \
- /usr/include/alloca.h /usr/include/stdio.h /usr/include/libio.h \
- /usr/include/_G_config.h /usr/include/wchar.h \
- /afs/glue.umd.edu/software/gcc/6.1.0/.@sys/lib/gcc/x86_64-pc-linux-gnu/6.1.0/include/stdarg.h \
+ /usr/include/bits/byteswap.h /usr/include/bits/types.h \
+ /usr/include/bits/typesizes.h /usr/include/bits/byteswap-16.h \
+ /usr/include/sys/types.h /usr/include/time.h /usr/include/sys/select.h \
+ /usr/include/bits/select.h /usr/include/bits/sigset.h \
+ /usr/include/bits/time.h /usr/include/sys/sysmacros.h \
+ /usr/include/bits/pthreadtypes.h /usr/include/alloca.h \
+ /usr/include/bits/stdlib-float.h /usr/include/stdio.h \
+ /usr/include/libio.h /usr/include/_G_config.h /usr/include/wchar.h \
+ /autofs/nccs-svm1_sw/summit/gcc/6.4.0/lib/gcc/powerpc64le-none-linux-gnu/6.4.0/include/stdarg.h \
  /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h \
  /usr/include/bits/stdio.h /usr/include/string.h /usr/include/xlocale.h \
  /usr/include/bits/string.h /usr/include/bits/string2.h \
- /afs/glue.umd.edu/software/gcc/6.1.0/.@sys/lib/gcc/x86_64-pc-linux-gnu/6.1.0/include/stdint.h \
+ /autofs/nccs-svm1_sw/summit/gcc/6.4.0/lib/gcc/powerpc64le-none-linux-gnu/6.4.0/include/stdint.h \
  /usr/include/stdint.h /usr/include/bits/wchar.h /usr/include/inttypes.h \
- /afs/glue.umd.edu/software/gcc/6.1.0/.@sys/lib/gcc/x86_64-pc-linux-gnu/6.1.0/include/stdbool.h \
+ /autofs/nccs-svm1_sw/summit/gcc/6.4.0/lib/gcc/powerpc64le-none-linux-gnu/6.4.0/include/stdbool.h \
  /usr/include/unistd.h /usr/include/bits/posix_opt.h \
  /usr/include/bits/environments.h /usr/include/bits/confname.h \
  /usr/include/getopt.h ../include/otf2/otf2.h \
@@ -58,6 +60,8 @@ lib_otf2_la-OTF2_AnchorFile.lo: ../src/OTF2_AnchorFile.c ../src/config.h \
  ../src/otf2_attribute_list.h ../src/otf2_id_map.h ../src/OTF2_File.h \
  ../src/OTF2_Buffer.h ../src/OTF2_AnchorFile.h
 
+/usr/include/stdc-predef.h:
+
 ../src/config.h:
 
 ../src/config-backend.h:
@@ -76,9 +80,9 @@ lib_otf2_la-OTF2_AnchorFile.lo: ../src/OTF2_AnchorFile.c ../src/config.h \
 
 /usr/include/gnu/stubs.h:
 
-/usr/include/gnu/stubs-64.h:
+/usr/include/gnu/stubs-64-v2.h:
 
-/afs/glue.umd.edu/software/gcc/6.1.0/.@sys/lib/gcc/x86_64-pc-linux-gnu/6.1.0/include/stddef.h:
+/autofs/nccs-svm1_sw/summit/gcc/6.4.0/lib/gcc/powerpc64le-none-linux-gnu/6.4.0/include/stddef.h:
 
 /usr/include/bits/waitflags.h:
 
@@ -90,11 +94,13 @@ lib_otf2_la-OTF2_AnchorFile.lo: ../src/OTF2_AnchorFile.c ../src/config.h \
 
 /usr/include/bits/byteswap.h:
 
-/usr/include/sys/types.h:
-
 /usr/include/bits/types.h:
 
 /usr/include/bits/typesizes.h:
+
+/usr/include/bits/byteswap-16.h:
+
+/usr/include/sys/types.h:
 
 /usr/include/time.h:
 
@@ -112,6 +118,8 @@ lib_otf2_la-OTF2_AnchorFile.lo: ../src/OTF2_AnchorFile.c ../src/config.h \
 
 /usr/include/alloca.h:
 
+/usr/include/bits/stdlib-float.h:
+
 /usr/include/stdio.h:
 
 /usr/include/libio.h:
@@ -120,7 +128,7 @@ lib_otf2_la-OTF2_AnchorFile.lo: ../src/OTF2_AnchorFile.c ../src/config.h \
 
 /usr/include/wchar.h:
 
-/afs/glue.umd.edu/software/gcc/6.1.0/.@sys/lib/gcc/x86_64-pc-linux-gnu/6.1.0/include/stdarg.h:
+/autofs/nccs-svm1_sw/summit/gcc/6.4.0/lib/gcc/powerpc64le-none-linux-gnu/6.4.0/include/stdarg.h:
 
 /usr/include/bits/stdio_lim.h:
 
@@ -136,7 +144,7 @@ lib_otf2_la-OTF2_AnchorFile.lo: ../src/OTF2_AnchorFile.c ../src/config.h \
 
 /usr/include/bits/string2.h:
 
-/afs/glue.umd.edu/software/gcc/6.1.0/.@sys/lib/gcc/x86_64-pc-linux-gnu/6.1.0/include/stdint.h:
+/autofs/nccs-svm1_sw/summit/gcc/6.4.0/lib/gcc/powerpc64le-none-linux-gnu/6.4.0/include/stdint.h:
 
 /usr/include/stdint.h:
 
@@ -144,7 +152,7 @@ lib_otf2_la-OTF2_AnchorFile.lo: ../src/OTF2_AnchorFile.c ../src/config.h \
 
 /usr/include/inttypes.h:
 
-/afs/glue.umd.edu/software/gcc/6.1.0/.@sys/lib/gcc/x86_64-pc-linux-gnu/6.1.0/include/stdbool.h:
+/autofs/nccs-svm1_sw/summit/gcc/6.4.0/lib/gcc/powerpc64le-none-linux-gnu/6.4.0/include/stdbool.h:
 
 /usr/include/unistd.h:
 

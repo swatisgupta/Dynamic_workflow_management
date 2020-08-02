@@ -1,33 +1,35 @@
 otf2_snapshots-otf2_snapshots_events.o: \
- ../src/tools/otf2_snapshots/otf2_snapshots_events.cpp ../src/config.h \
- ../src/config-backend.h ../src/config-common.h ../src/config-custom.h \
- /afs/glue.umd.edu/software/gcc/6.1.0/.@sys/include/c++/6.1.0/stdlib.h \
- /afs/glue.umd.edu/software/gcc/6.1.0/.@sys/include/c++/6.1.0/cstdlib \
- /afs/glue.umd.edu/software/gcc/6.1.0/.@sys/include/c++/6.1.0/x86_64-pc-linux-gnu/bits/c++config.h \
- /afs/glue.umd.edu/software/gcc/6.1.0/.@sys/include/c++/6.1.0/x86_64-pc-linux-gnu/bits/os_defines.h \
+ ../src/tools/otf2_snapshots/otf2_snapshots_events.cpp \
+ /usr/include/stdc-predef.h ../src/config.h ../src/config-backend.h \
+ ../src/config-common.h ../src/config-custom.h \
+ /autofs/nccs-svm1_sw/summit/gcc/6.4.0/include/c++/6.4.0/stdlib.h \
+ /autofs/nccs-svm1_sw/summit/gcc/6.4.0/include/c++/6.4.0/cstdlib \
+ /autofs/nccs-svm1_sw/summit/gcc/6.4.0/include/c++/6.4.0/powerpc64le-none-linux-gnu/bits/c++config.h \
+ /autofs/nccs-svm1_sw/summit/gcc/6.4.0/include/c++/6.4.0/powerpc64le-none-linux-gnu/bits/os_defines.h \
  /usr/include/features.h /usr/include/sys/cdefs.h \
  /usr/include/bits/wordsize.h /usr/include/gnu/stubs.h \
- /usr/include/gnu/stubs-64.h \
- /afs/glue.umd.edu/software/gcc/6.1.0/.@sys/include/c++/6.1.0/x86_64-pc-linux-gnu/bits/cpu_defines.h \
+ /usr/include/gnu/stubs-64-v2.h \
+ /autofs/nccs-svm1_sw/summit/gcc/6.4.0/include/c++/6.4.0/powerpc64le-none-linux-gnu/bits/cpu_defines.h \
  /usr/include/stdlib.h \
- /afs/glue.umd.edu/software/gcc/6.1.0/.@sys/lib/gcc/x86_64-pc-linux-gnu/6.1.0/include/stddef.h \
+ /autofs/nccs-svm1_sw/summit/gcc/6.4.0/lib/gcc/powerpc64le-none-linux-gnu/6.4.0/include/stddef.h \
  /usr/include/bits/waitflags.h /usr/include/bits/waitstatus.h \
  /usr/include/endian.h /usr/include/bits/endian.h \
- /usr/include/bits/byteswap.h /usr/include/xlocale.h \
- /usr/include/sys/types.h /usr/include/bits/types.h \
- /usr/include/bits/typesizes.h /usr/include/time.h \
+ /usr/include/bits/byteswap.h /usr/include/bits/types.h \
+ /usr/include/bits/typesizes.h /usr/include/bits/byteswap-16.h \
+ /usr/include/xlocale.h /usr/include/sys/types.h /usr/include/time.h \
  /usr/include/sys/select.h /usr/include/bits/select.h \
  /usr/include/bits/sigset.h /usr/include/bits/time.h \
  /usr/include/sys/sysmacros.h /usr/include/bits/pthreadtypes.h \
- /usr/include/alloca.h /usr/include/inttypes.h \
- /afs/glue.umd.edu/software/gcc/6.1.0/.@sys/lib/gcc/x86_64-pc-linux-gnu/6.1.0/include/stdint.h \
+ /usr/include/alloca.h /usr/include/bits/stdlib-float.h \
+ /usr/include/inttypes.h \
+ /autofs/nccs-svm1_sw/summit/gcc/6.4.0/lib/gcc/powerpc64le-none-linux-gnu/6.4.0/include/stdint.h \
  /usr/include/stdint.h /usr/include/bits/wchar.h /usr/include/string.h \
  ../include/otf2/otf2.h ../include/otf2/OTF2_Reader.h \
  ../include/otf2/OTF2_ErrorCodes.h /usr/include/errno.h \
  /usr/include/bits/errno.h /usr/include/linux/errno.h \
  /usr/include/asm/errno.h /usr/include/asm-generic/errno.h \
  /usr/include/asm-generic/errno-base.h \
- /afs/glue.umd.edu/software/gcc/6.1.0/.@sys/lib/gcc/x86_64-pc-linux-gnu/6.1.0/include/stdarg.h \
+ /autofs/nccs-svm1_sw/summit/gcc/6.4.0/lib/gcc/powerpc64le-none-linux-gnu/6.4.0/include/stdarg.h \
  ../include/otf2/OTF2_Archive.h ../include/otf2/OTF2_Callbacks.h \
  ../include/otf2/OTF2_GeneralDefinitions.h \
  ../include/otf2/OTF2_DefWriter.h ../include/otf2/OTF2_AttributeValue.h \
@@ -52,6 +54,8 @@ otf2_snapshots-otf2_snapshots_events.o: \
  ../src/tools/otf2_snapshots/otf2_snapshots_events.hpp \
  ../src/tools/otf2_snapshots/otf2_snapshots_events_inc.cpp
 
+/usr/include/stdc-predef.h:
+
 ../src/config.h:
 
 ../src/config-backend.h:
@@ -60,13 +64,13 @@ otf2_snapshots-otf2_snapshots_events.o: \
 
 ../src/config-custom.h:
 
-/afs/glue.umd.edu/software/gcc/6.1.0/.@sys/include/c++/6.1.0/stdlib.h:
+/autofs/nccs-svm1_sw/summit/gcc/6.4.0/include/c++/6.4.0/stdlib.h:
 
-/afs/glue.umd.edu/software/gcc/6.1.0/.@sys/include/c++/6.1.0/cstdlib:
+/autofs/nccs-svm1_sw/summit/gcc/6.4.0/include/c++/6.4.0/cstdlib:
 
-/afs/glue.umd.edu/software/gcc/6.1.0/.@sys/include/c++/6.1.0/x86_64-pc-linux-gnu/bits/c++config.h:
+/autofs/nccs-svm1_sw/summit/gcc/6.4.0/include/c++/6.4.0/powerpc64le-none-linux-gnu/bits/c++config.h:
 
-/afs/glue.umd.edu/software/gcc/6.1.0/.@sys/include/c++/6.1.0/x86_64-pc-linux-gnu/bits/os_defines.h:
+/autofs/nccs-svm1_sw/summit/gcc/6.4.0/include/c++/6.4.0/powerpc64le-none-linux-gnu/bits/os_defines.h:
 
 /usr/include/features.h:
 
@@ -76,13 +80,13 @@ otf2_snapshots-otf2_snapshots_events.o: \
 
 /usr/include/gnu/stubs.h:
 
-/usr/include/gnu/stubs-64.h:
+/usr/include/gnu/stubs-64-v2.h:
 
-/afs/glue.umd.edu/software/gcc/6.1.0/.@sys/include/c++/6.1.0/x86_64-pc-linux-gnu/bits/cpu_defines.h:
+/autofs/nccs-svm1_sw/summit/gcc/6.4.0/include/c++/6.4.0/powerpc64le-none-linux-gnu/bits/cpu_defines.h:
 
 /usr/include/stdlib.h:
 
-/afs/glue.umd.edu/software/gcc/6.1.0/.@sys/lib/gcc/x86_64-pc-linux-gnu/6.1.0/include/stddef.h:
+/autofs/nccs-svm1_sw/summit/gcc/6.4.0/lib/gcc/powerpc64le-none-linux-gnu/6.4.0/include/stddef.h:
 
 /usr/include/bits/waitflags.h:
 
@@ -94,13 +98,15 @@ otf2_snapshots-otf2_snapshots_events.o: \
 
 /usr/include/bits/byteswap.h:
 
-/usr/include/xlocale.h:
-
-/usr/include/sys/types.h:
-
 /usr/include/bits/types.h:
 
 /usr/include/bits/typesizes.h:
+
+/usr/include/bits/byteswap-16.h:
+
+/usr/include/xlocale.h:
+
+/usr/include/sys/types.h:
 
 /usr/include/time.h:
 
@@ -118,9 +124,11 @@ otf2_snapshots-otf2_snapshots_events.o: \
 
 /usr/include/alloca.h:
 
+/usr/include/bits/stdlib-float.h:
+
 /usr/include/inttypes.h:
 
-/afs/glue.umd.edu/software/gcc/6.1.0/.@sys/lib/gcc/x86_64-pc-linux-gnu/6.1.0/include/stdint.h:
+/autofs/nccs-svm1_sw/summit/gcc/6.4.0/lib/gcc/powerpc64le-none-linux-gnu/6.4.0/include/stdint.h:
 
 /usr/include/stdint.h:
 
@@ -146,7 +154,7 @@ otf2_snapshots-otf2_snapshots_events.o: \
 
 /usr/include/asm-generic/errno-base.h:
 
-/afs/glue.umd.edu/software/gcc/6.1.0/.@sys/lib/gcc/x86_64-pc-linux-gnu/6.1.0/include/stdarg.h:
+/autofs/nccs-svm1_sw/summit/gcc/6.4.0/lib/gcc/powerpc64le-none-linux-gnu/6.4.0/include/stdarg.h:
 
 ../include/otf2/OTF2_Archive.h:
 

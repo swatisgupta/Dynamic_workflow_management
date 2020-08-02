@@ -17,7 +17,7 @@
 #define _TAU_H_
 
 #define TAU_VERSION "2.28.1-git"
-#define TAU_MAKEFILE "/ccs/home/ssinghal/tau2-install/ibm64linux/lib/Makefile.tau-papi-gnu-mpi-pthread-adios2"
+#define TAU_MAKEFILE "/ccs/home/ssinghal/tau2-install/2.8/gcc/ibm64linux/lib/Makefile.tau-papi-gnu-mpi-pthread-adios2"
 
 #if (defined(PROFILING_ON) || defined(TRACING_ON))
 #define TAU_ENABLED

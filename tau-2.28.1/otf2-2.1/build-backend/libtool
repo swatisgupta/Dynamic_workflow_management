@@ -1,6 +1,6 @@
 #! /bin/sh
 # Generated automatically by config.status (otf2) 2.1
-# Libtool was configured on host login-1.deepthought2.umd.edu:
+# Libtool was configured on host login3:
 # NOTE: Changes made to this file will be lost: look at ltmain.sh.
 
 # Provide generalized library-building support services.
@@ -67,37 +67,37 @@ PATH_SEPARATOR=":"
 
 # The host system.
 host_alias=
-host=x86_64-pc-linux-gnu
+host=powerpc64le-unknown-linux-gnu
 host_os=linux-gnu
 
 # The build system.
 build_alias=
-build=x86_64-pc-linux-gnu
+build=powerpc64le-unknown-linux-gnu
 build_os=linux-gnu
 
 # A sed program that does not truncate output.
-SED="/usr/local/bin/gsed"
+SED="/usr/bin/sed"
 
 # Sed that helps us avoid accidentally triggering echo(1) options like -n.
 Xsed="$SED -e 1s/^X//"
 
 # A grep program that handles long lines.
-GREP="/usr/local/bin/ggrep"
+GREP="/usr/bin/grep"
 
 # An ERE matcher.
-EGREP="/usr/local/bin/ggrep -E"
+EGREP="/usr/bin/grep -E"
 
 # A literal string matcher.
-FGREP="/usr/local/bin/ggrep -F"
+FGREP="/usr/bin/grep -F"
 
 # A BSD- or MS-compatible name lister.
-NM="/usr/local/bin/nm -B"
+NM="/usr/bin/nm -B"
 
 # Whether we need soft or hard links.
 LN_S="ln -s"
 
 # What is the maximum length of a command?
-max_cmd_len=1966080
+max_cmd_len=1572864
 
 # Object file suffix (normally "o").
 objext=o
@@ -154,7 +154,7 @@ AR_FLAGS=${ARFLAGS-"$lt_ar_flags"}
 archiver_list_spec="@"
 
 # A symbol stripping program.
-STRIP="/usr/local/bin/strip"
+STRIP="/usr/bin/strip"
 
 # Commands used to install an old-style archive.
 RANLIB="ranlib"
@@ -195,7 +195,7 @@ nm_file_list_spec="@"
 lt_sysroot=
 
 # Command to truncate a binary pipe.
-lt_truncate_bin="/bin/dd bs=4096 count=1"
+lt_truncate_bin="/usr/bin/dd bs=4096 count=1"
 
 # The name of the directory that contains temporary libtool files.
 objdir=.libs
@@ -285,10 +285,10 @@ finish_eval=""
 hardcode_into_libs=yes
 
 # Compile-time system search path for libraries.
-sys_lib_search_path_spec="/afs/glue.umd.edu/software/gcc/6.1.0/.@sys/lib/gcc/x86_64-pc-linux-gnu/6.1.0 /afs/glue.umd.edu/software/gcc/6.1.0/.@sys/lib/gcc /lustre/ssinghal/ADIOS2-install/lib64 /afs/glue.umd.edu/software/gcc/6.1.0/.@sys/lib64 /lib64 /usr/lib64 /lustre/ssinghal/ADIOS2-install/lib /afs/glue.umd.edu/software/gcc/6.1.0/.@sys/lib /lib /usr/lib "
+sys_lib_search_path_spec="/autofs/nccs-svm1_sw/summit/gcc/6.4.0/lib/gcc/powerpc64le-none-linux-gnu/6.4.0 /autofs/nccs-svm1_sw/summit/gcc/6.4.0/lib/gcc /autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/kokkos-3.0.00-nd2jho65xryrafyrakewx7lmjh7vtg3t/lib64 /ccs/home/ssinghal/ADIOS2-install/lib64 /sw/summit/cuda/10.1.243/extras/CUPTI/lib64 /autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/netlib-lapack-3.8.0-wcabdyqhdi5rooxbkqa6x5d7hxyxwdkm/lib64 /sw/summit/gcc/6.4.0/lib64 /autofs/nccs-svm1_sw/summit/gcc/6.4.0/lib64 /lib64 /usr/lib64 /ccs/home/ssinghal/ADIOS2-install/lib /autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/hypre-2.13.0-tfeptwehvux4pgog34fm7mqoowrfynna/lib /autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/hdf5-1.10.4-qj7qoumocmjj2xkwbwotazo22sugeq5o/lib /autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/boost-1.66.0-l6qu5nrynyuksm4ex7gswb6rsvvhsj42/lib /autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/fftw-3.3.8-7p6nny234obzuczdtyyea4t4uxej777s/lib /sw/summit/cuda/10.1.243/lib64 /autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/spectrum-mpi-10.3.1.2-20200121-awz2q5brde7wgdqqw4ugalrkukeub4eb/lib /opt/ibm/spectrumcomputing/lsf/10.1.0.9/linux3.10-glibc2.17-ppc64le-csm/lib /autofs/nccs-svm1_sw/summit/gcc/6.4.0/lib /lib /usr/lib "
 
 # Detected run-time system search path for libraries.
-sys_lib_dlsearch_path_spec="/lib /usr/lib /usr/lib64/atlas /usr/lib64/ctapi /opt/mellanox/hcoll/lib /opt/ibutils/lib64 /opt/mellanox/mxm/lib /usr/lib64/mysql /usr/lib/qt-3.3/lib /usr/lib64/qt-3.3/lib /opt/mellanox/sharp/lib /usr/lib64/tcl8.5 /usr/lib/vmware-tools/lib/libvmGuestLib.so /usr/lib/vmware-tools/lib/libvmGuestLibJava.so /cell_root/software/vmware-tools/8.3.7-341836/sys/lib/vmware-tools/lib32/libvmGuestLib.so /cell_root/software/vmware-tools/8.3.7-341836/sys/lib/vmware-tools/lib64/libvmGuestLib.so /cell_root/software/vmware-tools/8.3.7-341836/sys/lib/vmware-tools/lib32/libvmGuestLibJava.so /cell_root/software/vmware-tools/8.3.7-341836/sys/lib/vmware-tools/lib64/libvmGuestLibJava.so /cell_root/software/vmware-tools/8.3.7-341836/sys/lib/vmware-tools/lib32/libDeployPkg.so /cell_root/software/vmware-tools/8.3.7-341836/sys/lib/vmware-tools/lib64/libDeployPkg.so /usr/lib/vmware-tools/lib/libDeployPkg.so /usr/lib64/xulrunner "
+sys_lib_dlsearch_path_spec="/lib /usr/lib /opt/mellanox/hcoll/lib /opt/ibutils/lib64 /opt/ibm/spectrum_mpi/jsm_pmix/lib /opt/ibm/spectrum_mpi/lib /usr/lib64/mysql /opt/mellanox/mxm/lib /usr/lib64/libglvnd  /opt/mellanox/sharp/lib /usr/lib64 "
 
 # Explicit LT_SYS_LIBRARY_PATH set during ./configure time.
 configure_time_lt_sys_library_path=""
@@ -303,12 +303,12 @@ dlopen_self=unknown
 dlopen_self_static=unknown
 
 # Commands to strip libraries.
-old_striplib="/usr/local/bin/strip --strip-debug"
-striplib="/usr/local/bin/strip --strip-unneeded"
+old_striplib="/usr/bin/strip --strip-debug"
+striplib="/usr/bin/strip --strip-unneeded"
 
 
 # The linker used to build libraries.
-LD="/usr/local/binutils/2.26/bin/ld -m elf_x86_64"
+LD="/sw/summit/xalt/1.2.0/bin/ld"
 
 # How to create reloadable object files.
 reload_flag=" -r"
@@ -333,7 +333,7 @@ pic_flag=" -fPIC -DPIC"
 wl="-Wl,"
 
 # Compiler flag to prevent dynamic linking.
-link_static_flag="-static"
+link_static_flag=""
 
 # Does compiler simultaneously support -c and -o options?
 compiler_c_o="yes"
@@ -11701,7 +11701,7 @@ build_old_libs=`case $build_libtool_libs in yes) echo no;; *) echo yes;; esac`
 # ### BEGIN LIBTOOL TAG CONFIG: CXX
 
 # The linker used to build libraries.
-LD="/usr/local/binutils/2.26/bin/ld -m elf_x86_64"
+LD="/sw/summit/xalt/1.2.0/bin/ld"
 
 # How to create reloadable object files.
 reload_flag=" -r"
@@ -11726,7 +11726,7 @@ pic_flag=" -fPIC -DPIC"
 wl="-Wl,"
 
 # Compiler flag to prevent dynamic linking.
-link_static_flag="-static"
+link_static_flag=""
 
 # Does compiler simultaneously support -c and -o options?
 compiler_c_o="yes"
@@ -11832,17 +11832,17 @@ file_list_spec=""
 hardcode_action=immediate
 
 # The directories searched by this compiler when creating a shared library.
-compiler_lib_search_dirs="/afs/glue.umd.edu/software/gcc/6.1.0/.@sys/bin/../lib/gcc/x86_64-pc-linux-gnu/6.1.0 /afs/glue.umd.edu/software/gcc/6.1.0/.@sys/bin/../lib/gcc /lustre/ssinghal/ADIOS2-install/lib/../lib64 /afs/glue.umd.edu/software/gcc/6.1.0/.@sys/bin/../lib/gcc/x86_64-pc-linux-gnu/6.1.0/../../../../lib64 /lib/../lib64 /usr/lib/../lib64 /lustre/ssinghal/ADIOS2-install/lib /afs/glue.umd.edu/software/gcc/6.1.0/.@sys/bin/../lib/gcc/x86_64-pc-linux-gnu/6.1.0/../../.."
+compiler_lib_search_dirs="/autofs/nccs-svm1_sw/summit/gcc/6.4.0/bin/../lib/gcc/powerpc64le-none-linux-gnu/6.4.0 /autofs/nccs-svm1_sw/summit/gcc/6.4.0/bin/../lib/gcc /autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/kokkos-3.0.00-nd2jho65xryrafyrakewx7lmjh7vtg3t/lib64/../lib64 /ccs/home/ssinghal/ADIOS2-install/lib64/../lib64 /ccs/home/ssinghal/ADIOS2-install/lib/../lib64 /sw/summit/cuda/10.1.243/extras/CUPTI/lib64/../lib64 /autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/netlib-lapack-3.8.0-wcabdyqhdi5rooxbkqa6x5d7hxyxwdkm/lib64/../lib64 /sw/summit/gcc/6.4.0/lib64/../lib64 /autofs/nccs-svm1_sw/summit/gcc/6.4.0/bin/../lib/gcc/powerpc64le-none-linux-gnu/6.4.0/../../../../lib64 /lib/../lib64 /usr/lib/../lib64 /autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/kokkos-3.0.00-nd2jho65xryrafyrakewx7lmjh7vtg3t/lib64 /ccs/home/ssinghal/ADIOS2-install/lib64 /ccs/home/ssinghal/ADIOS2-install/lib /sw/summit/cuda/10.1.243/extras/CUPTI/lib64 /autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/hypre-2.13.0-tfeptwehvux4pgog34fm7mqoowrfynna/lib /autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/netlib-lapack-3.8.0-wcabdyqhdi5rooxbkqa6x5d7hxyxwdkm/lib64 /autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/hdf5-1.10.4-qj7qoumocmjj2xkwbwotazo22sugeq5o/lib /autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/boost-1.66.0-l6qu5nrynyuksm4ex7gswb6rsvvhsj42/lib /autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/fftw-3.3.8-7p6nny234obzuczdtyyea4t4uxej777s/lib /sw/summit/cuda/10.1.243/lib64 /autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/spectrum-mpi-10.3.1.2-20200121-awz2q5brde7wgdqqw4ugalrkukeub4eb/lib /sw/summit/gcc/6.4.0/lib64 /opt/ibm/spectrumcomputing/lsf/10.1.0.9/linux3.10-glibc2.17-ppc64le-csm/lib /autofs/nccs-svm1_sw/summit/gcc/6.4.0/bin/../lib/gcc/powerpc64le-none-linux-gnu/6.4.0/../../.."
 
 # Dependencies to place before and after the objects being linked to
 # create a shared library.
-predep_objects="/usr/lib/../lib64/crti.o /afs/glue.umd.edu/software/gcc/6.1.0/.@sys/bin/../lib/gcc/x86_64-pc-linux-gnu/6.1.0/crtbeginS.o"
-postdep_objects="/afs/glue.umd.edu/software/gcc/6.1.0/.@sys/bin/../lib/gcc/x86_64-pc-linux-gnu/6.1.0/crtendS.o /usr/lib/../lib64/crtn.o"
+predep_objects="/lib/../lib64/crti.o /autofs/nccs-svm1_sw/summit/gcc/6.4.0/bin/../lib/gcc/powerpc64le-none-linux-gnu/6.4.0/crtbeginS.o"
+postdep_objects="/autofs/nccs-svm1_sw/summit/gcc/6.4.0/bin/../lib/gcc/powerpc64le-none-linux-gnu/6.4.0/crtendS.o /lib/../lib64/crtn.o"
 predeps=""
 postdeps="-lstdc++ -lm -lgcc_s -lc -lgcc_s"
 
 # The library search path used internally by the compiler when linking
 # a shared library.
-compiler_lib_search_path="-L/afs/glue.umd.edu/software/gcc/6.1.0/.@sys/bin/../lib/gcc/x86_64-pc-linux-gnu/6.1.0 -L/afs/glue.umd.edu/software/gcc/6.1.0/.@sys/bin/../lib/gcc -L/lustre/ssinghal/ADIOS2-install/lib/../lib64 -L/afs/glue.umd.edu/software/gcc/6.1.0/.@sys/bin/../lib/gcc/x86_64-pc-linux-gnu/6.1.0/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/lustre/ssinghal/ADIOS2-install/lib -L/afs/glue.umd.edu/software/gcc/6.1.0/.@sys/bin/../lib/gcc/x86_64-pc-linux-gnu/6.1.0/../../.."
+compiler_lib_search_path="-L/autofs/nccs-svm1_sw/summit/gcc/6.4.0/bin/../lib/gcc/powerpc64le-none-linux-gnu/6.4.0 -L/autofs/nccs-svm1_sw/summit/gcc/6.4.0/bin/../lib/gcc -L/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/kokkos-3.0.00-nd2jho65xryrafyrakewx7lmjh7vtg3t/lib64/../lib64 -L/ccs/home/ssinghal/ADIOS2-install/lib64/../lib64 -L/ccs/home/ssinghal/ADIOS2-install/lib/../lib64 -L/sw/summit/cuda/10.1.243/extras/CUPTI/lib64/../lib64 -L/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/netlib-lapack-3.8.0-wcabdyqhdi5rooxbkqa6x5d7hxyxwdkm/lib64/../lib64 -L/sw/summit/gcc/6.4.0/lib64/../lib64 -L/autofs/nccs-svm1_sw/summit/gcc/6.4.0/bin/../lib/gcc/powerpc64le-none-linux-gnu/6.4.0/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/kokkos-3.0.00-nd2jho65xryrafyrakewx7lmjh7vtg3t/lib64 -L/ccs/home/ssinghal/ADIOS2-install/lib64 -L/ccs/home/ssinghal/ADIOS2-install/lib -L/sw/summit/cuda/10.1.243/extras/CUPTI/lib64 -L/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/hypre-2.13.0-tfeptwehvux4pgog34fm7mqoowrfynna/lib -L/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/netlib-lapack-3.8.0-wcabdyqhdi5rooxbkqa6x5d7hxyxwdkm/lib64 -L/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/hdf5-1.10.4-qj7qoumocmjj2xkwbwotazo22sugeq5o/lib -L/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/boost-1.66.0-l6qu5nrynyuksm4ex7gswb6rsvvhsj42/lib -L/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/fftw-3.3.8-7p6nny234obzuczdtyyea4t4uxej777s/lib -L/sw/summit/cuda/10.1.243/lib64 -L/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/spectrum-mpi-10.3.1.2-20200121-awz2q5brde7wgdqqw4ugalrkukeub4eb/lib -L/sw/summit/gcc/6.4.0/lib64 -L/opt/ibm/spectrumcomputing/lsf/10.1.0.9/linux3.10-glibc2.17-ppc64le-csm/lib -L/autofs/nccs-svm1_sw/summit/gcc/6.4.0/bin/../lib/gcc/powerpc64le-none-linux-gnu/6.4.0/../../.."
 
 # ### END LIBTOOL TAG CONFIG: CXX

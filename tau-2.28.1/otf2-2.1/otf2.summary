@@ -1,21 +1,23 @@
 Configure command:
-  ./configure                   '--prefix=/lustre/ssinghal/tau2-install/x86_64/otf2-gcc' \
+  ./configure                   '--prefix=/ccs/home/ssinghal/tau2-install/2.8/gcc/ibm64linux/otf2-gcc' \
                                 'CC=gcc' \
                                 'CXX=g++'
 
 Loaded modules:
-  module load                   hpcc/deepthought2 \
-                                slurm/16.05.1 \
-                                gcc/6.1.0 \
-                                openmpi/1.10.2/gnu/6.1.0 \
-                                cmake/3.9.1 \
-                                likwid/4.3.3 \
-                                ofed/1.5.4.1 \
-                                cuda/7.5.18 \
-                                scalapack/2.0.2/gnu/6.1.0/openmpi/1.10.2 \
-                                lapack/3.6.1 \
-                                texlive/2015 \
-                                python/3.5.1
+  module load                   hsi/5.0.2.p5 \
+                                xalt/1.2.0 \
+                                lsf-tools/2.0 \
+                                DefApps \
+                                gcc/6.4.0 \
+                                spectrum-mpi/10.3.1.2-20200121 \
+                                cuda/10.1.243 \
+                                fftw/3.3.8 \
+                                boost/1.66.0 \
+                                hdf5/1.10.4 \
+                                netlib-lapack/3.8.0 \
+                                hypre/2.13.0 \
+                                kokkos-nvcc-wrapper/20200221 \
+                                kokkos/3.0.00
 
 Configuration summary:
   OTF2 2.1:
@@ -26,6 +28,6 @@ Configuration summary:
       C99 compiler used:        gcc
       SIONlib support:          no
       Entropy sources:          clock_gettime getpid sysinfo gethostid
-      Python bindings support:  yes, using /usr/local/python3/3.5.1/bin/python
+      Python bindings support:  yes, using /gpfs/alpine/csc299/scratch/ssinghal/Dynamic_workflow_management/rmonitor/bin/python
       Running tests:            no
         Parallel tests:         yes

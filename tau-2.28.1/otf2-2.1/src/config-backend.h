@@ -197,7 +197,7 @@
 #define HAVE_PTHREAD_MUTEX_ERRORCHECK 1
 
 /* Have PTHREAD_PRIO_INHERIT. */
-/* #undef HAVE_PTHREAD_PRIO_INHERIT */
+#define HAVE_PTHREAD_PRIO_INHERIT 1
 
 /* Can link a read function */
 #define HAVE_READ 1
@@ -277,7 +277,7 @@
 
 /* Directory where OTF2 executables to be run by other programs rather than by
    users are installed */
-#define PKGLIBEXECDIR "/lustre/ssinghal/tau2-install/x86_64/otf2-gcc/libexec/otf2"
+#define PKGLIBEXECDIR "/ccs/home/ssinghal/tau2-install/2.8/gcc/ibm64linux/otf2-gcc/libexec/otf2"
 
 /* Define to necessary symbol if this constant uses a non-standard name on
    your system. */

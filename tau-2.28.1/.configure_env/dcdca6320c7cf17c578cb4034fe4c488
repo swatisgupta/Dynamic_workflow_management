@@ -1,0 +1,1029 @@
+ADIOS2_PATH=/ccs/home/ssinghal/ADIOS2-install
+BASH=/bin/bash
+BASHOPTS=cmdhist:extquote:force_fignore:hostcomplete:interactive_comments:progcomp:promptvars:sourcepath
+BASH_ALIASES=()
+BASH_ARGC=([0]="12")
+BASH_ARGV=([0]="-adios=/ccs/home/ssinghal/ADIOS2-install" [1]="-papi=/ccs/home/ssinghal/papi_install" [2]="-pthread" [3]="-fortran=mpif90" [4]="-cc=mpicc" [5]="-c++=mpicxx" [6]="-mpi" [7]="-otf=download" [8]="-unwind=download" [9]="-iowrapper" [10]="-bfd=download" [11]="-prefix=/ccs/home/ssinghal/tau2-install/2.8/gcc")
+BASH_CMDS=()
+BASH_ENV=/sw/summit/lmod/8.2.10/init/bash
+BASH_LINENO=([0]="0")
+BASH_SOURCE=([0]="./configure")
+BASH_VERSINFO=([0]="4" [1]="2" [2]="46" [3]="2" [4]="release" [5]="powerpc64le-redhat-linux-gnu")
+BASH_VERSION='4.2.46(2)-release'
+BINARY_TYPE_HPC=
+CHEETAH_ROOT=/gpfs/alpine/csc299/scratch/ssinghal/cheetah/dynamic_cheetah
+CMAKE_PREFIX_PATH=/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/kokkos-3.0.00-nd2jho65xryrafyrakewx7lmjh7vtg3t:/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/kokkos-nvcc-wrapper-20200221-2k5mir5wxjpoyvdkwaotm2sy74oj2cvs:/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/hypre-2.13.0-tfeptwehvux4pgog34fm7mqoowrfynna:/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/netlib-lapack-3.8.0-wcabdyqhdi5rooxbkqa6x5d7hxyxwdkm:/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/hdf5-1.10.4-qj7qoumocmjj2xkwbwotazo22sugeq5o:/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/boost-1.66.0-l6qu5nrynyuksm4ex7gswb6rsvvhsj42:/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/fftw-3.3.8-7p6nny234obzuczdtyyea4t4uxej777s:/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/spectrum-mpi-10.3.1.2-20200121-awz2q5brde7wgdqqw4ugalrkukeub4eb
+CPATH=/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/kokkos-3.0.00-nd2jho65xryrafyrakewx7lmjh7vtg3t/include:/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/hypre-2.13.0-tfeptwehvux4pgog34fm7mqoowrfynna/include:/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/netlib-lapack-3.8.0-wcabdyqhdi5rooxbkqa6x5d7hxyxwdkm/include:/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/hdf5-1.10.4-qj7qoumocmjj2xkwbwotazo22sugeq5o/include:/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/boost-1.66.0-l6qu5nrynyuksm4ex7gswb6rsvvhsj42/include:/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/fftw-3.3.8-7p6nny234obzuczdtyyea4t4uxej777s/include:/sw/summit/cuda/10.1.243/include:/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/spectrum-mpi-10.3.1.2-20200121-awz2q5brde7wgdqqw4ugalrkukeub4eb/include
+CUDAPATH=/sw/summit/cuda/10.1.243
+CUDA_DIR=/sw/summit/cuda/10.1.243
+CUDA_TOOLKIT_ROOT_DIR=/sw/summit/cuda/10.1.243
+CVS_RSH=ssh
+DIRSTACK=()
+EUID=14473
+GROUPS=()
+HISTCONTROL=ignoredups
+HISTSIZE=1000
+HOME=/ccs/home/ssinghal
+HOSTNAME=login3
+HOSTTYPE=powerpc64le
+IFS=$' \t\n'
+JSM_JSRUN_NO_WARN_TOPOLOGY=1
+LD_LIBRARY_PATH=/gpfs/alpine/csc299/scratch/ssinghal/Dynamic_workflow_management/rmonitor/lib64:/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/kokkos-3.0.00-nd2jho65xryrafyrakewx7lmjh7vtg3t/lib64:/gpfs/alpine/csc299/scratch/ssinghal/cheetah/dynamic_cheetah/lib64:/ccs/home/ssinghal/vtk-install/lib:/ccs/home/ssinghal/vtkm-install/lib:/ccs/home/ssinghal/tau2-install/gcc/x86_64/lib:/ccs/home/ssinghal/papi_install/lib:/ccs/home/ssinghal/zfp-install/lib64:/ccs/home/ssinghal/ADIOS2-install/lib64:/ccs/home/ssinghal/ADIOS2-install/lib:/sw/summit/cuda/10.1.243/extras/CUPTI/lib64:/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/hypre-2.13.0-tfeptwehvux4pgog34fm7mqoowrfynna/lib:/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/netlib-lapack-3.8.0-wcabdyqhdi5rooxbkqa6x5d7hxyxwdkm/lib64:/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/hdf5-1.10.4-qj7qoumocmjj2xkwbwotazo22sugeq5o/lib:/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/boost-1.66.0-l6qu5nrynyuksm4ex7gswb6rsvvhsj42/lib:/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/fftw-3.3.8-7p6nny234obzuczdtyyea4t4uxej777s/lib:/sw/summit/cuda/10.1.243/lib64:/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/spectrum-mpi-10.3.1.2-20200121-awz2q5brde7wgdqqw4ugalrkukeub4eb/lib:/sw/summit/gcc/6.4.0/lib64:/opt/ibm/spectrumcomputing/lsf/10.1.0.9/linux3.10-glibc2.17-ppc64le-csm/lib
+LESSOPEN='||/usr/bin/lesspipe.sh %s'
+LIBRARY_PATH=/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/kokkos-3.0.00-nd2jho65xryrafyrakewx7lmjh7vtg3t/lib64:/ccs/home/ssinghal/ADIOS2-install/lib64:/ccs/home/ssinghal/ADIOS2-install/lib:/sw/summit/cuda/10.1.243/extras/CUPTI/lib64:/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/hypre-2.13.0-tfeptwehvux4pgog34fm7mqoowrfynna/lib:/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/netlib-lapack-3.8.0-wcabdyqhdi5rooxbkqa6x5d7hxyxwdkm/lib64:/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/hdf5-1.10.4-qj7qoumocmjj2xkwbwotazo22sugeq5o/lib:/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/boost-1.66.0-l6qu5nrynyuksm4ex7gswb6rsvvhsj42/lib:/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/fftw-3.3.8-7p6nny234obzuczdtyyea4t4uxej777s/lib:/sw/summit/cuda/10.1.243/lib64:/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/spectrum-mpi-10.3.1.2-20200121-awz2q5brde7wgdqqw4ugalrkukeub4eb/lib:/sw/summit/gcc/6.4.0/lib64:/opt/ibm/spectrumcomputing/lsf/10.1.0.9/linux3.10-glibc2.17-ppc64le-csm/lib
+LMOD_CMD=/sw/summit/lmod/8.2.10/libexec/lmod
+LMOD_DIR=/sw/summit/lmod/8.2.10/libexec
+LMOD_FAMILY_COMPILER=gcc
+LMOD_FAMILY_COMPILER_VERSION=6.4.0
+LMOD_FAMILY_MPI=spectrum-mpi
+LMOD_FAMILY_MPI_VERSION=10.3.1.2-20200121
+LMOD_MPI_NAME=spectrum-mpi
+LMOD_MPI_VERSION=10.3.1.2-20200121-awz2q5b
+LMOD_PKG=/sw/summit/lmod/8.2.10
+LMOD_ROOT=/sw/summit/lmod
+LMOD_SETTARG_FULL_SUPPORT=no
+LMOD_SYSTEM_DEFAULT_MODULES=DefApps
+LMOD_SYSTEM_NAME=summit
+LMOD_VERSION=8.2.10
+LMOD_sys=Linux
+LOADEDMODULES=hsi/5.0.2.p5:xalt/1.2.0:lsf-tools/2.0:DefApps:gcc/6.4.0:spectrum-mpi/10.3.1.2-20200121:cuda/10.1.243:fftw/3.3.8:boost/1.66.0:hdf5/1.10.4:netlib-lapack/3.8.0:hypre/2.13.0:kokkos-nvcc-wrapper/20200221:kokkos/3.0.00
+LOGNAME=ssinghal
+LSF_BINDIR=/opt/ibm/spectrumcomputing/lsf/10.1.0.9/linux3.10-glibc2.17-ppc64le-csm/bin
+LSF_ENVDIR=/opt/ibm/spectrumcomputing/lsf/conf
+LSF_LIBDIR=/opt/ibm/spectrumcomputing/lsf/10.1.0.9/linux3.10-glibc2.17-ppc64le-csm/lib
+LSF_SERVERDIR=/opt/ibm/spectrumcomputing/lsf/10.1.0.9/linux3.10-glibc2.17-ppc64le-csm/etc
+LS_COLORS='rs=0:di=38;5;27:ln=38;5;51:mh=44;38;5;15:pi=40;38;5;11:so=38;5;13:do=38;5;5:bd=48;5;232;38;5;11:cd=48;5;232;38;5;3:or=48;5;232;38;5;9:mi=05;48;5;232;38;5;15:su=48;5;196;38;5;15:sg=48;5;11;38;5;16:ca=48;5;196;38;5;226:tw=48;5;10;38;5;16:ow=48;5;10;38;5;21:st=48;5;21;38;5;15:ex=38;5;34:*.tar=38;5;9:*.tgz=38;5;9:*.arc=38;5;9:*.arj=38;5;9:*.taz=38;5;9:*.lha=38;5;9:*.lz4=38;5;9:*.lzh=38;5;9:*.lzma=38;5;9:*.tlz=38;5;9:*.txz=38;5;9:*.tzo=38;5;9:*.t7z=38;5;9:*.zip=38;5;9:*.z=38;5;9:*.Z=38;5;9:*.dz=38;5;9:*.gz=38;5;9:*.lrz=38;5;9:*.lz=38;5;9:*.lzo=38;5;9:*.xz=38;5;9:*.bz2=38;5;9:*.bz=38;5;9:*.tbz=38;5;9:*.tbz2=38;5;9:*.tz=38;5;9:*.deb=38;5;9:*.rpm=38;5;9:*.jar=38;5;9:*.war=38;5;9:*.ear=38;5;9:*.sar=38;5;9:*.rar=38;5;9:*.alz=38;5;9:*.ace=38;5;9:*.zoo=38;5;9:*.cpio=38;5;9:*.7z=38;5;9:*.rz=38;5;9:*.cab=38;5;9:*.jpg=38;5;13:*.jpeg=38;5;13:*.gif=38;5;13:*.bmp=38;5;13:*.pbm=38;5;13:*.pgm=38;5;13:*.ppm=38;5;13:*.tga=38;5;13:*.xbm=38;5;13:*.xpm=38;5;13:*.tif=38;5;13:*.tiff=38;5;13:*.png=38;5;13:*.svg=38;5;13:*.svgz=38;5;13:*.mng=38;5;13:*.pcx=38;5;13:*.mov=38;5;13:*.mpg=38;5;13:*.mpeg=38;5;13:*.m2v=38;5;13:*.mkv=38;5;13:*.webm=38;5;13:*.ogm=38;5;13:*.mp4=38;5;13:*.m4v=38;5;13:*.mp4v=38;5;13:*.vob=38;5;13:*.qt=38;5;13:*.nuv=38;5;13:*.wmv=38;5;13:*.asf=38;5;13:*.rm=38;5;13:*.rmvb=38;5;13:*.flc=38;5;13:*.avi=38;5;13:*.fli=38;5;13:*.flv=38;5;13:*.gl=38;5;13:*.dl=38;5;13:*.xcf=38;5;13:*.xwd=38;5;13:*.yuv=38;5;13:*.cgm=38;5;13:*.emf=38;5;13:*.axv=38;5;13:*.anx=38;5;13:*.ogv=38;5;13:*.ogx=38;5;13:*.aac=38;5;45:*.au=38;5;45:*.flac=38;5;45:*.mid=38;5;45:*.midi=38;5;45:*.mka=38;5;45:*.mp3=38;5;45:*.mpc=38;5;45:*.ogg=38;5;45:*.ra=38;5;45:*.wav=38;5;45:*.axa=38;5;45:*.oga=38;5;45:*.spx=38;5;45:*.xspf=38;5;45:'
+MACHTYPE=powerpc64le-redhat-linux-gnu
+MAIL=/var/spool/mail/ssinghal
+MANPATH=/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/fftw-3.3.8-7p6nny234obzuczdtyyea4t4uxej777s/share/man:/sw/summit/cuda/10.1.243/doc/man:/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/spectrum-mpi-10.3.1.2-20200121-awz2q5brde7wgdqqw4ugalrkukeub4eb/share/man:/sw/summit/gcc/6.4.0/share/man:/sw/sources/hpss/man:/sw/summit/lmod/8.2.10/share/man:/opt/ibm/spectrumcomputing/lsf/10.1.0.9/man::/opt/puppetlabs/puppet/share/man
+MEMBERWORK=/gpfs/alpine/scratch/ssinghal
+MODULEPATH=/autofs/nccs-svm1_sw/summit/modulefiles/site/linux-rhel7-ppc64le/spectrum-mpi/10.3.1.2-20200121-awz2q5b/gcc/6.4.0:/sw/summit/modulefiles/site/linux-rhel7-ppc64le/gcc/6.4.0:/sw/summit/modulefiles/site/linux-rhel7-ppc64le/Core:/sw/summit/modulefiles/core
+MODULEPATH_ROOT=/sw/summit/modulefiles
+MODULESHOME=/sw/summit/lmod/8.2.10
+MPI_ROOT=/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/spectrum-mpi-10.3.1.2-20200121-awz2q5brde7wgdqqw4ugalrkukeub4eb
+OLCF_BOOST_ROOT=/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/boost-1.66.0-l6qu5nrynyuksm4ex7gswb6rsvvhsj42
+OLCF_CUDA_ROOT=/sw/summit/cuda/10.1.243
+OLCF_FAMILY_COMPILER=gcc
+OLCF_FAMILY_COMPILER_VERSION=6.4.0
+OLCF_FAMILY_MPI=spectrum-mpi
+OLCF_FAMILY_MPI_VERSION=10.3.1.2-20200121
+OLCF_FFTW_ROOT=/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/fftw-3.3.8-7p6nny234obzuczdtyyea4t4uxej777s
+OLCF_GCC_ROOT=/sw/summit/gcc/6.4.0
+OLCF_HDF5_ROOT=/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/hdf5-1.10.4-qj7qoumocmjj2xkwbwotazo22sugeq5o
+OLCF_HSI_ROOT=/sw/sources/hpss
+OLCF_HYPRE_ROOT=/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/hypre-2.13.0-tfeptwehvux4pgog34fm7mqoowrfynna
+OLCF_KOKKOS_NVCC_WRAPPER_ROOT=/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/kokkos-nvcc-wrapper-20200221-2k5mir5wxjpoyvdkwaotm2sy74oj2cvs
+OLCF_KOKKOS_ROOT=/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/kokkos-3.0.00-nd2jho65xryrafyrakewx7lmjh7vtg3t
+OLCF_LMOD_ROOT=/sw/summit
+OLCF_MODULEPATH_ROOT=/sw/summit/modulefiles
+OLCF_NETLIB_LAPACK_ROOT=/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/netlib-lapack-3.8.0-wcabdyqhdi5rooxbkqa6x5d7hxyxwdkm
+OLCF_SPECTRUM_MPI_ROOT=/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/spectrum-mpi-10.3.1.2-20200121-awz2q5brde7wgdqqw4ugalrkukeub4eb
+OMPI_CC=gcc
+OMPI_CXX=g++
+OMPI_DIR=/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/spectrum-mpi-10.3.1.2-20200121-awz2q5brde7wgdqqw4ugalrkukeub4eb
+OMPI_FC=gfortran
+OMPI_MCA_io=romio321
+OPAL_LIBDIR=/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/spectrum-mpi-10.3.1.2-20200121-awz2q5brde7wgdqqw4ugalrkukeub4eb/lib
+OPAL_PREFIX=/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/spectrum-mpi-10.3.1.2-20200121-awz2q5brde7wgdqqw4ugalrkukeub4eb
+OPTERR=1
+OPTIND=1
+OSTYPE=linux-gnu
+PAMI_CUDA_AWARE_THRESH=320000
+PAMI_ENABLE_STRIPING=0
+PAMI_IBV_ADAPTER_AFFINITY=1
+PAMI_IBV_ENABLE_DCT=1
+PAMI_IBV_ENABLE_OOO_AR=1
+PAMI_IBV_QP_SERVICE_LEVEL=8
+PAPI_CUDA_ROOT=/sw/summit/cuda/10.1.243
+PAPI_PATH=/ccs/home/ssinghal/papi_install
+PATH=/gpfs/alpine/csc299/scratch/ssinghal/Dynamic_workflow_management/rmonitor:/gpfs/alpine/csc299/scratch/ssinghal/Dynamic_workflow_management/rmonitor/bin:/gpfs/alpine/csc299/scratch/ssinghal/Dynamic_workflow_management/rmonitor/include:/sw/sources/lsf-tools/2.0/summit/bin:/sw/summit/xalt/1.2.0/bin:/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/kokkos-3.0.00-nd2jho65xryrafyrakewx7lmjh7vtg3t/bin:/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/kokkos-nvcc-wrapper-20200221-2k5mir5wxjpoyvdkwaotm2sy74oj2cvs/bin:/gpfs/alpine/csc299/scratch/ssinghal/cheetah/dynamic_cheetah:/gpfs/alpine/csc299/scratch/ssinghal/cheetah/dynamic_cheetah/bin:/gpfs/alpine/csc299/scratch/ssinghal/cheetah/dynamic_cheetah/include:/ccs/home/ssinghal/vtk-install:/ccs/home/ssinghal/vtk-install/include:/ccs/home/ssinghal/vtk-install/bin:/ccs/home/ssinghal/vtkm-install:/ccs/home/ssinghal/vtkm-install/include:/ccs/home/ssinghal/vtkm-install/include/vtkm-1.3:/ccs/home/ssinghal/vtkm-install/bin:/ccs/home/ssinghal/tau2-install/gcc/x86_64:/ccs/home/ssinghal/tau2-install/gcc/x86_64/include:/ccs/home/ssinghal/tau2-install/gcc/x86_64/bin:/ccs/home/ssinghal/papi_install:/ccs/home/ssinghal/papi_install/include:/ccs/home/ssinghal/papi_install/bin:/ccs/home/ssinghal/zfp-install:/ccs/home/ssinghal/zfp-install/include:/ccs/home/ssinghal/zfp-install/bin:/ccs/home/ssinghal/ADIOS2-install/lib/python3.7/site-packages:/sw/summit/xalt/1.2.0/site:/sw/summit/xalt/1.2.0/libexec:/ccs/home/ssinghal/ADIOS2-install:/ccs/home/ssinghal/ADIOS2-install/include:/ccs/home/ssinghal/ADIOS2-install/bin:/sw/summit/cuda/10.1.243/extras/CUPTI/include:/sw/summit/cuda/10.1.243/extras/CUPTI/bin:/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/hdf5-1.10.4-qj7qoumocmjj2xkwbwotazo22sugeq5o/bin:/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/fftw-3.3.8-7p6nny234obzuczdtyyea4t4uxej777s/bin:/sw/summit/cuda/10.1.243/bin:/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/spectrum-mpi-10.3.1.2-20200121-awz2q5brde7wgdqqw4ugalrkukeub4eb/bin:/sw/summit/gcc/6.4.0/bin:/usr/bin:/usr/sbin:/sw/sources/hpss/bin:/opt/ibm/spectrumcomputing/lsf/10.1.0.9/linux3.10-glibc2.17-ppc64le-csm/etc:/opt/ibm/spectrumcomputing/lsf/10.1.0.9/linux3.10-glibc2.17-ppc64le-csm/bin:/opt/ibm/csm/bin:/usr/local/bin:/usr/local/sbin:/opt/ibm/flightlog/bin:/opt/ibutils/bin:/opt/ibm/spectrum_mpi/jsm_pmix/bin:/opt/puppetlabs/bin:/usr/lpp/mmfs/bin
+PIPESTATUS=([0]="0")
+PKG_CONFIG_PATH=/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/kokkos-3.0.00-nd2jho65xryrafyrakewx7lmjh7vtg3t/lib64/pkgconfig:/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/netlib-lapack-3.8.0-wcabdyqhdi5rooxbkqa6x5d7hxyxwdkm/lib64/pkgconfig:/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/fftw-3.3.8-7p6nny234obzuczdtyyea4t4uxej777s/lib/pkgconfig
+PPID=12130
+PROJWORK=/gpfs/alpine/proj-shared
+PS4='+ '
+PWD=/gpfs/alpine/scratch/ssinghal/csc299/Dynamic_workflow_management/tau-2.28.1
+PYTHONPATH=/ccs/home/ssinghal/ADIOS2-install/lib/python3.7/site-packages:/sw/summit/xalt/1.2.0/site:/sw/summit/xalt/1.2.0/libexec
+RMONITOR_ROOT=/gpfs/alpine/csc299/scratch/ssinghal/Dynamic_workflow_management/rmonitor
+SHELL=/bin/bash
+SHELLOPTS=braceexpand:hashall:interactive-comments
+SHLVL=3
+SSH_CLIENT='73.129.130.86 56830 22'
+SSH_CONNECTION='73.129.130.86 56830 128.219.134.73 22'
+SSH_TTY=/dev/pts/74
+START_DIR=/gpfs/alpine/scratch/ssinghal/csc299/Dynamic_workflow_management/tau-2.28.1
+TAU_CCOM=mpicc
+TAU_MAKEFILE=/ccs/home/ssinghal/tau2-install/gcc/x86_64/lib/Makefile.tau-papi-mpi-pthread-adios2
+TAU_PATH=/ccs/home/ssinghal/tau2-install/gcc/x86_64
+TERM=xterm-256color
+UID=14473
+USER=ssinghal
+VTKM_PATH=/ccs/home/ssinghal/vtkm-install
+VTK_ROOT=/ccs/home/ssinghal/vtk-install
+WORLDWORK=/gpfs/alpine/world-shared
+XALT_ETC_DIR=/sw/summit/xalt/1.2.0/etc
+XALT_OLCF=1
+XDG_RUNTIME_DIR=/run/user/14473
+XDG_SESSION_ID=37505
+XLSF_UIDDIR=/opt/ibm/spectrumcomputing/lsf/10.1.0.9/linux3.10-glibc2.17-ppc64le-csm/lib/uid
+XL_LINKER=/sw/summit/xalt/1.2.0/bin/ld
+ZFP_PATH=/ccs/home/ssinghal/zfp-install
+_=
+_LMFILES_=/sw/summit/modulefiles/site/linux-rhel7-ppc64le/Core/hsi/5.0.2.p5.lua:/sw/summit/modulefiles/site/linux-rhel7-ppc64le/Core/xalt/1.2.0.lua:/sw/summit/modulefiles/site/linux-rhel7-ppc64le/Core/lsf-tools/2.0.lua:/sw/summit/modulefiles/site/linux-rhel7-ppc64le/Core/DefApps.lua:/sw/summit/modulefiles/site/linux-rhel7-ppc64le/Core/gcc/6.4.0.lua:/sw/summit/modulefiles/site/linux-rhel7-ppc64le/gcc/6.4.0/spectrum-mpi/10.3.1.2-20200121.lua:/sw/summit/modulefiles/site/linux-rhel7-ppc64le/Core/cuda/10.1.243:/autofs/nccs-svm1_sw/summit/modulefiles/site/linux-rhel7-ppc64le/spectrum-mpi/10.3.1.2-20200121-awz2q5b/gcc/6.4.0/fftw/3.3.8.lua:/autofs/nccs-svm1_sw/summit/modulefiles/site/linux-rhel7-ppc64le/spectrum-mpi/10.3.1.2-20200121-awz2q5b/gcc/6.4.0/boost/1.66.0.lua:/autofs/nccs-svm1_sw/summit/modulefiles/site/linux-rhel7-ppc64le/spectrum-mpi/10.3.1.2-20200121-awz2q5b/gcc/6.4.0/hdf5/1.10.4.lua:/sw/summit/modulefiles/site/linux-rhel7-ppc64le/gcc/6.4.0/netlib-lapack/3.8.0.lua:/autofs/nccs-svm1_sw/summit/modulefiles/site/linux-rhel7-ppc64le/spectrum-mpi/10.3.1.2-20200121-awz2q5b/gcc/6.4.0/hypre/2.13.0.lua:/sw/summit/modulefiles/site/linux-rhel7-ppc64le/gcc/6.4.0/kokkos-nvcc-wrapper/20200221.lua:/sw/summit/modulefiles/site/linux-rhel7-ppc64le/gcc/6.4.0/kokkos/3.0.00.lua
+_ModuleTable001_=X01vZHVsZVRhYmxlXz17WyJNVHZlcnNpb24iXT0zLFsiY19yZWJ1aWxkVGltZSJdPWZhbHNlLFsiY19zaG9ydFRpbWUiXT1mYWxzZSxkZXB0aFQ9e30sZmFtaWx5PXtbImNvbXBpbGVyIl09ImdjYyIsWyJtcGkiXT0ic3BlY3RydW0tbXBpIix9LG1UPXtEZWZBcHBzPXtbImZuIl09Ii9zdy9zdW1taXQvbW9kdWxlZmlsZXMvc2l0ZS9saW51eC1yaGVsNy1wcGM2NGxlL0NvcmUvRGVmQXBwcy5sdWEiLFsiZnVsbE5hbWUiXT0iRGVmQXBwcyIsWyJsb2FkT3JkZXIiXT00LHByb3BUPXt9LFsic3RhY2tEZXB0aCJdPTAsWyJzdGF0dXMiXT0iYWN0aXZlIixbInVzZXJOYW1lIl09IkRlZkFwcHMiLH0sYm9vc3Q9e1siZm4iXT0iL2F1dG9mcy9uY2NzLXN2bTFfc3cvc3VtbWl0L21vZHVs
+_ModuleTable002_=ZWZpbGVzL3NpdGUvbGludXgtcmhlbDctcHBjNjRsZS9zcGVjdHJ1bS1tcGkvMTAuMy4xLjItMjAyMDAxMjEtYXd6MnE1Yi9nY2MvNi40LjAvYm9vc3QvMS42Ni4wLmx1YSIsWyJmdWxsTmFtZSJdPSJib29zdC8xLjY2LjAiLFsibG9hZE9yZGVyIl09OSxwcm9wVD17fSxbInN0YWNrRGVwdGgiXT0wLFsic3RhdHVzIl09ImFjdGl2ZSIsWyJ1c2VyTmFtZSJdPSJib29zdCIsfSxjdWRhPXtbImZuIl09Ii9zdy9zdW1taXQvbW9kdWxlZmlsZXMvc2l0ZS9saW51eC1yaGVsNy1wcGM2NGxlL0NvcmUvY3VkYS8xMC4xLjI0MyIsWyJmdWxsTmFtZSJdPSJjdWRhLzEwLjEuMjQzIixbImxvYWRPcmRlciJdPTcscHJvcFQ9e30sWyJzdGFja0RlcHRoIl09MCxbInN0YXR1cyJdPSJhY3RpdmUi
+_ModuleTable003_=LFsidXNlck5hbWUiXT0iY3VkYSIsfSxmZnR3PXtbImZuIl09Ii9hdXRvZnMvbmNjcy1zdm0xX3N3L3N1bW1pdC9tb2R1bGVmaWxlcy9zaXRlL2xpbnV4LXJoZWw3LXBwYzY0bGUvc3BlY3RydW0tbXBpLzEwLjMuMS4yLTIwMjAwMTIxLWF3ejJxNWIvZ2NjLzYuNC4wL2ZmdHcvMy4zLjgubHVhIixbImZ1bGxOYW1lIl09ImZmdHcvMy4zLjgiLFsibG9hZE9yZGVyIl09OCxwcm9wVD17fSxbInN0YWNrRGVwdGgiXT0wLFsic3RhdHVzIl09ImFjdGl2ZSIsWyJ1c2VyTmFtZSJdPSJmZnR3Iix9LGdjYz17WyJmbiJdPSIvc3cvc3VtbWl0L21vZHVsZWZpbGVzL3NpdGUvbGludXgtcmhlbDctcHBjNjRsZS9Db3JlL2djYy82LjQuMC5sdWEiLFsiZnVsbE5hbWUiXT0iZ2NjLzYuNC4wIixb
+_ModuleTable004_=ImxvYWRPcmRlciJdPTUscHJvcFQ9e30sWyJzdGFja0RlcHRoIl09MCxbInN0YXR1cyJdPSJhY3RpdmUiLFsidXNlck5hbWUiXT0iZ2NjIix9LGhkZjU9e1siZm4iXT0iL2F1dG9mcy9uY2NzLXN2bTFfc3cvc3VtbWl0L21vZHVsZWZpbGVzL3NpdGUvbGludXgtcmhlbDctcHBjNjRsZS9zcGVjdHJ1bS1tcGkvMTAuMy4xLjItMjAyMDAxMjEtYXd6MnE1Yi9nY2MvNi40LjAvaGRmNS8xLjEwLjQubHVhIixbImZ1bGxOYW1lIl09ImhkZjUvMS4xMC40IixbImxvYWRPcmRlciJdPTEwLHByb3BUPXt9LFsic3RhY2tEZXB0aCJdPTAsWyJzdGF0dXMiXT0iYWN0aXZlIixbInVzZXJOYW1lIl09ImhkZjUiLH0saHNpPXtbImZuIl09Ii9zdy9zdW1taXQvbW9kdWxlZmlsZXMvc2l0ZS9saW51
+_ModuleTable005_=eC1yaGVsNy1wcGM2NGxlL0NvcmUvaHNpLzUuMC4yLnA1Lmx1YSIsWyJmdWxsTmFtZSJdPSJoc2kvNS4wLjIucDUiLFsibG9hZE9yZGVyIl09MSxwcm9wVD17fSxbInN0YWNrRGVwdGgiXT0xLFsic3RhdHVzIl09ImFjdGl2ZSIsWyJ1c2VyTmFtZSJdPSJoc2kiLH0saHlwcmU9e1siZm4iXT0iL2F1dG9mcy9uY2NzLXN2bTFfc3cvc3VtbWl0L21vZHVsZWZpbGVzL3NpdGUvbGludXgtcmhlbDctcHBjNjRsZS9zcGVjdHJ1bS1tcGkvMTAuMy4xLjItMjAyMDAxMjEtYXd6MnE1Yi9nY2MvNi40LjAvaHlwcmUvMi4xMy4wLmx1YSIsWyJmdWxsTmFtZSJdPSJoeXByZS8yLjEzLjAiLFsibG9hZE9yZGVyIl09MTIscHJvcFQ9e30sWyJzdGFja0RlcHRoIl09MCxbInN0YXR1cyJdPSJhY3Rp
+_ModuleTable006_=dmUiLFsidXNlck5hbWUiXT0iaHlwcmUiLH0sa29ra29zPXtbImZuIl09Ii9zdy9zdW1taXQvbW9kdWxlZmlsZXMvc2l0ZS9saW51eC1yaGVsNy1wcGM2NGxlL2djYy82LjQuMC9rb2trb3MvMy4wLjAwLmx1YSIsWyJmdWxsTmFtZSJdPSJrb2trb3MvMy4wLjAwIixbImxvYWRPcmRlciJdPTE0LHByb3BUPXt9LFsic3RhY2tEZXB0aCJdPTAsWyJzdGF0dXMiXT0iYWN0aXZlIixbInVzZXJOYW1lIl09Imtva2tvcy8zLjAuMDAiLH0sWyJrb2trb3MtbnZjYy13cmFwcGVyIl09e1siZm4iXT0iL3N3L3N1bW1pdC9tb2R1bGVmaWxlcy9zaXRlL2xpbnV4LXJoZWw3LXBwYzY0bGUvZ2NjLzYuNC4wL2tva2tvcy1udmNjLXdyYXBwZXIvMjAyMDAyMjEubHVhIixbImZ1bGxOYW1lIl09Imtv
+_ModuleTable007_=a2tvcy1udmNjLXdyYXBwZXIvMjAyMDAyMjEiLFsibG9hZE9yZGVyIl09MTMscHJvcFQ9e30sWyJzdGFja0RlcHRoIl09MCxbInN0YXR1cyJdPSJhY3RpdmUiLFsidXNlck5hbWUiXT0ia29ra29zLW52Y2Mtd3JhcHBlci8yMDIwMDIyMSIsfSxbImxzZi10b29scyJdPXtbImZuIl09Ii9zdy9zdW1taXQvbW9kdWxlZmlsZXMvc2l0ZS9saW51eC1yaGVsNy1wcGM2NGxlL0NvcmUvbHNmLXRvb2xzLzIuMC5sdWEiLFsiZnVsbE5hbWUiXT0ibHNmLXRvb2xzLzIuMCIsWyJsb2FkT3JkZXIiXT0zLHByb3BUPXt9LFsic3RhY2tEZXB0aCJdPTEsWyJzdGF0dXMiXT0iYWN0aXZlIixbInVzZXJOYW1lIl09ImxzZi10b29scyIsfSxbIm5ldGxpYi1sYXBhY2siXT17WyJmbiJdPSIvc3cvc3Vt
+_ModuleTable008_=bWl0L21vZHVsZWZpbGVzL3NpdGUvbGludXgtcmhlbDctcHBjNjRsZS9nY2MvNi40LjAvbmV0bGliLWxhcGFjay8zLjguMC5sdWEiLFsiZnVsbE5hbWUiXT0ibmV0bGliLWxhcGFjay8zLjguMCIsWyJsb2FkT3JkZXIiXT0xMSxwcm9wVD17fSxbInN0YWNrRGVwdGgiXT0wLFsic3RhdHVzIl09ImFjdGl2ZSIsWyJ1c2VyTmFtZSJdPSJuZXRsaWItbGFwYWNrIix9LFsic3BlY3RydW0tbXBpIl09e1siZm4iXT0iL3N3L3N1bW1pdC9tb2R1bGVmaWxlcy9zaXRlL2xpbnV4LXJoZWw3LXBwYzY0bGUvZ2NjLzYuNC4wL3NwZWN0cnVtLW1waS8xMC4zLjEuMi0yMDIwMDEyMS5sdWEiLFsiZnVsbE5hbWUiXT0ic3BlY3RydW0tbXBpLzEwLjMuMS4yLTIwMjAwMTIxIixbImxvYWRPcmRlciJd
+_ModuleTable009_=PTYscHJvcFQ9e30sWyJzdGFja0RlcHRoIl09MCxbInN0YXR1cyJdPSJhY3RpdmUiLFsidXNlck5hbWUiXT0ic3BlY3RydW0tbXBpIix9LHhhbHQ9e1siZm4iXT0iL3N3L3N1bW1pdC9tb2R1bGVmaWxlcy9zaXRlL2xpbnV4LXJoZWw3LXBwYzY0bGUvQ29yZS94YWx0LzEuMi4wLmx1YSIsWyJmdWxsTmFtZSJdPSJ4YWx0LzEuMi4wIixbImxvYWRPcmRlciJdPTIscHJvcFQ9e30sWyJzdGFja0RlcHRoIl09MSxbInN0YXR1cyJdPSJhY3RpdmUiLFsidXNlck5hbWUiXT0ieGFsdCIsfSx9LG1wYXRoQT17Ii9hdXRvZnMvbmNjcy1zdm0xX3N3L3N1bW1pdC9tb2R1bGVmaWxlcy9zaXRlL2xpbnV4LXJoZWw3LXBwYzY0bGUvc3BlY3RydW0tbXBpLzEwLjMuMS4yLTIwMjAwMTIxLWF3ejJx
+_ModuleTable010_=NWIvZ2NjLzYuNC4wIiwiL3N3L3N1bW1pdC9tb2R1bGVmaWxlcy9zaXRlL2xpbnV4LXJoZWw3LXBwYzY0bGUvZ2NjLzYuNC4wIiwiL3N3L3N1bW1pdC9tb2R1bGVmaWxlcy9zaXRlL2xpbnV4LXJoZWw3LXBwYzY0bGUvQ29yZSIsIi9zdy9zdW1taXQvbW9kdWxlZmlsZXMvY29yZSIsfSxbInN5c3RlbUJhc2VNUEFUSCJdPSIvc3cvc3VtbWl0L21vZHVsZWZpbGVzL3NpdGUvbGludXgtcmhlbDctcHBjNjRsZS9Db3JlOi9zdy9zdW1taXQvbW9kdWxlZmlsZXMvY29yZSIsfQ==
+_ModuleTable_Sz_=10
+__Init_Default_Modules=1
+__LMOD_Priority_PATH='/sw/sources/lsf-tools/2.0/summit/bin:-9999;/sw/summit/xalt/1.2.0/bin:-9999'
+__LMOD_REF_COUNT_CMAKE_PREFIX_PATH='/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/kokkos-3.0.00-nd2jho65xryrafyrakewx7lmjh7vtg3t:1;/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/kokkos-nvcc-wrapper-20200221-2k5mir5wxjpoyvdkwaotm2sy74oj2cvs:1;/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/hypre-2.13.0-tfeptwehvux4pgog34fm7mqoowrfynna:1;/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/netlib-lapack-3.8.0-wcabdyqhdi5rooxbkqa6x5d7hxyxwdkm:1;/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/hdf5-1.10.4-qj7qoumocmjj2xkwbwotazo22sugeq5o:1;/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/boost-1.66.0-l6qu5nrynyuksm4ex7gswb6rsvvhsj42:1;/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/fftw-3.3.8-7p6nny234obzuczdtyyea4t4uxej777s:1;/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/spectrum-mpi-10.3.1.2-20200121-awz2q5brde7wgdqqw4ugalrkukeub4eb:1'
+__LMOD_REF_COUNT_CPATH='/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/kokkos-3.0.00-nd2jho65xryrafyrakewx7lmjh7vtg3t/include:1;/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/hypre-2.13.0-tfeptwehvux4pgog34fm7mqoowrfynna/include:1;/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/netlib-lapack-3.8.0-wcabdyqhdi5rooxbkqa6x5d7hxyxwdkm/include:1;/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/hdf5-1.10.4-qj7qoumocmjj2xkwbwotazo22sugeq5o/include:1;/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/boost-1.66.0-l6qu5nrynyuksm4ex7gswb6rsvvhsj42/include:1;/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/fftw-3.3.8-7p6nny234obzuczdtyyea4t4uxej777s/include:1;/sw/summit/cuda/10.1.243/include:1;/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/spectrum-mpi-10.3.1.2-20200121-awz2q5brde7wgdqqw4ugalrkukeub4eb/include:1'
+__LMOD_REF_COUNT_LD_LIBRARY_PATH='/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/kokkos-3.0.00-nd2jho65xryrafyrakewx7lmjh7vtg3t/lib64:1;/gpfs/alpine/csc299/scratch/ssinghal/cheetah/dynamic_cheetah/lib64:1;/ccs/home/ssinghal/vtk-install/lib:1;/ccs/home/ssinghal/vtkm-install/lib:1;/ccs/home/ssinghal/tau2-install/gcc/x86_64/lib:1;/ccs/home/ssinghal/papi_install/lib:1;/ccs/home/ssinghal/zfp-install/lib64:1;/ccs/home/ssinghal/ADIOS2-install/lib64:1;/ccs/home/ssinghal/ADIOS2-install/lib:1;/sw/summit/cuda/10.1.243/extras/CUPTI/lib64:1;/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/hypre-2.13.0-tfeptwehvux4pgog34fm7mqoowrfynna/lib:1;/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/netlib-lapack-3.8.0-wcabdyqhdi5rooxbkqa6x5d7hxyxwdkm/lib64:1;/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/hdf5-1.10.4-qj7qoumocmjj2xkwbwotazo22sugeq5o/lib:1;/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/boost-1.66.0-l6qu5nrynyuksm4ex7gswb6rsvvhsj42/lib:1;/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/fftw-3.3.8-7p6nny234obzuczdtyyea4t4uxej777s/lib:1;/sw/summit/cuda/10.1.243/lib64:1;/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/spectrum-mpi-10.3.1.2-20200121-awz2q5brde7wgdqqw4ugalrkukeub4eb/lib:1;/sw/summit/gcc/6.4.0/lib64:1;/opt/ibm/spectrumcomputing/lsf/10.1.0.9/linux3.10-glibc2.17-ppc64le-csm/lib:1'
+__LMOD_REF_COUNT_LIBRARY_PATH='/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/kokkos-3.0.00-nd2jho65xryrafyrakewx7lmjh7vtg3t/lib64:1;/ccs/home/ssinghal/ADIOS2-install/lib64:1;/ccs/home/ssinghal/ADIOS2-install/lib:1;/sw/summit/cuda/10.1.243/extras/CUPTI/lib64:1;/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/hypre-2.13.0-tfeptwehvux4pgog34fm7mqoowrfynna/lib:1;/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/netlib-lapack-3.8.0-wcabdyqhdi5rooxbkqa6x5d7hxyxwdkm/lib64:1;/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/hdf5-1.10.4-qj7qoumocmjj2xkwbwotazo22sugeq5o/lib:1;/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/boost-1.66.0-l6qu5nrynyuksm4ex7gswb6rsvvhsj42/lib:1;/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/fftw-3.3.8-7p6nny234obzuczdtyyea4t4uxej777s/lib:1;/sw/summit/cuda/10.1.243/lib64:1;/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/spectrum-mpi-10.3.1.2-20200121-awz2q5brde7wgdqqw4ugalrkukeub4eb/lib:1;/sw/summit/gcc/6.4.0/lib64:1;/opt/ibm/spectrumcomputing/lsf/10.1.0.9/linux3.10-glibc2.17-ppc64le-csm/lib:1'
+__LMOD_REF_COUNT_LOADEDMODULES='hsi/5.0.2.p5:1;xalt/1.2.0:1;lsf-tools/2.0:1;DefApps:1;gcc/6.4.0:1;spectrum-mpi/10.3.1.2-20200121:1;cuda/10.1.243:1;fftw/3.3.8:1;boost/1.66.0:1;hdf5/1.10.4:1;netlib-lapack/3.8.0:1;hypre/2.13.0:1;kokkos-nvcc-wrapper/20200221:1;kokkos/3.0.00:1'
+__LMOD_REF_COUNT_MANPATH='/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/fftw-3.3.8-7p6nny234obzuczdtyyea4t4uxej777s/share/man:1;/sw/summit/cuda/10.1.243/doc/man:1;/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/spectrum-mpi-10.3.1.2-20200121-awz2q5brde7wgdqqw4ugalrkukeub4eb/share/man:1;/sw/summit/gcc/6.4.0/share/man:1;/sw/sources/hpss/man:1;/sw/summit/lmod/8.2.10/share/man:1;/opt/ibm/spectrumcomputing/lsf/10.1.0.9/man:1;/opt/puppetlabs/puppet/share/man:1'
+__LMOD_REF_COUNT_MODULEPATH='/autofs/nccs-svm1_sw/summit/modulefiles/site/linux-rhel7-ppc64le/spectrum-mpi/10.3.1.2-20200121-awz2q5b/gcc/6.4.0:1;/sw/summit/modulefiles/site/linux-rhel7-ppc64le/gcc/6.4.0:1;/sw/summit/modulefiles/site/linux-rhel7-ppc64le/Core:1;/sw/summit/modulefiles/core:1'
+__LMOD_REF_COUNT_PATH='/sw/sources/lsf-tools/2.0/summit/bin:2;/sw/summit/xalt/1.2.0/bin:1;/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/kokkos-3.0.00-nd2jho65xryrafyrakewx7lmjh7vtg3t/bin:1;/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/kokkos-nvcc-wrapper-20200221-2k5mir5wxjpoyvdkwaotm2sy74oj2cvs/bin:1;/gpfs/alpine/csc299/scratch/ssinghal/cheetah/dynamic_cheetah:1;/gpfs/alpine/csc299/scratch/ssinghal/cheetah/dynamic_cheetah/bin:1;/gpfs/alpine/csc299/scratch/ssinghal/cheetah/dynamic_cheetah/include:1;/ccs/home/ssinghal/vtk-install:1;/ccs/home/ssinghal/vtk-install/include:1;/ccs/home/ssinghal/vtk-install/bin:1;/ccs/home/ssinghal/vtkm-install:1;/ccs/home/ssinghal/vtkm-install/include:1;/ccs/home/ssinghal/vtkm-install/include/vtkm-1.3:1;/ccs/home/ssinghal/vtkm-install/bin:1;/ccs/home/ssinghal/tau2-install/gcc/x86_64:1;/ccs/home/ssinghal/tau2-install/gcc/x86_64/include:1;/ccs/home/ssinghal/tau2-install/gcc/x86_64/bin:1;/ccs/home/ssinghal/papi_install:1;/ccs/home/ssinghal/papi_install/include:1;/ccs/home/ssinghal/papi_install/bin:1;/ccs/home/ssinghal/zfp-install:1;/ccs/home/ssinghal/zfp-install/include:1;/ccs/home/ssinghal/zfp-install/bin:1;/ccs/home/ssinghal/ADIOS2-install/lib/python3.7/site-packages:1;/sw/summit/xalt/1.2.0/site:1;/sw/summit/xalt/1.2.0/libexec:1;/ccs/home/ssinghal/ADIOS2-install:1;/ccs/home/ssinghal/ADIOS2-install/include:1;/ccs/home/ssinghal/ADIOS2-install/bin:1;/sw/summit/cuda/10.1.243/extras/CUPTI/include:1;/sw/summit/cuda/10.1.243/extras/CUPTI/bin:1;/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/hdf5-1.10.4-qj7qoumocmjj2xkwbwotazo22sugeq5o/bin:1;/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/fftw-3.3.8-7p6nny234obzuczdtyyea4t4uxej777s/bin:1;/sw/summit/cuda/10.1.243/bin:1;/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/spectrum-mpi-10.3.1.2-20200121-awz2q5brde7wgdqqw4ugalrkukeub4eb/bin:1;/sw/summit/gcc/6.4.0/bin:1;/usr/bin:2;/usr/sbin:2;/sw/sources/hpss/bin:1;/opt/ibm/spectrumcomputing/lsf/10.1.0.9/linux3.10-glibc2.17-ppc64le-csm/etc:1;/opt/ibm/spectrumcomputing/lsf/10.1.0.9/linux3.10-glibc2.17-ppc64le-csm/bin:1;/opt/ibm/csm/bin:1;/usr/local/bin:1;/usr/local/sbin:1;/opt/ibm/flightlog/bin:1;/opt/ibutils/bin:1;/opt/ibm/spectrum_mpi/jsm_pmix/bin:1;/opt/puppetlabs/bin:1;/usr/lpp/mmfs/bin:1'
+__LMOD_REF_COUNT_PKG_CONFIG_PATH='/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/kokkos-3.0.00-nd2jho65xryrafyrakewx7lmjh7vtg3t/lib64/pkgconfig:1;/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/netlib-lapack-3.8.0-wcabdyqhdi5rooxbkqa6x5d7hxyxwdkm/lib64/pkgconfig:1;/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/fftw-3.3.8-7p6nny234obzuczdtyyea4t4uxej777s/lib/pkgconfig:1'
+__LMOD_REF_COUNT_PYTHONPATH='/sw/summit/xalt/1.2.0/site:1;/sw/summit/xalt/1.2.0/libexec:1'
+__LMOD_REF_COUNT__LMFILES_='/sw/summit/modulefiles/site/linux-rhel7-ppc64le/Core/hsi/5.0.2.p5.lua:1;/sw/summit/modulefiles/site/linux-rhel7-ppc64le/Core/xalt/1.2.0.lua:1;/sw/summit/modulefiles/site/linux-rhel7-ppc64le/Core/lsf-tools/2.0.lua:1;/sw/summit/modulefiles/site/linux-rhel7-ppc64le/Core/DefApps.lua:1;/sw/summit/modulefiles/site/linux-rhel7-ppc64le/Core/gcc/6.4.0.lua:1;/sw/summit/modulefiles/site/linux-rhel7-ppc64le/gcc/6.4.0/spectrum-mpi/10.3.1.2-20200121.lua:1;/sw/summit/modulefiles/site/linux-rhel7-ppc64le/Core/cuda/10.1.243:1;/autofs/nccs-svm1_sw/summit/modulefiles/site/linux-rhel7-ppc64le/spectrum-mpi/10.3.1.2-20200121-awz2q5b/gcc/6.4.0/fftw/3.3.8.lua:1;/autofs/nccs-svm1_sw/summit/modulefiles/site/linux-rhel7-ppc64le/spectrum-mpi/10.3.1.2-20200121-awz2q5b/gcc/6.4.0/boost/1.66.0.lua:1;/autofs/nccs-svm1_sw/summit/modulefiles/site/linux-rhel7-ppc64le/spectrum-mpi/10.3.1.2-20200121-awz2q5b/gcc/6.4.0/hdf5/1.10.4.lua:1;/sw/summit/modulefiles/site/linux-rhel7-ppc64le/gcc/6.4.0/netlib-lapack/3.8.0.lua:1;/autofs/nccs-svm1_sw/summit/modulefiles/site/linux-rhel7-ppc64le/spectrum-mpi/10.3.1.2-20200121-awz2q5b/gcc/6.4.0/hypre/2.13.0.lua:1;/sw/summit/modulefiles/site/linux-rhel7-ppc64le/gcc/6.4.0/kokkos-nvcc-wrapper/20200221.lua:1;/sw/summit/modulefiles/site/linux-rhel7-ppc64le/gcc/6.4.0/kokkos/3.0.00.lua:1'
+_tauroot=.
+additional_mpiincs=
+additional_mpilibs=
+adios=no
+adios2=yes
+adios2dir=/ccs/home/ssinghal/ADIOS2-install
+adiosdir=/ccs/home/ssinghal/ADIOS2-install
+all_args='-prefix=/ccs/home/ssinghal/tau2-install/2.8/gcc -bfd=download -iowrapper -unwind=download -otf=download -mpi -c++=mpicxx -cc=mpicc -fortran=mpif90 -pthread -papi=/ccs/home/ssinghal/papi_install -adios=/ccs/home/ssinghal/ADIOS2-install'
+alphatimers=no
+android_platform=19
+android_version=4.4
+apex=no
+arg=-adios=/ccs/home/ssinghal/ADIOS2-install
+argsum=dcdca6320c7cf17c578cb4034fe4c488
+armci=no
+asmdex=download
+beacon=no
+beacondir=/
+bfd=yes
+bfddir=download
+bgltimers=no
+bgptimers=no
+bgqtimers=no
+boost=no
+c_compiler=mpicc
+callpath=no
+catamount=no
+charm=no
+comm=yes
+compaq=no
+compensate=no
+confenvdir=/gpfs/alpine/scratch/ssinghal/csc299/Dynamic_workflow_management/tau-2.28.1/.configure_env
+confenvfile=/gpfs/alpine/scratch/ssinghal/csc299/Dynamic_workflow_management/tau-2.28.1/.configure_env/dcdca6320c7cf17c578cb4034fe4c488
+cputime=no
+craymic=no
+craytimers=no
+cubedir=own
+cuda=no
+cupti=no
+cwd=/gpfs/alpine/scratch/ssinghal/csc299/Dynamic_workflow_management/tau-2.28.1
+cxx_compiler=mpicxx
+darshan=no
+debugprof=no
+default=false
+depthlimit=no
+disable_memory_manager=no
+disableshared=no
+dmapp=no
+download_likwid=no
+download_ompt=no
+download_ompt_tr6=no
+download_otf=yes
+download_scorep=no
+download_sos=no
+download_unwind=yes
+dwarf=no
+dyninst=no
+dyninstinc=no
+dyninstlib=no
+ebs2otf=no
+ebs_clock_res=-1
+ebs_has_rt=no
+echo='echo -n'
+elf=no
+elfdir=
+enable_export_dynamic=no
+epilog=no
+epilogbin=no
+epilogbindir=bin
+epilogdir=no
+epilogextralinkcmd=
+epiloginc=no
+epilogincdir=
+epiloglib=no
+epiloglibdir=no
+execprefix=unknown
+extra_linker_args=
+extradir=
+extrashlibopts=
+fixmakeargs=' tauprefix=/ccs/home/ssinghal/tau2-install/2.8/gcc'
+forceshared=no
+fortran_compiler=mpif90
+fujitsu=no
+gnu=no
+gpi=no
+gpidir=
+gpiinc=
+gpilib=
+gpilibrary=no
+gpshmem=no
+guidef90=no
+gupc=no
+hip=no
+host=
+host_prefix=
+host_sysroot=
+hpctoolkit=no
+hpctoolkit_install_dir=
+hpctoolkit_src_dir=
+ibmmpi=no
+ibmxlc=no
+ibmxlc_r=no
+install_ompt=no
+install_sos=no
+intel=no
+intelcxxlibicc=no
+intelifort=no
+iowrapper=yes
+java=no
+kai=no
+ktau=no
+ktau_merge=no
+ktau_ng=no
+ktau_shctr=no
+ktauinc=
+ktauincuser=
+ktaulib=
+ktausym=
+likwid=no
+linuxtimers=no
+md5sum=/usr/bin/md5sum
+modarg=-adios=/ccs/home/ssinghal/ADIOS2-install
+modargs=' -prefix=/ccs/home/ssinghal/tau2-install/2.8/gcc -bfd=download -iowrapper -unwind=download -otf=download -mpi -c++=mpicxx -cc=mpicc -fortran=mpif90 -pthread -papi=/ccs/home/ssinghal/papi_install -adios=/ccs/home/ssinghal/ADIOS2-install'
+modmodargs=' -prefix=/ccs/home/ssinghal/tau2-install/2.8/gcc -bfd=download -iowrapper -unwind=download -otf=download -mpi -c++=mpicxx -cc=mpicc -fortran=mpif90 -pthread -papi=/ccs/home/ssinghal/papi_install -adios=/ccs/home/ssinghal/ADIOS2-install'
+mon_mpi=no
+mpc=no
+mpi=yes
+mpi2=no
+mpiinc=
+mpiio=no
+mpilib=
+mpilibargs_added_to_fixmakeargs=no
+mpilibrary=no
+mpit=no
+mpitrace=no
+mpiwarnings=
+mrnet=no
+mrnet_lib=
+mrnet_root=
+mrnet_use_lightweight=no
+myarg=mpif90
+nnl=
+noex=no
+ompt=no
+ompt_use_tr6_version=no
+omptenabled=no
+omptlib=
+omptlibrary=-lomp
+opari=no
+opari1=no
+opari_construct=no
+opari_region=no
+oparicomp=no
+open64=no
+openmp=no
+orig_c_compiler=default
+orig_cxx_compiler=default
+orig_fortran_compiler=default
+orig_useropt='-O2 -g'
+otf=yes
+otfdir=
+otfinc=
+otflib=
+papi=yes
+papidir=/ccs/home/ssinghal/papi_install
+papiperfctr=no
+papipfm=no
+papisubdir=
+papithread=no
+papivirtual=no
+papiwallclock=no
+pathscale=no
+pdt=no
+pdt_cxx_compiler=default
+pdt_root_dir=.
+pdtarchdir=unknown
+pdtcompdir=
+perf=no
+perfincdir=
+perflibdir=
+perflibrary=
+perfsuite=no
+perfsuitedir=
+pgi=no
+phase=no
+pin=no
+plugins=yes
+pmi=no
+profile=no
+profilecommunicators=no
+profileheadroom=no
+profilememory=no
+profileparam=no
+profilestats=no
+pshmem=no
+pthread=yes
+python=no
+pythoninc=
+pythonlib=
+readlink=/usr/bin/readlink
+rocm=no
+rocprofiler=no
+roctracer=no
+scalasca=no
+scorep=no
+scoreplibs=
+sddf=no
+sddfdir=
+setnode0=no
+sgitimers=no
+shmem=no
+shmeminc=
+shmemlib=
+shmemlibrary=no
+sicortex=no
+smarts=no
+sol2cc=no
+sos=no
+sosdir=
+sproc=no
+stdcxxlib=no
+stff=no
+stffdir=
+strsignal_ok=no
+suncc=no
+symlink=bash
+system=summit
+tag=no
+targetdir=/ccs/home/ssinghal/tau2-install/2.8/gcc
+tau_cray_arm64=no
+tau_links_rt=no
+tau_uselm=yes
+tauarch=unknown
+taugcclibdir=unknown
+tauoptions=
+tauprefix=/ccs/home/ssinghal/tau2-install/2.8/gcc
+tauroot=/gpfs/alpine/scratch/ssinghal/csc299/Dynamic_workflow_management/tau-2.28.1
+tautag=
+tautoplevel=/ccs/home/ssinghal/tau2-install/2.8/gcc
+tbb=no
+tcltk=yes
+tcltkfile=/
+testlastcon=' -prefix=/ccs/home/ssinghal/tau2-install/2.8/gcc -bfd=download -iowrapper -unwind=download -otf=download -mpi -c++=mpicxx -cc=mpicc -fortran=mpif90 -pthread -papi=/ccs/home/ssinghal/papi-install -adios=/ccs/home/ssinghal/ADIOS2-install'
+testlaststu=
+threadsafe=no
+trace=no
+turnbfdoff=no
+unwind_extras=
+unwind_flag=-DTAU_USE_LIBUNWIND
+unwind_inc=
+unwind_lib=
+unwind_lib_flag='-lunwind#-Wl,-rpath,$(UNWIND_LIB)'
+unwinder=libunwind
+upc=no
+upc_compiler=default
+upcnetwork=mpi
+upnetwork=unknown
+use_ansic=no
+use_openacc=no
+use_opencl=no
+use_xgc_deps=0
+useropt=-O2#-g
+usingbash=yes
+vampirtrace=no
+vampirtraceshow=no
+vtf=no
+xlsmp=no
+zepto=no
+zeptodir=
+check_another_cube_installation () 
+{ 
+    testline=`cube_config.sh --name 2>&1`;
+    another_cube_present="no";
+    if test "x$testline" = "xCUBE"; then
+        another_cube_present="yes";
+        another_cube_dir=`cube_config.sh --cube-dir`;
+        if test "x$another_cube_dir" != "x$cubedir"; then
+            warning_about_another_cube_installation $another_cube_dir;
+            return 1;
+        fi;
+    fi;
+    if test "x$CUBE_DIR" != "x"; then
+        testline=`$CUBE_DIR/bin/cube_config.sh --name 2>&1`;
+        another_cube_present="no";
+        if test "x$testline" = "xCUBE"; then
+            another_cube_present="yes";
+            another_cube_dir=`$CUBE_DIR/bin/cube_config.sh --cube-dir`;
+            if test "x$another_cube_dir" != "x$cubedir"; then
+                warning_about_another_cube_installation $another_cube_dir;
+                return 1;
+            fi;
+        fi;
+    fi;
+    return 0
+}
+check_cube_installation () 
+{ 
+    if test "x$cubedir" != "x"; then
+        if test "x$cubedir" = "xext"; then
+            if test "x$another_cube_dir" = "x"; then
+                warning_about_general_missing_cube_installation;
+            else
+                cubedir=$another_cube_dir;
+            fi;
+        fi;
+        fix_tilde_at_the_start_of_cube_path;
+        testline=`$cubedir/bin/cube_config.sh --name 2>&1`;
+        cuberoot=$cubedir;
+        if test "x$testline" != "xCUBE"; then
+            testline=`$cubedir/../bin/cube_config.sh --name 2>&1`;
+            cuberoot=$cubedir/../;
+        fi;
+        if test "x$testline" = "xCUBE"; then
+            cubeclasspath=`$cuberoot/bin/cube_config.sh --classpath`;
+            makecubeclasspath=$cubeclasspath;
+            if [ "x$cubeclasspath" != "x" -a -f $cuberoot/lib/CubeReader.jar ]; then
+                confirm_proper_cube_installation $cuberoot;
+            fi;
+        else
+            warning_about_missing_cube_installation $cubedir;
+        fi;
+    fi;
+    return 0
+}
+clearLmod () 
+{ 
+    module --force purge;
+    eval $($LMOD_DIR/clearLMOD_cmd --shell bash --full "$@")
+}
+clearMT () 
+{ 
+    eval $($LMOD_DIR/clearLMOD_cmd --shell bash --simple)
+}
+clone () 
+{ 
+    src="$1";
+    dst="$2";
+    echo "git clone $src" "$dst";
+    git clone "$src" "$dst"
+}
+configure_java () 
+{ 
+    taushell=sh;
+    if [ $machine = solaris2* -o $machine = alpha ]; then
+        taushell=ksh;
+    fi
+}
+configure_perfexplorer () 
+{ 
+    cat ${tauroot}/tools/src/perfdmf/bin/configure.skel | sed -e 's,@TAUROOTDIR@,'$targetdir',' -e 's,@SHELL@,'$taushell',' -e 's,@ARCH@,'$architecture',' > ${targetdir}/${architecture}/bin/perfdmf_configure;
+    chmod a+rx ${targetdir}/${architecture}/bin/perfdmf_configure;
+    cd ${targetdir}/${architecture}/bin;
+    /bin/rm -f taudb_configure;
+    ln -s perfdmf_configure taudb_configure;
+    cd ${tauroot};
+    cat ${tauroot}/tools/src/perfdmf/bin/createapp.skel | sed -e 's,@TAUROOTDIR@,'$targetdir',' -e 's,@SHELL@,'$taushell',' -e 's,@ARCH@,'$architecture',' > ${targetdir}/${architecture}/bin/perfdmf_createapp;
+    chmod a+rx ${targetdir}/${architecture}/bin/perfdmf_createapp;
+    cat ${tauroot}/tools/src/perfdmf/bin/createexp.skel | sed -e 's,@TAUROOTDIR@,'$targetdir',' -e 's,@SHELL@,'$taushell',' -e 's,@ARCH@,'$architecture',' > ${targetdir}/${architecture}/bin/perfdmf_createexp;
+    chmod a+rx ${targetdir}/${architecture}/bin/perfdmf_createexp;
+    cat ${tauroot}/tools/src/perfdmf/bin/loadtrial.skel | sed -e 's,@TAUROOTDIR@,'$targetdir',' -e 's,@SHELL@,'$taushell',' -e 's,@ARCH@,'$architecture',' > ${targetdir}/${architecture}/bin/perfdmf_loadtrial;
+    chmod a+rx ${targetdir}/${architecture}/bin/perfdmf_loadtrial;
+    cd ${targetdir}/${architecture}/bin;
+    /bin/rm -f taudb_loadtrial;
+    ln -s perfdmf_loadtrial taudb_loadtrial;
+    cd ${tauroot};
+    cat ${tauroot}/tools/src/perfdmf/bin/phaseconvert.skel | sed -e 's,@TAUROOTDIR@,'$targetdir',' -e 's,@SHELL@,'$taushell',' -e 's,@ARCH@,'$architecture',' > ${targetdir}/${architecture}/bin/phaseconvert;
+    chmod a+rx ${targetdir}/${architecture}/bin/phaseconvert;
+    cat ${tauroot}/tools/src/tau_user_setup.sh.skel | sed -e 's,@TAUROOTDIR@,'$targetdir',' -e 's,@SHELL@,'$taushell',' -e 's,@ARCH@,'$architecture',' > ${targetdir}/${architecture}/bin/tau_user_setup.sh;
+    chmod a+rx ${targetdir}/${architecture}/bin/tau_user_setup.sh;
+    cp ${tauroot}/tools/src/perfdmf/bin/taudb_keygen ${targetdir}/${architecture}/bin/.;
+    cp ${tauroot}/tools/src/perfdmf/bin/taudb_install_cert ${targetdir}/${architecture}/bin/.;
+    mkdir -p ${targetdir}/etc;
+    cp ${tauroot}/tools/src/perfdmf/bin/derby.properties.skel ${targetdir}/etc;
+    cp ${tauroot}/tools/src/contrib/jython.registry ${targetdir}/etc;
+    cat ${tauroot}/tools/src/perfexplorer/bin/configure.skel | sed -e 's,@TAUROOTDIR@,'$tauroot',' -e 's,@SHELL@,'$taushell',' -e 's,@ARCH@,'$architecture',' -e 's,@TARGETDIR@,'$targetdir',' > ${tauroot}/tools/src/perfexplorer/configure;
+    chmod a+rx ${tauroot}/tools/src/perfexplorer/configure;
+    cat ${tauroot}/tools/src/perfexplorer/bin/perfexplorer_configure.skel | sed -e 's,@TAUROOTDIR@,'$targetdir',' -e 's,@SHELL@,'$taushell',' -e 's,@ARCH@,'$architecture',' -e 's,@TARGETDIR@,'$targetdir',' > ${targetdir}/${architecture}/bin/perfexplorer_configure;
+    chmod a+rx ${targetdir}/${architecture}/bin/perfexplorer_configure;
+    cat ${tauroot}/tools/src/java-1.4/configure-1.4.skel | sed -e 's,@TAUROOTDIR@,'$targetdir',' -e 's,@SHELL@,'$taushell',' -e 's,@ARCH@,'$architecture',' -e 's,@TARGETDIR@,'$targetdir',' > ${targetdir}/${architecture}/bin/configure-1.4;
+    chmod a+rx ${targetdir}/${architecture}/bin/configure-1.4;
+    if [ ! -d ${targetdir}/etc ]; then
+        mkdir -p ${targetdir}/etc;
+    fi;
+    cp ${tauroot}/tools/src/perfexplorer/bin/perfexplorer.skel ${targetdir}/etc/.;
+    cp ${tauroot}/tools/src/perfexplorer/etc/dbschema.derby ${targetdir}/etc/.;
+    cp ${tauroot}/tools/src/perfexplorer/etc/dbschema.h2 ${targetdir}/etc/.;
+    cp ${tauroot}/tools/src/perfexplorer/etc/dbschema.mysql ${targetdir}/etc/.;
+    cp ${tauroot}/tools/src/perfexplorer/etc/dbschema.oracle ${targetdir}/etc/.;
+    cp ${tauroot}/tools/src/perfexplorer/etc/dbschema.postgresql ${targetdir}/etc/.;
+    cp ${tauroot}/tools/src/perfexplorer/etc/dbschema.db2 ${targetdir}/etc/.;
+    cp ${tauroot}/tools/src/perfexplorer/etc/java.policy ${targetdir}/etc/.;
+    if [ ! -d ${targetdir}/etc/topology ]; then
+        cp -r ${tauroot}/etc/topology ${targetdir}/etc;
+        cp ${tauroot}/etc/blacklist.txt ${targetdir}/etc/.;
+    fi;
+    cp ${tauroot}/tools/src/perfdmf/etc/* ${targetdir}/etc/.;
+    if [ ! -r ${targetdir}/etc/ptts.html.index ]; then
+        cp ${tauroot}/etc/ptts.html.* ${targetdir}/etc/.;
+    fi;
+    if [ ! -d ${targetdir}/tools/src/perfdmf/etc ]; then
+        mkdir -p ${targetdir}/tools/src/perfdmf/etc;
+    fi;
+    cp ${tauroot}/tools/src/perfdmf/etc/dbschema*.txt ${targetdir}/tools/src/perfdmf/etc/. 2> /dev/null;
+    BINTARGET=${targetdir}/${architecture}/bin;
+    JARTARGET=${targetdir}/${architecture}/lib;
+    copy_own_cube_reader_if_selected;
+    cat ${tauroot}/tools/src/paraprof/bin/paraprof.skel | sed -e 's,@TAUROOTDIR@,'$targetdir',' -e 's,@SHELL@,'$taushell',' -e 's,@ARCH@,'$architecture',' > $BINTARGET/paraprof;
+    chmod a+rx $BINTARGET/paraprof;
+    cat ${tauroot}/tools/src/ppscript.skel | sed -e 's,@TAUROOTDIR@,'$targetdir',' -e 's,@SHELL@,'$taushell',' -e 's,@ARCH@,'$architecture',' > $BINTARGET/ppscript;
+    chmod a+rx $BINTARGET/ppscript;
+    cat ${tauroot}/tools/src/tau_portal/bin/perfdmfdb.py.skel | sed -e 's,@BINDIR@,'$BINTARGET',' > $BINTARGET/perfdmfdb.py;
+    cat ${tauroot}/tools/src/tau_portal/bin/portal.py.skel | sed -e 's,@BINDIR@,'$BINTARGET',' > $BINTARGET/portal.py;
+    cp ${tauroot}/tools/src/tau_portal/bin/tau_portal.py $BINTARGET;
+    chmod a+rx $BINTARGET/tau_portal.py $BINTARGET/portal.py $BINTARGET/perfdmfdb.py;
+    cp include/tauarch.h.default include/tauarch.h;
+    if [ $default = "true" ]; then
+        echo "#define TAU_BIN_DIR \"default\"" >> include/tauarch.h;
+    else
+        echo "#define TAU_BIN_DIR \"$BINTARGET\"" >> include/tauarch.h;
+        echo "#define TAU_LIB_DIR \"$targetdir/$machine/lib/shared$tauoptions\"" >> include/tauarch.h;
+    fi;
+    cat ${tauroot}/tools/src/perfexplorer/bin/perfexplorer.skel | sed -e 's,@TAUROOT@,'$targetdir',' -e 's,@TAUSHELL@,'$taushell',' -e 's,@TAUARCH@,'$architecture',' -e 's,@RROOT@,'$rroot',' -e 's,@ANALYSIS_ENGINE@,'weka',' -e 's,@SERVER_HOSTNAME@,'$serverhostname',' -e 's,@SERVER_OBJECT_PORT@,'$objectport',' -e 's,@SERVER_RMIREGISTRY_PORT@,'$registryport',' -e 's,@CONFIGFILE@,'$configfile',' > $BINTARGET/perfexplorer;
+    chmod a+rx $BINTARGET/perfexplorer;
+    cp ${tauroot}/tools/src/tau_gen_wrapper $BINTARGET;
+    cp ${tauroot}/tools/src/tau_macro.sh $BINTARGET;
+    if [ ! -f $BINTARGET/jracy ]; then
+        cd $BINTARGET/;
+        ln -s paraprof jracy;
+        cd ${tauroot};
+    fi;
+    cat ${tauroot}/tools/src/tau_java.skel | sed -e 's,@JARTARGET@,'$JARTARGET',' -e 's,@JDKDIR@,'$jdkdir',' > $BINTARGET/tau_java;
+    chmod a+rx $BINTARGET/tau_java;
+    cp ${tauroot}/tools/src/paraprof/bin/paraprof.jar $JARTARGET;
+    cp ${tauroot}/tools/src/perfdmf/bin/perfdmf.jar $JARTARGET;
+    cp ${tauroot}/tools/src/perfexplorer/perfexplorer.jar $JARTARGET;
+    cp ${tauroot}/src/Profile/TAU.jar $JARTARGET;
+    cp ${tauroot}/tools/src/perfexplorer/perfexplorer-1.4.jar $JARTARGET;
+    cp ${tauroot}/tools/src/vis/bin/vis.jar $JARTARGET;
+    cp ${tauroot}/tools/src/vis-jogl2/bin/vis-jogl2.jar $JARTARGET;
+    cp ${tauroot}/tools/src/common/bin/tau-common.jar $JARTARGET;
+    cp ${tauroot}/tools/src/contrib/jargs.jar $JARTARGET;
+    cp ${tauroot}/tools/src/contrib/google-gson-2.1/gson-2.1.jar $JARTARGET;
+    cp ${tauroot}/tools/src/contrib/batik-combined.jar $JARTARGET;
+    cp ${tauroot}/tools/src/contrib/jfreechart-1.0.12.jar $JARTARGET;
+    cp ${tauroot}/tools/src/contrib/jcommon-1.0.15.jar $JARTARGET;
+    cp ${tauroot}/tools/src/contrib/jgraph.jar $JARTARGET;
+    cp ${tauroot}/tools/src/contrib/jython.jar $JARTARGET;
+    cp ${tauroot}/tools/src/contrib/jogl/jogl.jar $JARTARGET;
+    cp ${tauroot}/tools/src/contrib/jogl/jogl-all.jar $JARTARGET;
+    cp ${tauroot}/tools/src/contrib/jogl/gluegen-rt.jar $JARTARGET;
+    cp ${tauroot}/tools/src/contrib/derby.jar $JARTARGET;
+    cp ${tauroot}/tools/src/contrib/h2.jar $JARTARGET;
+    cp ${tauroot}/tools/src/contrib/mysql.jar $JARTARGET;
+    cp ${tauroot}/tools/src/contrib/postgresql.jar $JARTARGET;
+    cp ${tauroot}/tools/src/contrib/xerces.jar $JARTARGET;
+    cp ${tauroot}/tools/src/contrib/mesp.jar $JARTARGET;
+    cp ${tauroot}/tools/src/common/resources/tau16x16.gif $JARTARGET;
+    cp ${tauroot}/tools/src/tau_ebs_process.pl $BINTARGET;
+    cp ${tauroot}/utils/ebs2otf/tau_ebs2otf.pl $BINTARGET;
+    cp ${tauroot}/tools/src/pycoolr/bin/pycoolr $BINTARGET;
+    chmod a+rx $BINTARGET/pycoolr;
+    cp -r ${tauroot}/tools/src/pycoolr/src/pycoolrgui $BINTARGET;
+    cp ${tauroot}/tools/src/tau_resolve_addresses.py $BINTARGET;
+    chmod +x $BINTARGET/tau_resolve_addresses.py;
+    cp ${tauroot}/tools/src/tau_baseline $BINTARGET;
+    chmod +x $BINTARGET/tau_baseline;
+    case $machine in 
+        apple)
+            gunzip -c tools/src/contrib/jogl/apple/libjogl.jnilib.gz > $JARTARGET/libjogl.jnilib;
+            gunzip -c tools/src/contrib/jogl/apple/libjogl_awt.jnilib.gz > $JARTARGET/libjogl_awt.jnilib;
+            gunzip -c tools/src/contrib/jogl/apple/libjogl_cg.jnilib.gz > $JARTARGET/libjogl_cg.jnilib;
+            cp tools/src/contrib/jogl/apple/gluegen-rt-natives*.jar $JARTARGET/gluegen-rt-natives.jar;
+            cp tools/src/contrib/jogl/apple/jogl-all-natives*.jar $JARTARGET/jogl-all-natives.jar
+        ;;
+        i386_linux)
+            gunzip -c tools/src/contrib/jogl/i386_linux/libjogl.so.gz > $JARTARGET/libjogl.so;
+            gunzip -c tools/src/contrib/jogl/i386_linux/libjogl_awt.so.gz > $JARTARGET/libjogl_awt.so;
+            gunzip -c tools/src/contrib/jogl/i386_linux/libjogl_cg.so.gz > $JARTARGET/libjogl_cg.so;
+            gunzip -c tools/src/contrib/jogl/i386_linux/libjogl_drihack.so.gz > $JARTARGET/libjogl_drihack.so;
+            cp tools/src/contrib/jogl/i386_linux/gluegen-rt-natives*.jar $JARTARGET/gluegen-rt-natives.jar;
+            cp tools/src/contrib/jogl/i386_linux/jogl-all-natives*.jar $JARTARGET/jogl-all-natives.jar
+        ;;
+        arm_linux | arm64_linux)
+            gunzip -c tools/src/contrib/jogl/arm_linux/jogl.jar.gz > $JARTARGET/jogl.jar;
+            gunzip -c tools/src/contrib/jogl/arm_linux/libjogl.so.gz > $JARTARGET/libjogl.so;
+            gunzip -c tools/src/contrib/jogl/arm_linux/libjogl_awt.so.gz > $JARTARGET/libjogl_awt.so;
+            cp tools/src/contrib/jogl/arm_linux/gluegen-rt-natives*.jar $JARTARGET/gluegen-rt-natives.jar;
+            cp tools/src/contrib/jogl/arm_linux/jogl-all-natives*.jar $JARTARGET/jogl-all-natives.jar;
+            if [ -r tools/src/contrib/jogl/arm_linux/libjogl_drihack.so.gz ]; then
+                gunzip -c tools/src/contrib/jogl/arm_linux/libjogl_drihack.so.gz > $JARTARGET/libjogl_drihack.so;
+            fi;
+            if [ ! -r /usr/lib/libGL.so.1 ]; then
+                echo "NOTE: Did not find OpenGL library, copying TAU's Mesa libGL.so.1 to arm_linux/lib directory";
+                gunzip -c tools/src/contrib/jogl/arm_linux/libGL.so.1.gz > $JARTARGET/libGL.so.1;
+            fi;
+            if [ -r tools/src/contrib/jogl/arm_linux/gluegen.jar.gz -a -r tools/src/contrib/jogl/arm_linux/libgluegen-rt.so.gz ]; then
+                gunzip -c tools/src/contrib/jogl/arm_linux/libgluegen-rt.so.gz > $JARTARGET/libgluegen-rt.so;
+                gunzip -c tools/src/contrib/jogl/arm_linux/gluegen.jar.gz > $JARTARGET/gluegen.jar;
+            fi
+        ;;
+        crayxmt)
+            gunzip -c tools/src/contrib/jogl/x86_64/libjogl.so.gz > $JARTARGET/libjogl.so;
+            gunzip -c tools/src/contrib/jogl/x86_64/libjogl_awt.so.gz > $JARTARGET/libjogl_awt.so;
+            gunzip -c tools/src/contrib/jogl/x86_64/libjogl_drihack.so.gz > $JARTARGET/libjogl_drihack.so;
+            gunzip -c tools/src/contrib/jogl/x86_64/libjogl_cg.so.gz > $JARTARGET/libjogl_cg.so
+        ;;
+        nec-sx-aurora)
+            gunzip -c tools/src/contrib/jogl/x86_64/libjogl.so.gz > $JARTARGET/libjogl.so;
+            gunzip -c tools/src/contrib/jogl/x86_64/libjogl_awt.so.gz > $JARTARGET/libjogl_awt.so;
+            gunzip -c tools/src/contrib/jogl/x86_64/libjogl_drihack.so.gz > $JARTARGET/libjogl_drihack.so;
+            gunzip -c tools/src/contrib/jogl/x86_64/libjogl_cg.so.gz > $JARTARGET/libjogl_cg.so
+        ;;
+        craycnl | sparc64fx)
+            if [ $tau_cray_arm64 = no ]; then
+                gunzip -c tools/src/contrib/jogl/x86_64/libjogl.so.gz > $JARTARGET/libjogl.so;
+                gunzip -c tools/src/contrib/jogl/x86_64/libjogl_awt.so.gz > $JARTARGET/libjogl_awt.so;
+                gunzip -c tools/src/contrib/jogl/x86_64/libjogl_drihack.so.gz > $JARTARGET/libjogl_drihack.so;
+                gunzip -c tools/src/contrib/jogl/x86_64/libjogl_cg.so.gz > $JARTARGET/libjogl_cg.so;
+            fi
+        ;;
+        xt3)
+            gunzip -c tools/src/contrib/jogl/x86_64/libjogl.so.gz > $JARTARGET/libjogl.so;
+            gunzip -c tools/src/contrib/jogl/x86_64/libjogl_awt.so.gz > $JARTARGET/libjogl_awt.so;
+            gunzip -c tools/src/contrib/jogl/x86_64/libjogl_drihack.so.gz > $JARTARGET/libjogl_drihack.so;
+            gunzip -c tools/src/contrib/jogl/x86_64/libjogl_cg.so.gz > $JARTARGET/libjogl_cg.so
+        ;;
+        x86_64)
+            gunzip -c tools/src/contrib/jogl/x86_64/libjogl.so.gz > $JARTARGET/libjogl.so;
+            gunzip -c tools/src/contrib/jogl/x86_64/libjogl_awt.so.gz > $JARTARGET/libjogl_awt.so;
+            gunzip -c tools/src/contrib/jogl/x86_64/libjogl_drihack.so.gz > $JARTARGET/libjogl_drihack.so;
+            gunzip -c tools/src/contrib/jogl/x86_64/libjogl_cg.so.gz > $JARTARGET/libjogl_cg.so;
+            cp tools/src/contrib/jogl/x86_64/gluegen-rt-natives*.jar $JARTARGET/gluegen-rt-natives.jar;
+            cp tools/src/contrib/jogl/x86_64/jogl-all-natives*.jar $JARTARGET/jogl-all-natives.jar
+        ;;
+        mic_linux)
+            gunzip -c tools/src/contrib/jogl/x86_64/libjogl.so.gz > $JARTARGET/libjogl.so;
+            gunzip -c tools/src/contrib/jogl/x86_64/libjogl_awt.so.gz > $JARTARGET/libjogl_awt.so;
+            gunzip -c tools/src/contrib/jogl/x86_64/libjogl_drihack.so.gz > $JARTARGET/libjogl_drihack.so;
+            gunzip -c tools/src/contrib/jogl/x86_64/libjogl_cg.so.gz > $JARTARGET/libjogl_cg.so
+        ;;
+        ia64)
+            gunzip -c tools/src/contrib/jogl/ia64/libjogl.so.gz > $JARTARGET/libjogl.so;
+            gunzip -c tools/src/contrib/jogl/ia64/libjogl_awt.so.gz > $JARTARGET/libjogl_awt.so;
+            gunzip -c tools/src/contrib/jogl/ia64/libjogl_drihack.so.gz > $JARTARGET/libjogl_drihack.so
+        ;;
+        solaris2)
+            gunzip -c tools/src/contrib/jogl/solaris2/libjogl.so.gz > $JARTARGET/libjogl.so;
+            gunzip -c tools/src/contrib/jogl/solaris2/libjogl_awt.so.gz > $JARTARGET/libjogl_awt.so;
+            gunzip -c tools/src/contrib/jogl/solaris2/libjogl_drihack.so.gz > $JARTARGET/libjogl_drihack.so
+        ;;
+        solaris2-64)
+            gunzip -c tools/src/contrib/jogl/solaris2-64/libjogl.so.gz > $JARTARGET/libjogl.so;
+            gunzip -c tools/src/contrib/jogl/solaris2-64/libjogl_awt.so.gz > $JARTARGET/libjogl_awt.so;
+            gunzip -c tools/src/contrib/jogl/solaris2-64/libjogl_drihack.so.gz > $JARTARGET/libjogl_drihack.so
+        ;;
+        sun386i)
+            gunzip -c tools/src/contrib/jogl/sun386i/libjogl.so.gz > $JARTARGET/libjogl.so;
+            gunzip -c tools/src/contrib/jogl/sun386i/libjogl_awt.so.gz > $JARTARGET/libjogl_awt.so;
+            gunzip -c tools/src/contrib/jogl/sun386i/libjogl_drihack.so.gz > $JARTARGET/libjogl_drihack.so
+        ;;
+        sunx86_64)
+            gunzip -c tools/src/contrib/jogl/sunx86_64/libjogl.so.gz > $JARTARGET/libjogl.so;
+            gunzip -c tools/src/contrib/jogl/sunx86_64/libjogl_awt.so.gz > $JARTARGET/libjogl_awt.so;
+            gunzip -c tools/src/contrib/jogl/sunx86_64/libjogl_drihack.so.gz > $JARTARGET/libjogl_drihack.so
+        ;;
+        ppc64)
+            gunzip -c tools/src/contrib/jogl/ppc64/jogl.jar.gz > $JARTARGET/jogl.jar;
+            gunzip -c tools/src/contrib/jogl/ppc64/libjogl.so.gz > $JARTARGET/libjogl.so;
+            gunzip -c tools/src/contrib/jogl/ppc64/libjogl_awt.so.gz > $JARTARGET/libjogl_awt.so;
+            gunzip -c tools/src/contrib/jogl/ppc64/libjogl_drihack.so.gz > $JARTARGET/libjogl_drihack.so;
+            cp tools/src/contrib/jogl/ppc64/gluegen-rt-natives*.jar $JARTARGET/gluegen-rt-natives.jar;
+            cp tools/src/contrib/jogl/ppc64/jogl-all-natives*.jar $JARTARGET/jogl-all-natives.jar
+        ;;
+        ibm64linux)
+            cp tools/src/contrib/jogl/ppc64/gluegen-rt-natives*.jar $JARTARGET/gluegen-rt-natives.jar;
+            cp tools/src/contrib/jogl/ppc64/jogl-all-natives*.jar $JARTARGET/jogl-all-natives.jar
+        ;;
+        bgp)
+            gunzip -c tools/src/contrib/jogl/ppc64/jogl.jar.gz > $JARTARGET/jogl.jar;
+            gunzip -c tools/src/contrib/jogl/ppc64/libjogl.so.gz > $JARTARGET/libjogl.so;
+            gunzip -c tools/src/contrib/jogl/ppc64/libjogl_awt.so.gz > $JARTARGET/libjogl_awt.so;
+            gunzip -c tools/src/contrib/jogl/ppc64/libjogl_drihack.so.gz > $JARTARGET/libjogl_drihack.so
+        ;;
+        bgq)
+            gunzip -c tools/src/contrib/jogl/bgq/jogl.jar.gz > $JARTARGET/jogl.jar;
+            gunzip -c tools/src/contrib/jogl/bgq/libjogl.so.gz > $JARTARGET/libjogl.so;
+            gunzip -c tools/src/contrib/jogl/bgq/libjogl_awt.so.gz > $JARTARGET/libjogl_awt.so;
+            gunzip -c tools/src/contrib/jogl/bgq/libjogl_drihack.so.gz > $JARTARGET/libjogl_drihack.so;
+            if [ -r ${JAVA_HOME}/lib/ppc64/libjawt.so ]; then
+                /bin/rm -f $JARTARGET/libjawt.so;
+                ln -s ${JAVA_HOME}/lib/ppc64/libjawt.so $JARTARGET/libjawt.so;
+            fi
+        ;;
+        *)
+            echo "Platform does not support JOGL, no 3d displays will be available in ParaProf"
+        ;;
+    esac
+}
+confirm_proper_cube_installation () 
+{ 
+    echo "====================================================";
+    echo "CUBE Reader is found under $1/lib.";
+    echo "CLASSPATH of it is $cubeclasspath";
+    echo "====================================================";
+    return 0
+}
+confirmation_copy_of_own_jar_file () 
+{ 
+    echo "====================================================";
+    if [ -f ${tauroot}/tools/src/contrib/CubeReader.jar ]; then
+        echo " Copy ${tauroot}/tools/src/contrib/CubeReader.jar to $JARTARGET";
+        cp ${tauroot}/tools/src/contrib/CubeReader.jar $JARTARGET;
+    else
+        echo "ERROR: Tau doesn't have own copy of CubeReader.jar under ${tauroot}/tools/src/contrib/";
+        echo "       Please check the recent TAU distribution and report this bug to tau-bugs@cs.uoregon.edu";
+        exit -1;
+    fi;
+    echo "====================================================";
+    return 0
+}
+copy_own_cube_reader_if_selected () 
+{ 
+    if test "x$cubedir" = "xown"; then
+        confirmation_copy_of_own_jar_file;
+    fi
+}
+correction_paraprof () 
+{ 
+    cd ${tauroot};
+    _tauroot=".";
+    echo "Adjust ParaProf to use CubeReader...";
+    cat ${_tauroot}/tools/src/paraprof/bin/paraprof.skel | sed -e 's,@CUBECLASSPATH@,'$cubeclasspath',' > ${_tauroot}/tools/src/paraprof/bin/paraprof.new;
+    mv ${_tauroot}/tools/src/paraprof/bin/paraprof.new ${_tauroot}/tools/src/paraprof/bin/paraprof.skel;
+    cat ${_tauroot}/tools/src/paraprof/Makefile | sed -e 's,@CUBECLASSPATH@,'$makecubeclasspath',' > ${_tauroot}/tools/src/paraprof/Makefile.new;
+    mv ${_tauroot}/tools/src/paraprof/Makefile.new ${_tauroot}/tools/src/paraprof/Makefile
+}
+correction_perfdmf () 
+{ 
+    echo "Adjust PerfDmf to use CubeReader...";
+    cat ${_tauroot}/tools/src/perfdmf/Makefile.skel | sed -e 's,@CUBECLASSPATH@,'$makecubeclasspath',' > ${_tauroot}/tools/src/perfdmf/Makefile.new;
+    mv ${_tauroot}/tools/src/perfdmf/Makefile.new ${_tauroot}/tools/src/perfdmf/Makefile
+}
+correction_perfdmf_and_paraprof () 
+{ 
+    correction_paraprof;
+    correction_perfdmf
+}
+download () 
+{ 
+    src="$1";
+    dst="$2";
+    local="$cwd/external_dependencies/$dst";
+    echo "Looking for $local...";
+    if [ -e $local ]; then
+        echo "Found $local, using it.";
+        cp $local $dst;
+    else
+        if which wget > /dev/null 2>&1; then
+            echo "wget: $src ==> $dst";
+            wget "$dst" "$src";
+        else
+            if which curl > /dev/null 2>&1; then
+                echo "curl: $src ==> $dst";
+                curl -L "$src" > "$dst";
+            else
+                echo "ERROR: neither curl nor wget found in your path.";
+                exit 199;
+            fi;
+        fi;
+    fi
+}
+fix_tilde_at_the_start_of_cube_path () 
+{ 
+    cubedir=`echo $cubedir | sed -e "s,^~,$HOME,"g`
+}
+installsos () 
+{ 
+    echo "installsos - current dir: `pwd`";
+    dst="$1";
+    currdir=`pwd`;
+    sqlite3_cmd=`which sqlite3`;
+    if [ "x$sqlite3_cmd" = "x" ]; then
+        echo 'ERROR: SQLITE3 required to build SOS, exiting.';
+        exit 1;
+    fi;
+    cd $dst;
+    mkdir build-linux;
+    cd build-linux;
+    export sosdir=$currdir/$dst/inst;
+    echo "EVPath Inst dir: $targetdir/$architecture/sos/chaos/inst";
+    cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_INSTALL_PREFIX=$currdir/$dst/inst -DEVPath_DIR=$targetdir/$architecture/sos/chaos/inst -DSQLite3_DIR=$targetdir/$architecture/sos/chaos/sqlite3 -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ -DSOS_CLOUD_SYNC_WITH_EVPATH=TRUE ..;
+    make;
+    make install
+}
+installsosdeps () 
+{ 
+    installdir="$1";
+    mkdir $installdir;
+    cd $installdir;
+    P=`pwd`;
+    cmake_major_version=`cmake --version | head -1 |  sed "s/[^0-9.]*\([0-9.]*\).*/\1/" | cut -d. -f1`;
+    cmake_cmd=`which cmake`;
+    if [ "x$cmake_cmd" = "x" ] || [ $cmake_major_version -lt 3 ]; then
+        echo 'ERROR: cmake version 3 or higher required to build SOS dependencies, exiting.';
+        exit 1;
+    fi;
+    echo "Install SOS deps";
+    mkdir chaos;
+    cd chaos;
+    currdir=`pwd`;
+    echo "Install Sqlite3";
+    mkdir sqlite3;
+    wget https://www.sqlite.org/2017/sqlite-autoconf-3210000.tar.gz;
+    tar -xvzf sqlite-autoconf-3210000.tar.gz;
+    cd sqlite-autoconf-3210000;
+    ./configure --prefix=$currdir/sqlite3;
+    make;
+    make install;
+    cd ..;
+    wget http://www.cc.gatech.edu/systems/projects/EVPath/chaos_bootstrap.pl;
+    perl ./chaos_bootstrap.pl adios-1.13 $currdir/inst;
+    mkdir build_area;
+    cd build_area;
+    echo "Download SOS dependencies: $2 $3";
+    download "$2" "$3";
+    echo "Extract SOS dependencies: $3";
+    tar -xvf "$3";
+    rm -f "$3";
+    set -x;
+    cd dill/source;
+    cmake -DENABLE_TESTING=0 -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=$currdir/inst $currdir/build_area/dill/source;
+    make all install;
+    cd ../..;
+    cd cercs_env/source;
+    cmake -DENABLE_TESTING=0 -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=$currdir/inst $currdir/build_area/cercs_env/source;
+    make all install;
+    cd ../..;
+    cd atl/source;
+    cmake -DENABLE_TESTING=0 -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=$currdir/inst $currdir/build_area/atl/source;
+    make all install;
+    cd ../..;
+    cd ffs/source;
+    cmake -DENABLE_TESTING=0 -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=$currdir/inst $currdir/build_area/ffs/source;
+    make all install;
+    cd ../..;
+    cd enet/source;
+    $currdir/build_area/enet/source/configure CFLAGS='-g -O0' CPPFLAGS='-g -O0' --prefix=$currdir/inst;
+    make install;
+    cd ../..;
+    cd evpath/source;
+    cmake -DENABLE_TESTING=0 -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=$currdir/inst $currdir/build_area/evpath/source;
+    make all install;
+    cd ../../..;
+    export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:${FLEXPATH_DIR}/lib/pkgconfig;
+    cd inst/lib/cmake/EVPath;
+    cp EVPathConfig.cmake ../../../;
+    cp EVPathTargets.cmake ../../../;
+    cd ../../../..;
+    echo "Install libfabric";
+    git clone https://github.com/ofiwg/libfabric.git;
+    cd libfabric;
+    ./autogen.sh;
+    currdir=`pwd`;
+    ./configure --prefix=$currdir/inst;
+    make install;
+    cd inst/lib;
+    cp libfabric.* ../../../inst/lib;
+    cd ../../../..;
+    set +x
+}
+make_directories () 
+{ 
+    if [ "$tauprefix" = "unknown" ]; then
+        fixmakeargs="$fixmakeargs tauprefix=$tauroot";
+    fi;
+    if [ ! -d $tautoplevel/$architecture ]; then
+        mkdir -p $tautoplevel/$architecture;
+    fi;
+    if [ ! -d $tautoplevel/$architecture/bin ]; then
+        mkdir -p $tautoplevel/$architecture/bin;
+    fi;
+    if [ ! -d $tautoplevel/$architecture/lib ]; then
+        mkdir -p $tautoplevel/$architecture/lib;
+    fi
+}
+ml () 
+{ 
+    eval $($LMOD_DIR/ml_cmd "$@")
+}
+module () 
+{ 
+    eval $($LMOD_CMD bash "$@") && eval $(${LMOD_SETTARG_CMD:-:} -s sh)
+}
+restore_paraprof () 
+{ 
+    _tauroot=".";
+    echo "Unset ParaProf's cubeclasspath...";
+    cat ${_tauroot}/tools/src/paraprof/bin/paraprof.skel | sed -e 's,^CUBE_JAVA_READER=.*$,CUBE_JAVA_READER=@CUBECLASSPATH@,' > ${_tauroot}/tools/src/paraprof/bin/paraprof.new;
+    mv ${_tauroot}/tools/src/paraprof/bin/paraprof.new ${_tauroot}/tools/src/paraprof/bin/paraprof.skel;
+    cat ${_tauroot}/tools/src/paraprof/Makefile | sed -e 's,^CUBE_JAVA_READER=.*$,CUBE_JAVA_READER=@CUBECLASSPATH@,' > ${_tauroot}/tools/src/paraprof/Makefile.new;
+    mv ${_tauroot}/tools/src/paraprof/Makefile.new ${_tauroot}/tools/src/paraprof/Makefile
+}
+restore_perfdmf () 
+{ 
+    _tauroot=".";
+    _tauroot=".";
+    echo "Unset Perfdmf cubeclasspath...";
+    cat ${_tauroot}/tools/src/perfdmf/Makefile | sed -e 's,^CUBE_JAVA_READER=.*$,CUBE_JAVA_READER=@CUBECLASSPATH@,' > ${_tauroot}/tools/src/perfdmf/Makefile.new;
+    cp ${_tauroot}/tools/src/perfdmf/Makefile.new ${_tauroot}/tools/src/perfdmf/Makefile
+}
+restore_perfdmf_and_paraprof () 
+{ 
+    restore_paraprof;
+    restore_perfdmf
+}
+save_configure_env () 
+{ 
+    _tauroot=".";
+    confenvdir="$_tauroot/.configure_env";
+    md5sum="`which md5sum 2>/dev/null || which md5 2>/dev/null`";
+    if [ "x$md5sum" == "x" ]; then
+        echo "Warning: can't find md5sum or md5.";
+        return;
+    fi;
+    argsum=`echo "$all_args" | $md5sum | awk '{print $1}'`;
+    mkdir -p "$confenvdir";
+    confenvfile="$confenvdir/$argsum";
+    set > "$confenvfile";
+    fixmakeargs="$fixmakeargs confenvfile=$confenvfile"
+}
+select_cube_reader_jar () 
+{ 
+    if test "x$cubedir" != "xown"; then
+        check_another_cube_installation;
+        check_cube_installation;
+        if test "x$cubedir" = "x"; then
+            warning_about_missing_cube_installation;
+        fi;
+    else
+        cubeclasspath='${TAUROOT}/${MACHINE}/lib/CubeReader.jar';
+        makecubeclasspath="../contrib/CubeReader.jar";
+    fi;
+    return 0
+}
+warning_about_another_cube_installation () 
+{ 
+    echo "====================================================";
+    echo "WARNING: CUBE is detected under $1";
+    echo "====================================================";
+    return 0
+}
+warning_about_general_missing_cube_installation () 
+{ 
+    echo "====================================================";
+    echo "ERROR: Cannot find CUBE installation.";
+    echo "       Please specify precise place of CUBE using option -cube=$cubedir";
+    echo "Abort.";
+    echo "====================================================";
+    exit -1
+}
+warning_about_missing_cube_installation () 
+{ 
+    echo "====================================================";
+    echo "ERROR: Cannot find CUBE installation under $1";
+    echo "       Please check your option -cube=$cubedir";
+    echo "Abort.";
+    echo "====================================================";
+    exit -1
+}
+xSetTitleLmod () 
+{ 
+    builtin echo -n -e "\033]2;$1\007"
+}

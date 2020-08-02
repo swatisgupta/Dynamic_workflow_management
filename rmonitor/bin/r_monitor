@@ -1,0 +1,6 @@
+#!/gpfs/alpine/csc299/scratch/ssinghal/Dynamic_workflow_management/rmonitor/bin/python3
+# EASY-INSTALL-DEV-SCRIPT: 'runtime-monitor==0.1.0','r_monitor'
+__requires__ = 'runtime-monitor==0.1.0'
+__import__('pkg_resources').require('runtime-monitor==0.1.0')
+__file__ = '/gpfs/alpine/csc299/scratch/ssinghal/Dynamic_workflow_management/r_monitor'
+exec(compile(open(__file__).read(), __file__, 'exec'))

@@ -1,4 +1,4 @@
-TAU_HOME	= /gpfs/alpine/scratch/ssinghal/csc143/Dynamic_workflow_management/tau-2.28.1
+TAU_HOME	= /gpfs/alpine/scratch/ssinghal/csc299/Dynamic_workflow_management/tau-2.28.1
 
 TAUIL_HOME	= $(TAU_HOME)/tools/src/TauIL
 

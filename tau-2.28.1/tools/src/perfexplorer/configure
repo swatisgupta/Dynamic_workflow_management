@@ -11,10 +11,10 @@ echo $* >> .all_configs
 arguments=$*
 
 # Default compilers and options
-tauroot=/gpfs/alpine/scratch/ssinghal/csc143/Dynamic_workflow_management/tau-2.28.1
+tauroot=/gpfs/alpine/scratch/ssinghal/csc299/Dynamic_workflow_management/tau-2.28.1
 architecture=ibm64linux
 taushell=sh
-targetdir=/ccs/home/ssinghal/tau2-install
+targetdir=/ccs/home/ssinghal/tau2-install/2.8/gcc
 serverhostname=localhost
 objectport=9999
 registryport=1099

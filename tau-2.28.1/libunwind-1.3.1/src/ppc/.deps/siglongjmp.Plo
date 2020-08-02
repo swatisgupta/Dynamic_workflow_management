@@ -1,0 +1,3 @@
+ppc/siglongjmp.lo: ppc/siglongjmp.S /usr/include/stdc-predef.h
+
+/usr/include/stdc-predef.h:
