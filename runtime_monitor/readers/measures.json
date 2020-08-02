@@ -1,0 +1,9 @@
+["perf::LLC-LOADS",
+             "perf::LLC-LOAD-MISSES",
+             "PM_CMPLU_STALL_DMISS_L3MISS",
+             "PM_INST_CMPL",
+             "PM_CYC",
+             "cuda:::metric_nvlink_transmit_throughput:device=0",
+             "cuda:::metric_nvlink_receive_throughput:device=0"
+]
+

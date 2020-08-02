@@ -3,8 +3,8 @@ from mpi4py import MPI
 import argparse
 import os
 import sys
-from runtime_monitor.adios2_tau_reader import adios2_tau_reader
-from runtime_monitor.adios2_generic_reader import adios2_generic_reader
+from runtime_monitor.readers.adios2_tau_reader import adios2_tau_reader
+from runtime_monitor.readers.adios2_generic_reader import adios2_generic_reader
 import socket
 
 def argument_parser():
@@ -92,11 +92,18 @@ class configuration():
                  
     def validate_model_params(self, node, stream, params_list):
         if self.perf_model == "memory":
-            if int(params_list[0]) != 0 or int(params_list[0]) != 1:
-                print("tau_one_file should be 0 or 1 for ", stream, ". Using defalt value 0")
+            if node not in self. tau_one_file.keys():
+               self.tau_one_file[node] ={} 
+               self.tau_file_type[node] ={} 
+            if stream not in self.tau_one_file[node].keys():
+               self.tau_one_file[node][stream] ={} 
+               self.tau_file_type[node][stream] ={} 
+ 
+            if int(params_list[0].strip()) != 0 or int(params_list[0].strip()) != 1:
+                print("tau_one_file should be 0 or 1 for ", stream, " .Params provided are ", int(params_list[0].strip()) , ". Using defalt value 0")
                 self.tau_one_file[node][stream] = 0  
             else:
-                self.tau_one_file[node][stream] = int(params_list[0])
+                self.tau_one_file[node][stream] = int(params_list[0].strip())
             if params_list[1] not in ["trace", "profile"] :
                 print("tau_file_type should be trace or profile for ", stream, ". Using defalt value trace")
                 self.tau_file_type[node][stream] = "trace" 
@@ -129,9 +136,9 @@ class configuration():
 
         i = self.rank
         #print(all_nodes)
-        #print(self.rank, len(all_nodes))
+        print(self.rank, len(all_nodes))
         while i < len(all_nodes):
-            #print("Assigned node", all_nodes[i])
+            print("Assigned node for i = ",i, " node ", all_nodes[i])
             asg_node = all_nodes[i]  
             self.local_res_map[asg_node] = self.global_res_map[asg_node]   
             stream_map = self.global_res_map[asg_node]
@@ -146,7 +153,7 @@ class configuration():
                 if asg_node not in  self.reader_blocks.keys():
                      self.reader_blocks[asg_node] = {}
 
-                if self.perf_model == "outsteps2" or (self.perf_model == "memory" and self.tau_one_file[asg_node][stream_nm] == False):
+                if self.perf_model == "outsteps2" or (self.perf_model == "memory" and self.tau_one_file[asg_node][stream_nm] == 0):
                     self.reader_blocks[asg_node][stream_nm] = [0]
                 else:
                     self.reader_blocks[asg_node][stream_nm] = self.reader_procs[asg_node][stream_nm]
@@ -200,6 +207,9 @@ class configuration():
         self.rank = 0
 
         args = argument_parser()
+        self.mpi_comm = mpi_comm
+        self.nprocs = mpi_comm.Get_size() 
+        self.rank =  mpi_comm.Get_rank()
 
         #print(args.bind_outaddr) 
         # for two-way communication with Savanna
@@ -210,17 +220,15 @@ class configuration():
         self.iaddr = socket.gethostbyname(socket.gethostname())
 
      
-        self.mpi_comm = mpi_comm
-        self.nprocs = mpi_comm.Get_size() 
-        self.rank =  mpi_comm.Get_rank()
 
         #print("args model", args.model)
 
         if args.model[0] == "memory":
             self.perf_model = "memory"
-            if args.hc_lib not in ["papi", "likwid"]:
+            if args.hc_lib[0] not in ["papi", "likwid"]:
                 print("Unsupported hardware counter library ", args.hc_lib, ". Possible values for hardware counter libraries are papi and likwid")
-                exit          
+                exit
+            self.hc_lib = args.hc_lib[0]          
         elif args.model[0] == "outsteps1":
             self.perf_model = "outsteps1"        
             print("Outsteps loaded") 
@@ -260,7 +268,7 @@ class configuration():
     def begin_next_step(self):
         if self.perf_model == "outsteps2":
             return True
-        #print("Next iteration begins..")
+        print("Next iteration begins..", flush = True)
         sys.stdout.flush() 
         ret = False 
         for nodes in self.active_reader_objs.keys():
@@ -301,7 +309,7 @@ class configuration():
             conn_streams_set = [] 
             self.actual_streams_map[node] = {}
             for stream_nm in self.stream_nm[node]:
-                if self.perf_model == "memory" and self.tau_one_file[node][stream_nm] is False:
+                if self.perf_model == "memory" and self.tau_one_file[node][stream_nm] == 0:
                     self.mpi_comm = MPI.COMM_SELF
                     for rank in self.global_res_map[node][stream_nm]:
                         str_split = stream_nm.split('.bp')

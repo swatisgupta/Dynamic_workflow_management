@@ -23,6 +23,10 @@ class model(abc.ABC):
          pass   
 
      @abc.abstractmethod 
+     def dump_curr_state(self):
+         pass   
+
+     @abc.abstractmethod 
      def if_urgent_update(self):
          pass   
 

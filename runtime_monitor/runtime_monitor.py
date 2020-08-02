@@ -4,9 +4,9 @@
 from mpi4py import MPI
 import os
 from runtime_monitor import helper
-from runtime_monitor.memory_model import memory
-from runtime_monitor.outstep2_model import outsteps2
-from runtime_monitor.outstep1_model import outsteps1
+from runtime_monitor.models.memory_model import memory
+from runtime_monitor.models.outstep2_model import outsteps2
+from runtime_monitor.models.outstep1_model import outsteps1
 import threading
 from datetime import datetime
 import zmq
@@ -14,7 +14,7 @@ import numpy
 import json
 from queue import Queue
 import sys
-
+import traceback
 
 class Rmonitor():
     def __init__(self, mpicomm):
@@ -30,7 +30,7 @@ class Rmonitor():
         self.stop_work = False
         self.stop_cntrl = False
         self.rank = 0
-        self.mpi_comm = MPI.COMM_SELF
+        #self.mpi_comm = MPI.COMM_SELF
         self.starttime = None
         
         # Can setup other things before the thread starts
@@ -77,7 +77,10 @@ class Rmonitor():
         print("added model:", self.config.perf_model)  
 
     def open_connections(self):
-        self.config.open_connections()
+        try:
+            self.config.open_connections()
+        except Exception as e:
+            print(e)
 
     def send_req_or_res(self, socket, req_or_res):
         if self.rank == 0 :
@@ -97,16 +100,19 @@ class Rmonitor():
         return j_data
  
     def get_update(self, model_name, timestamp, local_state, req_type):
-        global_state = self.mpi_comm.gather(local_state, root=0)
-        request = {}
-        j_data = ""
-        if self.rank == 0 : 
-            request["model"] = model_name
-            request["socket"] = self.config.iport
-            request["timestamp"] = str(timestamp)
-            request["msg_type"] = req_type
-            request["message"] = global_state
-            j_data = json.dumps(request)
+        try: 
+            global_state = self.mpi_comm.gather(local_state, root=0)
+            request = {}
+            j_data = ""
+            if self.rank == 0 : 
+                request["model"] = model_name
+                request["socket"] = self.config.iport
+                request["timestamp"] = str(timestamp)
+                request["msg_type"] = req_type
+                request["message"] = global_state
+                j_data = json.dumps(request)
+        except Exception as e:
+           print(e) 
         #self.mpi_comm.Barrier()
         return j_data
  
@@ -143,6 +149,10 @@ class Rmonitor():
             mdls.update_curr_state()
         self.config.end_current_step()
         return ret
+
+    def write_model_data(self):
+        for mdls in self.model_objs:
+            mdls.dump_curr_state()
  
     def close_connections(self):
         self.config.close_connections()
@@ -150,7 +160,7 @@ class Rmonitor():
     def worker(self):
         context = None
         socket = None
-
+        '''
         if self.rank == 0:
             try:
                 context = zmq.Context()
@@ -166,8 +176,10 @@ class Rmonitor():
                 res_msg = socket.recv()
                 print("Send connection info : ", msg) 
              
-            except Exception as e:
-                print("Worker : Got an exception ..", e)    
+            except:
+                traceback.print_exc()    
+                print("Worker : Got an exception ..")
+        '''
 
         do_work = True
 
@@ -175,12 +187,15 @@ class Rmonitor():
             try: 
                 if self.stop_work == True:
                     do_work = False
+                    print("Done...dumping the data!!")
                     self.close_connections()
+                    self.write_model_data()
+                    '''
                     if self.rank == 0: 
                         socket.send_string("done")
                         msg = socket.recv()
-                        #print("Done!!")
                         sys.stdout.flush()
+                    '''
                 else:
                     #print("Worker: Next iteration ...")
                     sys.stdout.flush()  
@@ -189,6 +204,7 @@ class Rmonitor():
                         sys.stdout.flush()
 
                     message = None
+                    '''
                     with self.msg_cond:
                         #print("Worker: checking msg queue ..len ", len(self.msg_queue)) 
                         while len(self.msg_queue) > 0:
@@ -208,8 +224,12 @@ class Rmonitor():
                         else:
                             print("Worker: not sending a response...", response)
                     self.if_send_update(socket)
+                       '''
             except Exception as e:
+                traceback.print_exc()    
                 print("Worker : Got an exception ..", e)    
+                self.close_connections()
+                self.write_model_data()
 
     def controller(self):
         l_socket = None
@@ -231,7 +251,7 @@ class Rmonitor():
         else:  
             l_socket = l_context.socket(zmq.SUB)
             l_socket.connect(self.lsocket)     
-            l_socket.setsockopt(zmq.SUBSCRIBE, topic)
+            l_socket.setsockopt_string(zmq.SUBSCRIBE, topic)
 
         j_data = {}
 
@@ -282,7 +302,7 @@ class Rmonitor():
              #timestamp = list(divmod(timestamp.total_seconds(), 60))
              #print(self.model_objs)   
              mdls = self.model_objs[-1] #s[request["model"]] 
-             response = self.get_update(mdls.name, timestamp, mdls.get_curr_state(), "res:update")
+             ###response = self.get_update(mdls.name, timestamp, mdls.get_curr_state(), "res:update")
          elif request["msg_type"] == "req:stop":
              #print("Processing an update request...", request)
              sys.stdout.flush()

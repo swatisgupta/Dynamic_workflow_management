@@ -1,0 +1,38 @@
+{   "papi_counters" : {
+           "Intel(R) Xeon(R) CPU E5-2680 v2 @ 2.80GHz" : {
+              "llc_misses": "PAPI_NATIVE_LAST_LEVEL_CACHE_MISSES",
+              "llc_refs": "PAPI_NATIVE_LAST_LEVEL_CACHE_REFERENCES",
+              "ld_stalls":"PAPI_NATIVE_CYCLE_ACTIVITY:STALLS_LDM_PENDING",
+              "inst_ret": "PAPI_NATIVE_INSTRUCTIONS_RETIRED",
+              "st_stalls" : "PAPI_NATIVE_RESOURCE_STALLS:SB",
+              "cpu_cyc" : "PAPI_NATIVE_ix86arch::UNHALTED_CORE_CYCLES" 
+           }, 
+           "POWER9, altivec supported" : {
+              "llc_misses": "perf::LLC-LOADS",
+              "llc_refs": "perf::LLC-LOAD-MISSES",
+              "ld_stalls": "PM_CMPLU_STALL_DMISS_L3MISS",
+              "inst_ret": "PM_INST_CMPL",
+              "cpu_cyc": "PM_CYC",
+              "gpu_tbw": "cuda:::metric_nvlink_transmit_throughput:device=0",
+              "gpu_rbw": "cuda:::metric_nvlink_receive_throughput:device=0"
+            }
+       },
+
+      "metrics" : {
+            "Intel(R) Xeon(R) CPU E5-2680 v2 @ 2.80GHz" : [
+              "llc_miss_per",
+              "ld_stalls_per",
+              "ipc"
+            ],
+            "POWER9, altivec supported" : [
+              "llc_miss_per",
+              "ld_stalls_per",
+              "ipc"
+            ]
+       },
+
+       "memory_size" : {
+            "Intel(R) Xeon(R) CPU E5-2680 v2 @ 2.80GHz" : "128",
+            "POWER9, altivec supported" : "512"
+        } 
+}
