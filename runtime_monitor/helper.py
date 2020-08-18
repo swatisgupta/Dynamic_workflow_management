@@ -42,14 +42,14 @@ def argument_parser():
 
     #if args.stream_engs is not None:
     #   if len(args.stream_engs[0]) != len(args.streams[0]):
-    #       print("--stream_engs: adios2 engines should be defined for all adios2 connection strings") 
+    #       print("[Rank ", self.wrank, "] :","--stream_engs: adios2 engines should be defined for all adios2 connection strings") 
     #       exit    
     #   for i in args.stream_engs[0]:
-    #       print("Engine under test ", i)
+    #       print("[Rank ", self.wrank, "] :","Engine under test ", i)
     #       if i in available_adios2_engines:
     #           continue
     #       else:
-    #           print("Engine ", i, " is not currently used or is not supported in ADIOS2")
+    #           print("[Rank ", self.wrank, "] :","Engine ", i, " is not currently used or is not supported in ADIOS2")
     #           exit    
  
     return args
@@ -73,7 +73,7 @@ class configuration():
             data = json.load(json_file) 
             for nodes in data['node']:
                 node = nodes['name']
-                print(node)
+                print("[Rank ", self.wrank, "] :",node)
                 self.global_res_map[node] = {} 
                 self.stream_nm[node] = [] 
                 self.stream_engs[node] = {} 
@@ -100,25 +100,25 @@ class configuration():
                self.tau_file_type[node][stream] ={} 
  
             if int(params_list[0].strip()) != 0 or int(params_list[0].strip()) != 1:
-                print("tau_one_file should be 0 or 1 for ", stream, " .Params provided are ", int(params_list[0].strip()) , ". Using defalt value 0")
+                print("[Rank ", self.wrank, "] :","tau_one_file should be 0 or 1 for ", stream, " .Params provided are ", int(params_list[0].strip()) , ". Using defalt value 0")
                 self.tau_one_file[node][stream] = 0  
             else:
                 self.tau_one_file[node][stream] = int(params_list[0].strip())
             if params_list[1] not in ["trace", "profile"] :
-                print("tau_file_type should be trace or profile for ", stream, ". Using defalt value trace")
+                print("[Rank ", self.wrank, "] :","tau_file_type should be trace or profile for ", stream, ". Using defalt value trace")
                 self.tau_file_type[node][stream] = "trace" 
             else:
                 self.tau_file_type[node][stream] = params_list[1]
         if self.perf_model == "outsteps2":
             if len(params_list) != 10:
-                print("Insufficient model parameters for ",  stream) 
+                print("[Rank ", self.wrank, "] :","Insufficient model parameters for ",  stream) 
                 exit
             if node not in self.reader_config.keys():
                 self.reader_config[node] = {}
             self.reader_config[node][stream] = params_list 
         if self.perf_model == "outsteps1":
             if len(params_list) != 4:
-                print("Insufficient model parameters for ",  stream) 
+                print("[Rank ", self.wrank, "] :","Insufficient model parameters for ",  stream) 
                 exit
             if node not in self.reader_config.keys():
                 self.reader_config[node] = {}
@@ -135,10 +135,10 @@ class configuration():
         #    mpi_comm = self.mpi_comm
 
         i = self.rank
-        #print(all_nodes)
-        print(self.rank, len(all_nodes))
+        #print("[Rank ", self.wrank, "] :",all_nodes)
+        print("[Rank ", self.wrank, "] :",self.rank, len(all_nodes))
         while i < len(all_nodes):
-            print("Assigned node for i = ",i, " node ", all_nodes[i])
+            print("[Rank ", self.wrank, "] :","Assigned node for i = ", i, " node ", all_nodes[i])
             asg_node = all_nodes[i]  
             self.local_res_map[asg_node] = self.global_res_map[asg_node]   
             stream_map = self.global_res_map[asg_node]
@@ -159,6 +159,7 @@ class configuration():
                     self.reader_blocks[asg_node][stream_nm] = self.reader_procs[asg_node][stream_nm]
 
                 conn_streams_set = self.actual_streams_map[asg_node][stream_nm]
+                print("[Rank ", self.wrank, "] :", "Stream :", stream_nm, " Node :", asg_node, " connections:", conn_streams_set) # self.active_reader_objs)   
                 for stream_nm1 in conn_streams_set:
                     reader_obj = None 
                     #create  an adios2 object based on model
@@ -175,7 +176,7 @@ class configuration():
                         self.active_reader_objs[asg_node][stream_nm] = []
                     self.active_reader_objs[asg_node][stream_nm].append(reader_obj)
             i = i + self.nprocs
-        #print(self.active_reader_objs)   
+        print("[Rank ", self.wrank, "] :",self.active_reader_objs)   
 
 
     def __init__(self, mpi_comm):
@@ -201,17 +202,18 @@ class configuration():
 
         self.perf_model = "outsteps2" 
         self.cpu_model = self.__get_cpuinfo_model()
-        #print(self.cpu_model)
+        #print("[Rank ", self.wrank, "] :",self.cpu_model)
         self.mpi_comm = MPI.COMM_SELF  
         self.nprocs = 1
         self.rank = 0
 
         args = argument_parser()
         self.mpi_comm = mpi_comm
-        self.nprocs = mpi_comm.Get_size() 
+        self.nprocs = MPI.COMM_WORLD.Get_size() 
+        self.wrank = MPI.COMM_WORLD.Get_rank() 
         self.rank =  mpi_comm.Get_rank()
 
-        #print(args.bind_outaddr) 
+        #print("[Rank ", self.wrank, "] :",args.bind_outaddr) 
         # for two-way communication with Savanna
         self.iport = int(args.bind_inport[0])
         self.oport = int(args.bind_outport[0])
@@ -221,17 +223,17 @@ class configuration():
 
      
 
-        #print("args model", args.model)
+        #print("[Rank ", self.wrank, "] :","args model", args.model)
 
         if args.model[0] == "memory":
             self.perf_model = "memory"
             if args.hc_lib[0] not in ["papi", "likwid"]:
-                print("Unsupported hardware counter library ", args.hc_lib, ". Possible values for hardware counter libraries are papi and likwid")
+                print("[Rank ", self.wrank, "] :","Unsupported hardware counter library ", args.hc_lib, ". Possible values for hardware counter libraries are papi and likwid")
                 exit
             self.hc_lib = args.hc_lib[0]          
         elif args.model[0] == "outsteps1":
             self.perf_model = "outsteps1"        
-            print("Outsteps loaded") 
+            print("[Rank ", self.wrank, "] :","Outsteps loaded") 
 
         self.__compute_resource_mapping(args)
         self.__init_streams__(args)
@@ -241,11 +243,11 @@ class configuration():
     def open_connections(self):
         if self.perf_model == "outsteps2":
             return
-        #print("Model is ", self.perf_model)
+        #print("[Rank ", self.wrank, "] :","Model is ", self.perf_model)
         for nodes in self.active_reader_objs.keys():
             for streams in self.active_reader_objs[nodes].keys():
                 for conc in self.active_reader_objs[nodes][streams]:
-                    #print("Trying to open .....", conc )
+                    #print("[Rank ", self.wrank, "] :","Trying to open .....", conc )
                     conc.open() 
             if self.perf_model == "outsteps1":
                return
@@ -255,7 +257,7 @@ class configuration():
         if self.perf_model == "outsteps2":
             return
 
-        #print(self.active_reader_objs.items())
+        #print("[Rank ", self.wrank, "] :",self.active_reader_objs.items())
         for nodes in self.active_reader_objs.keys():
             for streams in self.active_reader_objs[nodes].keys():
                 for conc in self.active_reader_objs[nodes][streams]:
@@ -268,17 +270,17 @@ class configuration():
     def begin_next_step(self):
         if self.perf_model == "outsteps2":
             return True
-        print("Next iteration begins..", flush = True)
+        print("[Rank ", self.wrank, "] :","Next iteration begins..", flush = True)
         sys.stdout.flush() 
         ret = False 
         for nodes in self.active_reader_objs.keys():
             for streams in self.active_reader_objs[nodes].keys():
                 for conc in self.active_reader_objs[nodes][streams]:
-                    #print("Reading step from..", conc.inputfile)
+                    #print("[Rank ", self.wrank, "] :","Reading step from..", conc.inputfile)
                     ret_tmp = conc.advance_step()
                     if ret_tmp == True:
                         ret =  True
-                    #print("Read step fro m..", conc.inputfile, " ... ret ", ret_tmp)
+                    #print("[Rank ", self.wrank, "] :","Read step fro m..", conc.inputfile, " ... ret ", ret_tmp)
             if self.perf_model == "outsteps1":
                return ret
         return ret
@@ -304,20 +306,19 @@ class configuration():
         #if self.perf_model == "outsteps2":
         #    return 
 
-        j = 0
         for node in self.stream_nm.keys():
             conn_streams_set = [] 
             self.actual_streams_map[node] = {}
             for stream_nm in self.stream_nm[node]:
+                conn_streams_set = [] 
                 if self.perf_model == "memory" and self.tau_one_file[node][stream_nm] == 0:
                     self.mpi_comm = MPI.COMM_SELF
                     for rank in self.global_res_map[node][stream_nm]:
                         str_split = stream_nm.split('.bp')
                         conn_streams_set.append(str_split[0] + "-" + str(rank) + ".bp")
-                        #print(str_split[0] + "-" + str(rank) + ".bp")   
+                        #print("[Rank ", self.wrank, "] :",str_split[0] + "-" + str(rank) + ".bp")   
                 else:
                     conn_streams_set = [stream_nm]
                 self.actual_streams_map[node][stream_nm] = conn_streams_set
-                j = j + 1 
 
        

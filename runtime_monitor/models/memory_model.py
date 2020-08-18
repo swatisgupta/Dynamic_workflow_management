@@ -19,21 +19,21 @@ import xlsxwriter
 likwid_counters = {}
 papi_counters = {
            "Intel(R) Xeon(R) CPU E5-2680 v2 @ 2.80GHz" : {
-              "llc_misses": "PAPI_NATIVE_LAST_LEVEL_CACHE_MISSES",
-              "llc_refs": "PAPI_NATIVE_LAST_LEVEL_CACHE_REFERENCES",
-              "ld_stalls":"PAPI_NATIVE_CYCLE_ACTIVITY:STALLS_LDM_PENDING",
-              "inst_ret": "PAPI_NATIVE_INSTRUCTIONS_RETIRED",
-              "st_stalls" : "PAPI_NATIVE_RESOURCE_STALLS:SB",
-              "cpu_cyc" : "PAPI_NATIVE_ix86arch::UNHALTED_CORE_CYCLES"
+              "llc_misses": [ "LAST_LEVEL_CACHE_MISSES", "D"],
+              "llc_refs": [ "LAST_LEVEL_CACHE_REFERENCES", "D"],
+              "ld_stalls": [ "CYCLE_ACTIVITY:STALLS_LDM_PENDING", "D"],
+              "inst_ret": ["INSTRUCTIONS_RETIRED", "D"],
+              "st_stalls" : ["RESOURCE_STALLS:SB", "D" ],
+              "cpu_cyc" : ["ix86arch::UNHALTED_CORE_CYCLES", "D"]
            },
            "POWER9, altivec supported" : {
-              "llc_misses": "perf::LLC-LOADS",
-              "llc_refs": "perf::LLC-LOAD-MISSES",
-              "ld_stalls": "PM_CMPLU_STALL_DMISS_L3MISS",
-              "inst_ret": "PM_INST_CMPL",
-              "cpu_cyc": "PM_ANY_THRD_RUN_CYC",
-              "gpu_tbw": "cuda:::metric_nvlink_transmit_throughput:device=0",
-              "gpu_rbw": "cuda:::metric_nvlink_receive_throughput:device=0"
+              "llc_refs": ["perf::LLC-LOADS", "D" ],
+              "llc_misses": ["perf::LLC-LOAD-MISSES", "D" ],
+              "ld_stalls": ["PM_LD_L3MISS_PEND_CYC", "D"], #PM_CMPLU_STALL_DMISS_L3MISS", "D"],
+              "inst_ret": ["PM_INST_CMPL", "D" ],
+              "cpu_cyc": ["PM_RUN_CYC", "D"], #perf::PERF_COUNT_SW_CPU_CYCLES", "D" ],
+              "gpu_tbw": ["cuda:::metric_nvlink_transmit_throughput:device=0", "D" ],
+              "gpu_rbw": ["cuda:::metric_nvlink_receive_throughput:device=0", "D" ]
             }
        }
 
@@ -78,10 +78,10 @@ class OrderedCounter(Counter, OrderedDict):
 
 def _fix_ranges_(func, val_l, val_tot):
     if len(val_l) != len(val_tot):
-        print(func, " : Length of meaurements donot match!\n", len(val_l), "!=", len(val_tot))
+        print("[Rank ", self.my_rank, "] :",func, " : Length of meaurements donot match!\n", len(val_l), "!=", len(val_tot))
         nlen = min(len(val_l), len(val_tot)) 
         val_l = val_l[:nlen]
-        val_tot = val_len[:nlen]
+        val_tot = val_tot[:nlen]
     return val_l, val_tot
     
 def _percentage_(func, nprocs, val_l, val_tot):
@@ -93,7 +93,7 @@ def _percentage_(func, nprocs, val_l, val_tot):
         percentage[i].extend([ (x/y*100) if y else 0 for x,y in zip(val_l[i] , val_tot[i])])
         if len(percentage[i]) != 0 :
             if max(percentage[i]) == 0:
-                print("Max percenatge is 0 for index " , i, " in ", func)
+                print("[Rank ", self.my_rank, "] :","Max percenatge is 0 for index " , i, " in ", func)
         if len(percentage[i]) != 0 and max_p < max(percentage[i]):
              max_p = max(percentage[i])
     return percentage, max_p
@@ -107,7 +107,7 @@ def _divide_(func, nprocs, val_l, val_tot):
         div[i].extend([ x/y if y else 0 for x,y in zip(val_l[i] , val_tot[i])])
         if len(div[i]) != 0 :
             if max(div[i]) == 0:
-                print("Max division is 0 for index " , i, " in ", func)
+                print("[Rank ", self.my_rank, "] :","Max division is 0 for index " , i, " in ", func)
         if len(div[i]) != 0 and max_v < max(div[i]):
              max_v = max(div[i])
     return div, max_v
@@ -125,13 +125,13 @@ class memory(abstract_model.model):
     def __init__(self, config):
         self.iter = 0
         self.hd_counters = {} 
-        self.rss_m = "Memory Footprint (VmRSS) (KB)"
-        self.vms_m = "Peak Memory Usage Resident Set Size (VmHWM) (KB)"
+        self.rss_m = ["Memory Footprint (VmRSS) (KB)", "C"]
+        self.vms_m = ["Heap Memory Used (KB)", "C"] # "Peak Memory Usage Resident Set Size (VmHWM) (KB)", "C"]
         self.metric_func = []
         self.adios2_active_conns = []
         self.r_map = None
         self.name = "memory"
-        self.frequency = '1S'
+        self.frequency = '1s'
         self.m_status_rss_max = {} 
         self.m_status_vms_max = {} 
         self.m_status_ipc_max = {} 
@@ -144,10 +144,7 @@ class memory(abstract_model.model):
         self.avg_window = 60 
         self.max_window = 60
         self.max_history = 120
-        '''
-        pdf = pd.DataFrame(data=ini_val, index=ini_time, columns=["value"]) 
-        pdf = pdf.groupby(pd.Grouper(freq=self.frequency)).last()
-        ''' 
+        self.my_rank = config.wrank
         self.last_rcd = {}
         self.rss = {}
         self.vms = {}
@@ -160,19 +157,12 @@ class memory(abstract_model.model):
         self.fltrd_llcp = {}
         self.fltrd_ipc = {}
         self.urgent_update = False
-        ''' 
-        with open('./machine_infos.json') as f:
-            machine_infos = json.load(f)
-            papi_counters = machine_infos["papi_counters"]
-            metric = machine_infos["metrics"]
-            memory_size = machine_infos["memory_size"]
-        '''
-    
+          
         if config.hc_lib  == 'papi':
             self.hd_counters = papi_counters[config.cpu_model.strip()]
             self.metric_func = metrics[config.cpu_model.strip()]
             self.rss_thresh = math.ceil(0.90 * int(memory_size[config.cpu_model.strip()]))
-        #print("Machine name", config.cpu_model, "counter" , self.hd_counters)            
+        #print("[Rank ", self.my_rank, "] :","Machine name", config.cpu_model, "counter" , self.hd_counters)            
         self.update_model_conf(config)    
 
     def __compute_llc_miss_per(self, nprocs, llc_miss, llc_refs):
@@ -192,26 +182,22 @@ class memory(abstract_model.model):
         dateconv = numpy.vectorize(dt.datetime.fromtimestamp)
         date1 = dateconv(ts_in_ms)
         return date1.tolist()
-    '''
-    def round(t, freq_v):
-        freq = to_offset(freq_v)
-        return pd.Timestamp((t.value // freq.delta.value) * freq.delta.value)
-    '''
+
     def __group_by_frequency(self, narray, by_last=0): #Replace S with U for microsecond 
-        #print(narray)  
+        #print("[Rank ", self.my_rank, "] :",narray)  
         narray_v = narray[:,0] # get the value
         nlist_k = narray[:,1].tolist() #get the timestamp
         nlist_k = self.__timestamp_to_date(nlist_k)
 
         pdf = pd.DataFrame(data=narray_v, index=nlist_k, columns=["value"])
-        #print(pdf)
+        #print("[Rank ", self.my_rank, "] :",pdf)
         if by_last == 0:
             pdf = pdf.groupby(pd.Grouper(freq=self.frequency)).sum()
         else:
             pdf = pdf.groupby(pd.Grouper(freq=self.frequency)).last()
         #pdf = pdf["value"].fillna(method='ffill')
         pdf = pdf["value"].dropna() #method='ffill')
-        #print(pdf)  
+        #print("[Rank ", self.my_rank, "] :",pdf)  
         return pdf #.to_dict()
 
     def get_model_name(self):
@@ -276,36 +262,56 @@ class memory(abstract_model.model):
                 self.fltrd_ldsp[node][stream] = None 
                 self.ipc[node][stream] = None 
                 self.fltrd_ipc[node][stream] = None 
-
+    
+    def __remove_empty_nan(self, array):
+        mask = numpy.any(numpy.isnan(array), axis=1) # | numpy.equal(array, 0), axis=1)
+        return array[~mask]
 
     def __get_agg_values_for(self, adios_conc, cntr, cntr_map, last_rcd, by_last=0, procs=[0], threads=[0], diff_idx=-1):
-        #print(cntr)
-        is_valid, val_ar = adios_conc.read_var(cntr, procs, threads)
+        is_valid, val_ar = adios_conc.read_var(cntr[0], procs, threads)
         if is_valid == True:
             for proc in procs:
                 for th in threads:
                     val_tmp = val_ar[proc]
                     #tmp_ar = val_tmp #[val_tmp[:,0] == th] 
-                    #print(val_tmp)
+                    print("[Rank ", self.my_rank, "] : process ", proc, " counter ", cntr, "Raw values ", val_tmp, flush = True)
+                    #print("[Rank ", self.my_rank, "] :",val_tmp)
                     tmp_ar = val_tmp 
                     if tmp_ar.size != 0:
                         tmp_ar = tmp_ar[:,[1,2]]
+                        tmp_ar = self.__remove_empty_nan(tmp_ar)         
+                        print("[Rank ", self.my_rank, "] : process ", proc, " counter ", cntr, "After empty/Nan remova ", tmp_ar, flush = True)
+  
+                    if tmp_ar.size != 0:
                         cntr_df = self.__group_by_frequency(tmp_ar, by_last)
+                        print("[Rank ", self.my_rank, "] : process ", proc, " counter ", cntr, "After group by ", cntr_df, flush = True)
                         #cntr_df = cntr_df.dropna()
                         if diff_idx != -1:
                              temp_df = last_rcd[diff_idx]
-                             cntr_df = temp_df.append(cntr_df)
+                             if cntr[1] == "C": 
+                                 cntr_df = temp_df.append(cntr_df)
+                             #else:
+                             #    cntr_df = temp_df
                              last_rcd[diff_idx] = cntr_df[-1:]
-                             cntr_df = cntr_df.diff()[1:]
+                             if cntr[1] == "C": 
+                                cntr_df = cntr_df.diff()[1:]
+                             print("[Rank ", self.my_rank, "] : process ", proc, " counter ", cntr, "After diff ", cntr_df, flush = True)
                         if cntr_map is None:
                             cntr_map = cntr_df
-                            #print("Was None ", cntr_map )
+                            #print("[Rank ", self.my_rank, "] :","Was None ", cntr_map )
+                            print("[Rank ", self.my_rank, "] : process " , proc , "counter ", cntr, " Counter mapping ", cntr_map, flush = True)
                         else:
-                            cntr_map.append(cntr_df)
+                            cntr_map = cntr_map.append(cntr_df)
+                            
+                            print("[Rank ", self.my_rank, "] : process " , proc , "counter ", cntr, " Counter mapping ", cntr_map, flush = True)
                             if by_last == 1:
+                                cntr_map = cntr_map.sort_index(ascending=True)
                                 cntr_map = cntr_map.groupby(pd.Grouper(freq=self.frequency)).last()
+                                #cntr_map = cntr_map.groupby(pd.Grouper(freq=self.frequency)).tail(1)
                             else:
-                                cntr_map= cntr_map.groupby(pd.Grouper(freq=self.frequency)).sum()
+                                cntr_map = cntr_map.sort_index(ascending=True)
+                                cntr_map = cntr_map.groupby(pd.Grouper(freq=self.frequency)).sum()
+                print("[Rank ", self.my_rank, "] : process " , proc , "counter ", cntr, " Processed values ", cntr_map, flush = True)
         return cntr_map, last_rcd
 
     def update_curr_state(self):
@@ -321,16 +327,17 @@ class memory(abstract_model.model):
         b_pressure = False
         flag_llc = flag_lds = flag_ipc = False 
         nodes = self.adios2_active_conns.keys()
-        print("Update for step ::", self.iter)
+        print("[Rank ", self.my_rank, "] :","Update for step ::", self.iter)
         self.iter = self.iter + 1  
         for node in nodes:
             rss_val = None
             vms_val = None
-            #print("Looking for node:: ", node)
+            #print("[Rank ", self.my_rank, "] :","Looking for node:: ", node)
             streams = list(self.adios2_active_conns[node].keys())
             for stream in streams:
                 procs = list(self.blocks_to_read[node][stream])
-                #print("Looking for stream:: ", stream, " with procs", procs)
+                print("[Rank ", self.my_rank, "] :","Looking for stream:: ", stream, " with procs", procs)
+                print("Active connections ", self.adios2_active_conns[node][stream]) 
                 llcm_val = None
                 llcr_val = None
                 lds_val = None
@@ -341,41 +348,44 @@ class memory(abstract_model.model):
                 for active_conc in self.adios2_active_conns[node][stream]:
                 #read RSS
                     rss_val, self.last_rcd[node][stream] = self.__get_agg_values_for(active_conc, self.rss_m, rss_val, self.last_rcd[node][stream], 1, procs, thread_l1)
-                    #print("Read RSS", self.last_rcd[node][stream][0])
+                    #print("[Rank ", self.my_rank, "] :","Read RSS", self.last_rcd[node][stream][0])
                     vms_val, self.last_rcd[node][stream] = self.__get_agg_values_for(active_conc, self.vms_m, vms_val, self.last_rcd[node][stream], 1, procs, thread_l1)
-                    #print("Read VMS", self.last_rcd[node][stream][1])
-                    #print("Metric funcs are ", self.metric_func)
+                    #print("[Rank ", self.my_rank, "] :","Read VMS", self.last_rcd[node][stream][1])
+                    #print("[Rank ", self.my_rank, "] :","Metric funcs are ", self.metric_func)
+                    read_cyc = 0
                     for met in self.metric_func:
                         if met == "ld_stalls_per" or met == "ipc":
                             #read No of CPU cycles
-                            cyc_val, self.last_rcd[node][stream] = self.__get_agg_values_for(active_conc, self.hd_counters['cpu_cyc'], cyc_val, self.last_rcd[node][stream], 0, procs, thread_l1, MetricID.CYC.value)
-                            #print("Read CYC")
+                            if read_cyc != 1:
+                                cyc_val, self.last_rcd[node][stream] = self.__get_agg_values_for(active_conc, self.hd_counters['cpu_cyc'], cyc_val, self.last_rcd[node][stream], 0, procs, thread_l1, MetricID.CYC.value)
+                                read_cyc = 1
+                            #print("[Rank ", self.my_rank, "] :","Read CYC")
                         if met == "ld_stalls_per":
                             #read No of Load Stalls
                             lds_val, self.last_rcd[node][stream] = self.__get_agg_values_for(active_conc, self.hd_counters['ld_stalls'], lds_val, self.last_rcd[node][stream], 0, procs, thread_l1, MetricID.LDS.value)
-                            #print("Read STALLS")
+                            #print("[Rank ", self.my_rank, "] :","Read STALLS")
                         elif met == "llc_miss_per":
                             #read No of L3 misses
-                            #print(self.hd_counters['llc_misses'])
+                            #print("[Rank ", self.my_rank, "] :",self.hd_counters['llc_misses'])
                             llcm_val, self.last_rcd[node][stream] = self.__get_agg_values_for(active_conc, self.hd_counters['llc_misses'], llcm_val, self.last_rcd[node][stream], 0, procs, thread_l1, MetricID.LLCM.value)
-                            #print("Read LLC MISS")
-                            #print(llcm_val)
+                            #print("[Rank ", self.my_rank, "] :","Read LLC MISS")
+                            #print("[Rank ", self.my_rank, "] :",llcm_val)
                             #read No of L3 references
                             llcr_val, self.last_rcd[node][stream] = self.__get_agg_values_for(active_conc, self.hd_counters['llc_refs'], llcr_val, self.last_rcd[node][stream], 0, procs, thread_l1, MetricID.LLCR.value)
                         elif met == "ipc":
                             #read No of Instruction
                             ins_val, self.last_rcd[node][stream] = self.__get_agg_values_for(active_conc, self.hd_counters['inst_ret'], ins_val, self.last_rcd[node][stream], 0, procs, thread_l1, MetricID.INS.value)
-                            #print("Read IPC")
+                            #print("[Rank ", self.my_rank, "] :","Read IPC")
                 for met in self.metric_func:
-                    if met == "llc_miss_per" and llcm_val is not None:
+                    if met == "llc_miss_per" and llcm_val is not None: 
+                        print("[Rank ", self.my_rank, "] :","LLC VAR ", llcm_val, " LLCR  val ", llcr_val, flush=True)
                         if self.llcp[node][stream] is None:
-                            #print("LLC VAR ", llcm_val)
                             self.llcp[node][stream] = llcm_val.div(llcr_val, fill_value=0).mul(100) 
                         else:
-                            self.llcp[node][stream].append(llcm_val.div(llcr_val, fill_value=0).mul(100))
+                            self.llcp[node][stream] = self.llcp[node][stream].append(llcm_val.div(llcr_val, fill_value=0).mul(100))
                         #self.llcp[node][stream] = self.llcp[node][stream][-self.max_history:]
                         self.fltrd_llcp[node][stream] = self.__compute_rmax(self.__compute_ravg(self.llcp[node][stream][-self.max_history:]))
-                        print("Filtered LLCP[", node, "][", stream ,"]:: \n", self.fltrd_llcp[node][stream])
+                        print("[Rank ", self.my_rank, "] :","Filtered LLCP[", node, "][", stream ,"]:: \n", self.fltrd_llcp[node][stream])
                         '''
                         self.m_status_llcp_max[node][stream].append(self.__compute_max(self.fltrd_llcp[node][stream]))
                         self.m_status_llcp_inc[node][stream].append(self.__compute_inc(self.m_status_llcp_max[node][stream]))
@@ -389,13 +399,12 @@ class memory(abstract_model.model):
                             self.ldsp[node][stream] = self.ldsp[node][stream].append(lds_val.div(cyc_val, fill_value=0).mul(100))
                         #self.lds[node][stream] = self.lds[node][stream][-self.max_history:]
                         self.fltrd_ldsp[node][stream] = self.__compute_rmax(self.__compute_ravg(self.ldsp[node][stream][-self.max_history:]))
-                        print("Filtered LDSP[", node, "][", stream ,"]:: \n", self.fltrd_ldsp[node][stream])
+                        print("[Rank ", self.my_rank, "] :","Filtered LDSP[", node, "][", stream ,"]:: \n", self.fltrd_ldsp[node][stream])
                         '''
-                        self.m_status_ldsp_max[node][stream].append(self.__compute_max(self.fltrd_lds[node][stream]))
                         self.m_status_lds_inc[node][stream].append(self.__compute_inc(self.m_status_lds_max[node][stream]))
                         if self.m_status_llcp_inc[node][stream][-1] >= 20:
                             flag_lds = True
-                        '''
+                        ''' 
                     if met == "ipc" and ins_val is not None:
                         if self.ipc[node][stream] is None:
                             self.ipc[node][stream] = ins_val.div(cyc_val, fill_value=0).mul(100) 
@@ -403,7 +412,7 @@ class memory(abstract_model.model):
                             self.ipc[node][stream] = self.ipc[node][stream].append(ins_val.div(cyc_val, fill_value=0))
                         #self.ipc[node][stream] = self.ipc[node][stream][-self.max_history:]
                         self.fltrd_ipc[node][stream] = self.__compute_rmax(self.__compute_ravg(self.ipc[node][stream][-self.max_history:]))
-                        print("Filtered IPC[", node, "][", stream ,"]:: \n", self.fltrd_ipc[node][stream])
+                        print("[Rank ", self.my_rank, "] :","Filtered IPC[", node, "][", stream ,"]:: \n", self.fltrd_ipc[node][stream])
                         '''
                         self.m_status_ipc_max[node][stream].append(self.__compute_min(self.fltrd_ipc[node][stream]))
                         self.m_status_ipc_dec[node][stream].append(self.__compute_dec(self.m_status_ipc_max[node][stream]))
@@ -425,7 +434,7 @@ class memory(abstract_model.model):
                 self.fltrd_rss[node] = self.__compute_rmax(self.__compute_ravg(self.rss[node][-self.max_history:]))
             if self.fltrd_rss[node] is not None:
                 self.m_status_rss_max[node].append(self.__compute_max(self.fltrd_rss[node]))
-            print("Filtered RSS::\n", self.fltrd_rss[node])
+            print("[Rank ", self.my_rank, "] :","Filtered RSS::\n", self.fltrd_rss[node])
 
             if vms_val is not None:
                  if node not in self.vms.keys():
@@ -441,15 +450,15 @@ class memory(abstract_model.model):
  
             if self.fltrd_vms[node] is not None:
                 self.m_status_vms_max[node].append(self.__compute_max(self.fltrd_vms[node]))
-            print("Filtered VMS::\n", self.fltrd_vms[node])
+            print("[Rank ", self.my_rank, "] :","Filtered VMS::\n", self.fltrd_vms[node])
 
             if self.m_status_rss_max[node] is not None and ( len(self.m_status_rss_max[node]) != 0 and int(math.ceil(self.m_status_rss_max[node][-1]/(1024*1024))) >= self.rss_thresh ) or ( len(self.m_status_vms_max[node]) != 0 and int(math.ceil(self.m_status_vms_max[node][0])) > 0 ):
                 c_pressure = True
-                #print("RSS is high", self.m_status_rss_max[node][-1], ">=", self.rss_thresh) 
-                #print("VMS is high", self.m_status_vms_max[node][-1], ">=", 0) 
+                #print("[Rank ", self.my_rank, "] :","RSS is high", self.m_status_rss_max[node][-1], ">=", self.rss_thresh) 
+                #print("[Rank ", self.my_rank, "] :","VMS is high", self.m_status_vms_max[node][-1], ">=", 0) 
              
-            if c_pressure or b_pressure:
-                self.urgent_update = True 
+            #if c_pressure or b_pressure:
+            #    self.urgent_update = True 
             self.dump_curr_state()
         return True
 
@@ -478,7 +487,7 @@ class memory(abstract_model.model):
             return 0
         if array is None:
             return 0 
-        #print(df.head())
+        #print("[Rank ", self.my_rank, "] :",df.head())
         array_min = array.min()
         return array_min
 
@@ -496,17 +505,23 @@ class memory(abstract_model.model):
         val_o = lst[-2]
         return ((val_o - val_n)/val_o) * 100 
 
-    def __check_overflow(self, df, xlsx_writer, index, sheetnm):
+    def __check_overflow(self, df, writer, index, sheetnm):
         if df is None:
             return
         total_rows = df.shape[0] 
-        print(total_rows)
+        print("[Rank ", self.my_rank, "] :",total_rows)
         if total_rows > index:
             temp_df = df[index:]
-            temp_df.to_excel(xlsx_writer, startrow = index, sheet_name = sheetnm)
+            #if temp_df.shape[0] > 1:
+                #temp_df = temp_df[-2:]
+            temp_df.to_csv(writer, header = False)
+            #print("[Rank ", self.my_rank, "] : WROTE ", temp_df, flush=True)
+            #temp_df.to_excel(xlsx_writer, startrow = index, sheet_name = sheetnm)
             df = df[-self.max_history:] 
+            total_rows = df.shape[0] 
             index = total_rows
-    
+        return df, index
+ 
     def create_workbook(self, filename, sheetnames):
         workbook = xlsxwriter.Workbook(filename)
         for sheet in sheetnames:
@@ -516,28 +531,28 @@ class memory(abstract_model.model):
     def dump_curr_state(self):
         nodes = self.adios2_active_conns.keys()
         file_md = 'a'
-        print("NODES..", nodes)
+        print("[Rank ", self.my_rank, "] :","NODES..", nodes)
         for node in nodes:
-            filename = "memory-" + str(node) + ".xlsx"
-            print("WRITING..", filename) 
-            if os.path.isfile(filename) is False:
-                self.create_workbook(filename, ['rss', 'vms'])
+            filename = "memory-" + str(node) + "rss.csv"
+            #print("[Rank ", self.my_rank, "] :","WRITING..", filename) 
+            with open(filename, 'a') as writer:
+                 self.rss[node], self.last_index[node]['rss'] = self.__check_overflow(self.rss[node], writer, self.last_index[node]['rss'], 'rss')
+            filename = "memory-" + str(node) + "vms.csv"
+            #print("[Rank ", self.my_rank, "] :","WRITING..", filename) 
+            with open(filename, 'a') as writer:
+                 self.vms[node], self.last_index[node]['vms'] = self.__check_overflow(self.vms[node], writer, self.last_index[node]['vms'], 'vms')
 
-            with pd.ExcelWriter(filename, engine="openpyxl", mode = file_md) as writer:
-                 self.__check_overflow(self.rss[node], writer, self.last_index[node]['rss'], 'rss')
-                 self.__check_overflow(self.vms[node], writer, self.last_index[node]['vms'], 'vms')
-                 writer.save()
             streams = list(self.adios2_active_conns[node].keys())
             for stream in streams:
-                filename = "memory-" + str(node) + "-" + str(stream.replace('.', '').replace('/', '-')) + ".xlsx"
-                if os.path.isfile(filename) is False:
-                    self.create_workbook(filename, ['llc', 'lds', 'ipc'])
-
-                with pd.ExcelWriter(filename, engine="openpyxl", mode = file_md) as writer:
-                     self.__check_overflow(self.llcp[node][stream], writer, self.last_index[node][stream]['llc'], 'llc')
-                     self.__check_overflow(self.ldsp[node][stream], writer, self.last_index[node][stream]['llc'], 'lds')
-                     self.__check_overflow(self.ipc[node][stream], writer, self.last_index[node][stream]['llc'], 'ipc')
-                     writer.save()
+                filename = "memory-" + str(node) + "-" + str(stream.replace('.', '').replace('/', '-')) + "llcp.csv"
+                with open(filename, 'a') as writer:
+                    self.llcp[node][stream], self.last_index[node][stream]['llc'] = self.__check_overflow(self.llcp[node][stream], writer, self.last_index[node][stream]['llc'], 'llc')
+                filename = "memory-" + str(node) + "-" + str(stream.replace('.', '').replace('/', '-')) + "ldsp.csv"
+                with open(filename, 'a') as writer:
+                    self.ldsp[node][stream], self.last_index[node][stream]['lds'] = self.__check_overflow(self.ldsp[node][stream], writer, self.last_index[node][stream]['lds'], 'lds')
+                filename = "memory-" + str(node) + "-" + str(stream.replace('.', '').replace('/', '-')) + "ipc.csv"
+                with open(filename, 'a') as writer:
+                    self.ipc[node][stream], self.last_index[node][stream]['ipc'] = self.__check_overflow(self.ipc[node][stream], writer, self.last_index[node][stream]['ipc'], 'ipc')
         return   
     
 

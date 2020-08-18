@@ -1,6 +1,6 @@
 import adios2
 from mpi4py import MPI
-import sys
+import sys, traceback
 import numpy as np
 import re
 from enum import Enum 
@@ -22,6 +22,7 @@ class adios2_tau_reader():
          self.mpi_comm = mpi_comm
          self.blocks_to_read = blocks_to_read
          self.tau_file_type = tau_ftype
+         self.my_rank = MPI.COMM_WORLD.Get_rank()
          self.size = 1
          self.conn = None
          self.cstep_avail_vars = None
@@ -29,6 +30,7 @@ class adios2_tau_reader():
          self.cstep_map_vars = {}
          self.cstep = None
          self.data_counters = {}
+         self.data_timers = {}
          self.event_counters = {}
          self.is_step = False
          self.is_open = False  
@@ -38,20 +40,20 @@ class adios2_tau_reader():
      def open(self):
          if self.is_open == False:
              try:
-                 #print("Looking for..", self.inputfile) 
+                 #print("[Rank ", self.my_rank, "] :","Looking for..", self.inputfile) 
                  i = 0
                  found = 0
                  while i < 1:
                      if os.path.isfile(self.inputfile) or os.path.isdir(self.inputfile):
-                         print("found file ", self.inputfile)
+                         print("[Rank ", self.my_rank, "] :","found file ", self.inputfile)
                          found = 1
                          break
                      elif os.path.isfile(self.inputfile + ".sst"):
-                         print("found file ", self.inputfile, ".sst")
+                         print("[Rank ", self.my_rank, "] :","found file ", self.inputfile, ".sst")
                          found = 1
                          break
                      #time.sleep(1)
-                 #print("Found ? ", found) 
+                 #print("[Rank ", self.my_rank, "] :","Found ? ", found) 
                  '''
                  if found == 0:
                     return self.is_open
@@ -59,7 +61,8 @@ class adios2_tau_reader():
                  self.conn = adios2.open(self.inputfile, "r", self.mpi_comm, self.eng_name)
                  self.is_open = True
              except Exception as ex:
-                 print("Got an exception!!", ex)
+                 traceback.print_exc()
+                 print("[Rank ", self.my_rank, "] :","Got an exception!!", ex)
                  self.is_open = False
          return self.is_open
 
@@ -77,7 +80,6 @@ class adios2_tau_reader():
      def get_trace_map(self):
          self.cstep_avail_vars = self.cstep.available_variables()
          self.cstep_avail_attrs = self.cstep.available_attributes() 
-         self.cstep_avail_attrs = self.cstep.available_attributes() 
          for name, info in self.cstep_avail_vars.items():
              if name == "counter_values":
                  for key, value in info.items():
@@ -85,21 +87,21 @@ class adios2_tau_reader():
                          self.count = value.split(',')
                          self.count = [int(i) for i in self.count] 
                          self.start = [0] * len(self.count)
-         print("START ",  self.start, " COUNT ", self.count)
+         print("[Rank ", self.my_rank, "] :","START ",  self.start, " COUNT ", self.count)
 
          for name, info in self.cstep_avail_attrs.items():
              if bool("MetaData" in name):
                  continue 
-             #print("attr_name: " + name)
+             #print("[Rank ", self.my_rank, "] :","attr_name: " + name)
              for key, value in info.items():
                  if key == "Value":
-                     print("\t" + key + ": " + value)
+                     #print("[Rank ", self.my_rank, "] :","\t" + key + ": " + value)
                      value = value.strip('\"')
                      value = value.split('[')[0].strip(' ')   
                      self.cstep_map_vars[value] = name.split()
-                     #print(self.cstep_map_vars[value])
-             #print("\n")         
-         #print(self.cstep_map_vars)    
+                     #print("[Rank ", self.my_rank, "] :",self.cstep_map_vars[value])
+             #print("[Rank ", self.my_rank, "] :","\n")         
+         #print("[Rank ", self.my_rank, "] :",self.cstep_map_vars)    
 
      def advance_step(self):
          if (self.eng_name == "BPFile" or self.eng_name == "BP4") and self.open() == False:
@@ -110,19 +112,21 @@ class adios2_tau_reader():
              else:
                  self.cstep = next(self.conn)
              self.is_step = True
-             print("Read step ",self.cstep.current_step(), " for stream", self.inputfile) 
+             print("[Rank ", self.my_rank, "] :","Read step ",self.cstep.current_step(), " for stream", self.inputfile) 
              if self.tau_file_type == "trace":
                  #if self.current_step % 4 == 0: 
                  self.get_trace_map() # only reads counters for now
                  self.read_trace_data()
              self.current_step = self.cstep.current_step()
          except ValueError as e:
-             print(e)
-             print("Unexpected error:", sys.exc_info()[0])
+             #print("[Rank ", self.my_rank, "] :",e)
+             traceback.print_exc()
+             print("[Rank ", self.my_rank, "] :","Unexpected error:", sys.exc_info()[0])
              self.is_step = False
          except:
-             #print("Unexpected error:", sys.exc_info()[0])
-             #print("No more steps!!")
+             traceback.print_exc()
+             #print("[Rank ", self.my_rank, "] :","Unexpected error:", sys.exc_info()[0])
+             #print("[Rank ", self.my_rank, "] :","No more steps!!")
              self.is_step = False
          return self.is_step    
                       
@@ -130,14 +134,14 @@ class adios2_tau_reader():
          var_data = {}
          if self.is_step == True: 
               if self.tau_file_type == "trace":
-                  #print("Getting measure", measure) 
+                  #print("[Rank ", self.my_rank, "] :","Getting measure", measure) 
                   return self.get_trace_var(measure, procs, threads)
          return False, var_data
 
      def read_trace_data(self):
          if self.is_step == True:
              for b in self.blocks_to_read:
-                 #print("Reading block...", b)
+                 #print("[Rank ", self.my_rank, "] :","Reading block...", b)
                  if self.eng_name == "BPFile" or  self.eng_name == "BP4":
                      self.data_counters[b] = self.cstep.read("counter_values", start = self.start, count = self.count) #, block_id = b)
                  else: 
@@ -155,7 +159,7 @@ class adios2_tau_reader():
 
          for mesr in res_match:
              for b in procs:
-                 #print("Reading block", b , "from ", self.inputfile) 
+                 print("[Rank ", self.my_rank, "] :","Reading measure", mesr, "from block", b , "from ", self.inputfile) 
                  if self.cstep_map_vars[mesr][0] == "counter":
                      vdata = self.data_counters[b][self.data_counters[b][:,TraceID.MEASURE.value] == int(self.cstep_map_vars[mesr][1])]           
                  else:

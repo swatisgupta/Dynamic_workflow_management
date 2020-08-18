@@ -80,6 +80,7 @@ class Rmonitor():
         try:
             self.config.open_connections()
         except Exception as e:
+            traceback.print_exc()
             print(e)
 
     def send_req_or_res(self, socket, req_or_res):
@@ -112,7 +113,8 @@ class Rmonitor():
                 request["message"] = global_state
                 j_data = json.dumps(request)
         except Exception as e:
-           print(e) 
+           traceback.print_exc()
+           #print(e) 
         #self.mpi_comm.Barrier()
         return j_data
  
