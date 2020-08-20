@@ -32,8 +32,8 @@ papi_counters = {
               "ld_stalls": ["PM_LD_L3MISS_PEND_CYC", "D"], #PM_CMPLU_STALL_DMISS_L3MISS", "D"],
               "inst_ret": ["PM_INST_CMPL", "D" ],
               "cpu_cyc": ["PM_RUN_CYC", "D"], #perf::PERF_COUNT_SW_CPU_CYCLES", "D" ],
-              "gpu_tbw": ["cuda:::metric_nvlink_transmit_throughput:device=0", "D" ],
-              "gpu_rbw": ["cuda:::metric_nvlink_receive_throughput:device=0", "D" ]
+              "gtbw": ["cuda:::metric_nvlink_transmit_throughput:device=0", "D" ],
+              "grbw": ["cuda:::metric_nvlink_receive_throughput:device=0", "D" ]
             }
        }
 
@@ -46,7 +46,9 @@ metrics = {
             "POWER9, altivec supported" : [
               "llc_miss_per",
               "ld_stalls_per",
-              "ipc"
+              "ipc",
+              "gtbw",
+              "grbw" 
             ]
        }
 
@@ -64,7 +66,8 @@ class MetricID(Enum):
     LDS = 4
     INS = 5
     CYC = 6
-
+    GTBW = 7
+    GRBW = 8 
 
 class OrderedCounter(Counter, OrderedDict):
      'Counter that remembers the order elements are first encountered'
@@ -140,6 +143,9 @@ class memory(abstract_model.model):
         self.m_status_ipc_dec = {} 
         self.m_status_ldsp_inc = {} 
         self.m_status_llcp_inc = {} 
+        self.m_status_gtbw_inc = {} 
+        self.m_status_grbw_inc = {} 
+
         self.last_index = {}
         self.avg_window = 60 
         self.max_window = 60
@@ -151,11 +157,15 @@ class memory(abstract_model.model):
         self.ldsp = {}
         self.llcp = {}
         self.ipc = {}
+        self.gtbw = {}
+        self.grbw = {}
         self.fltrd_rss = {}
         self.fltrd_vms = {}
         self.fltrd_ldsp = {}
         self.fltrd_llcp = {}
         self.fltrd_ipc = {}
+        self.fltrd_gtbw ={}
+        self.fltrd_grbw ={}  
         self.urgent_update = False
           
         if config.hc_lib  == 'papi':
@@ -221,10 +231,16 @@ class memory(abstract_model.model):
             self.ldsp[node] = {}
             self.llcp[node] = {}
             self.ipc[node] = {}
+            self.gtbw[node] = {}
+            self.grbw[node] = {}
+            self.fltrd_ldsp[node] = {}
+            self.fltrd_ldsp[node] = {}
             self.fltrd_ldsp[node] = {}
             self.fltrd_llcp[node] = {}
             self.fltrd_ipc[node] = {}
             self.fltrd_ipc[node] = {}
+            self.fltrd_gtbw[node] = {}
+            self.fltrd_grbw[node] = {}
             self.fltrd_rss[node] = {}
             self.fltrd_vms[node] = {}
             self.last_rcd[node] = {}
@@ -237,6 +253,8 @@ class memory(abstract_model.model):
             self.m_status_ldsp_inc[node] = {}
             self.m_status_llcp_inc[node] = {}
             self.m_status_ipc_dec[node] = {}
+            self.m_status_gtbw_inc[node] = {}
+            self.m_status_grbw_inc[node] = {}
             self.last_index[node] = { 'rss':0, 'vms':0}
         
       
@@ -245,23 +263,29 @@ class memory(abstract_model.model):
                 procs = list(self.blocks_to_read[node][stream])
                 #obj = OrderedCounter(pdf["value"].to_dict()) #numpy.array([[ini_time, ini_val]])
                 #obj[ini_time] = ini_val
-                self.last_index[node][stream] = {'lds':0, 'llc':0, 'ipc':0}
+                self.last_index[node][stream] = {'lds':0, 'llc':0, 'ipc':0, 'gtbw':0, 'grbw':0}
                 self.m_status_ldsp_max[node][stream] = []
                 self.m_status_llcp_max[node][stream] = []
                 self.m_status_ipc_max[node][stream] = []
                 self.m_status_ldsp_inc[node][stream] = []
                 self.m_status_llcp_inc[node][stream] = []
                 self.m_status_ipc_dec[node][stream] = []
+                self.m_status_grbw_inc[node][stream] = []
+                self.m_status_grbw_inc[node][stream] = []
 
                 self.last_rcd[node][stream] = {}
-                for i in range(0,7): #for each metrics
+                for i in range(0,9): #for each metrics
                     self.last_rcd[node][stream][i] = obj 
                 self.ldsp[node][stream] = None 
                 self.fltrd_ldsp[node][stream] = None 
                 self.llcp[node][stream] = None 
                 self.fltrd_ldsp[node][stream] = None 
                 self.ipc[node][stream] = None 
+                self.gtbw[node][stream] = None 
+                self.grbw[node][stream] = None 
                 self.fltrd_ipc[node][stream] = None 
+                self.fltrd_gtbw[node][stream] = None 
+                self.fltrd_grbw[node][stream] = None 
     
     def __remove_empty_nan(self, array):
         mask = numpy.any(numpy.isnan(array), axis=1) # | numpy.equal(array, 0), axis=1)
@@ -322,6 +346,8 @@ class memory(abstract_model.model):
         lds_val = {} 
         ins_val = {} 
         cyc_val = {}
+        gtbw = {}
+        grbw = {}
         k = 0 
         c_pressure = False
         b_pressure = False
@@ -343,6 +369,8 @@ class memory(abstract_model.model):
                 lds_val = None
                 ins_val = None
                 cyc_val = None
+                gtbw = None
+                grbw = None
                 thread_l1 = [0]
                 thread_l = [0,1,2,3]
                 for active_conc in self.adios2_active_conns[node][stream]:
@@ -376,6 +404,12 @@ class memory(abstract_model.model):
                             #read No of Instruction
                             ins_val, self.last_rcd[node][stream] = self.__get_agg_values_for(active_conc, self.hd_counters['inst_ret'], ins_val, self.last_rcd[node][stream], 0, procs, thread_l1, MetricID.INS.value)
                             #print("[Rank ", self.my_rank, "] :","Read IPC")
+                        elif met == "gtbw":
+                            gtbw, self.last_rcd[node][stream] = self.__get_agg_values_for(active_conc, self.hd_counters['gtbw'], ins_val, self.last_rcd[node][stream], 0, procs, thread_l1, MetricID.GTBW.value)
+
+                        elif met == "grbw":
+                            grbw, self.last_rcd[node][stream] = self.__get_agg_values_for(active_conc, self.hd_counters['grbw'], ins_val, self.last_rcd[node][stream], 0, procs, thread_l1, MetricID.GRBW.value)
+
                 for met in self.metric_func:
                     if met == "llc_miss_per" and llcm_val is not None: 
                         print("[Rank ", self.my_rank, "] :","LLC VAR ", llcm_val, " LLCR  val ", llcr_val, flush=True)
@@ -419,6 +453,18 @@ class memory(abstract_model.model):
                         if self.m_status_llcp_inc[node][stream][-1] >= 20:
                             flag_ipc = True
                         '''
+                    if met == "gtbw":
+                        if self.gtbw[node][stream] is None:
+                            self.gtbw[node][stream] = gtbw 
+                        else:
+                            self.gtbw[node][stream] = self.gtbw[node][stream].append(gtbw)
+
+                    if met == "grbw":
+                        if self.grbw[node][stream] is None:
+                            self.grbw[node][stream] = grbw 
+                        else:
+                            self.grbw[node][stream] = self.grbw[node][stream].append(grbw)
+
                     if flag_llc and flag_lds and flag_ipc:
                         b_pressure == True
             # keep only last X records
@@ -553,6 +599,12 @@ class memory(abstract_model.model):
                 filename = "memory-" + str(node) + "-" + str(stream.replace('.', '').replace('/', '-')) + "ipc.csv"
                 with open(filename, 'a') as writer:
                     self.ipc[node][stream], self.last_index[node][stream]['ipc'] = self.__check_overflow(self.ipc[node][stream], writer, self.last_index[node][stream]['ipc'], 'ipc')
+                filename = "memory-" + str(node) + "-" + str(stream.replace('.', '').replace('/', '-')) + "gtbw.csv"
+                with open(filename, 'a') as writer:
+                    self.gtbw[node][stream], self.last_index[node][stream]['gtbw'] = self.__check_overflow(self.gtbw[node][stream], writer, self.last_index[node][stream]['gtbw'], 'gtbw')
+                filename = "memory-" + str(node) + "-" + str(stream.replace('.', '').replace('/', '-')) + "grbw.csv"
+                with open(filename, 'a') as writer:
+                    self.grbw[node][stream], self.last_index[node][stream]['grbw'] = self.__check_overflow(self.grbw[node][stream], writer, self.last_index[node][stream]['grbw'], 'grbw')
         return   
     
 
