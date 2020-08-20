@@ -1,8 +1,0 @@
-README.md
-r_monitor
-setup.py
-runtime_monitor.egg-info/PKG-INFO
-runtime_monitor.egg-info/SOURCES.txt
-runtime_monitor.egg-info/dependency_links.txt
-runtime_monitor.egg-info/requires.txt
-runtime_monitor.egg-info/top_level.txt

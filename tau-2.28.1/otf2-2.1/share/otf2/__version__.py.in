@@ -1,7 +1,0 @@
-__version__ = '@PACKAGE_VERSION@'
-__version_info__ = [
-    @PACKAGE_MAJOR@,
-    @PACKAGE_MINOR@,
-    @PACKAGE_BUGFIX@,
-    '@PACKAGE_SUFFIX@'
-]

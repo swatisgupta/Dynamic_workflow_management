@@ -1,4 +1,0 @@
-numpy
-mpi4py
-pyzmq
-pandas
