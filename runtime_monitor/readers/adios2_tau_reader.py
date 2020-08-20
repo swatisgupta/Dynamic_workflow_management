@@ -130,7 +130,7 @@ class adios2_tau_reader():
              self.is_step = False
          return self.is_step    
                       
-     def read_var(self, measure, procs, threads=[0]):
+     def read_var(self, measure, procs=[0], threads=[0]):
          var_data = {}
          if self.is_step == True: 
               if self.tau_file_type == "trace":
