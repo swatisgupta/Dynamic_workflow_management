@@ -302,7 +302,7 @@ class memory(abstract_model.model):
                     #print("[Rank ", self.my_rank, "] :",val_tmp)
                     tmp_ar = val_tmp 
                     if tmp_ar.size != 0:
-                        tmp_ar = tmp_ar[:,[1,2]]
+                        tmp_ar = tmp_ar[:,[2,3]]
                         tmp_ar = self.__remove_empty_nan(tmp_ar)         
                         print("[Rank ", self.my_rank, "] : process ", proc, " counter ", cntr, "After empty/Nan remova ", tmp_ar, flush = True)
   
@@ -600,11 +600,13 @@ class memory(abstract_model.model):
                 with open(filename, 'a') as writer:
                     self.ipc[node][stream], self.last_index[node][stream]['ipc'] = self.__check_overflow(self.ipc[node][stream], writer, self.last_index[node][stream]['ipc'], 'ipc')
                 filename = "memory-" + str(node) + "-" + str(stream.replace('.', '').replace('/', '-')) + "gtbw.csv"
+                '''
                 with open(filename, 'a') as writer:
                     self.gtbw[node][stream], self.last_index[node][stream]['gtbw'] = self.__check_overflow(self.gtbw[node][stream], writer, self.last_index[node][stream]['gtbw'], 'gtbw')
                 filename = "memory-" + str(node) + "-" + str(stream.replace('.', '').replace('/', '-')) + "grbw.csv"
                 with open(filename, 'a') as writer:
                     self.grbw[node][stream], self.last_index[node][stream]['grbw'] = self.__check_overflow(self.grbw[node][stream], writer, self.last_index[node][stream]['grbw'], 'grbw')
+                '''
         return   
     
 

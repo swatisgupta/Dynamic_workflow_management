@@ -34,9 +34,11 @@ class adios2_tau_reader():
          self.event_counters = {}
          self.is_step = False
          self.is_open = False  
+         self.reset = False 
          self.current_step = 0
-         self.start = None
-         self.count = None
+         self.start = {} 
+         self.count = {}
+        
      def open(self):
          if self.is_open == False:
              try:
@@ -66,6 +68,9 @@ class adios2_tau_reader():
                  self.is_open = False
          return self.is_open
 
+     def get_reset(self):
+         return self.reset 
+
      def close(self):
          if self.is_open == True:
              try: 
@@ -84,9 +89,16 @@ class adios2_tau_reader():
              if name == "counter_values":
                  for key, value in info.items():
                      if key == "Shape":
-                         self.count = value.split(',')
-                         self.count = [int(i) for i in self.count] 
-                         self.start = [0] * len(self.count)
+                         self.count['counters'] = value.split(',')
+                         self.count['counters'] = [int(i) for i in self.count['counters']] 
+                         self.start['counters'] = [0] * len(self.count['counters'])
+             if name == "event_timestamps":
+                 for key, value in info.items():
+                     if key == "Shape":
+                         self.count['timers'] = value.split(',')
+                         self.count['timers'] = [int(i) for i in self.count['timers']] 
+                         self.start['timers'] = [0] * len(self.count['timers'])
+                
          print("[Rank ", self.my_rank, "] :","START ",  self.start, " COUNT ", self.count)
 
          for name, info in self.cstep_avail_attrs.items():
@@ -101,7 +113,7 @@ class adios2_tau_reader():
                      self.cstep_map_vars[value] = name.split()
                      #print("[Rank ", self.my_rank, "] :",self.cstep_map_vars[value])
              #print("[Rank ", self.my_rank, "] :","\n")         
-         #print("[Rank ", self.my_rank, "] :",self.cstep_map_vars)    
+         print("[Rank ", self.my_rank, "] :",self.cstep_map_vars)    
 
      def advance_step(self):
          if (self.eng_name == "BPFile" or self.eng_name == "BP4") and self.open() == False:
@@ -124,17 +136,27 @@ class adios2_tau_reader():
              print("[Rank ", self.my_rank, "] :","Unexpected error:", sys.exc_info()[0])
              self.is_step = False
          except:
-             traceback.print_exc()
+             #traceback.print_exc()
              #print("[Rank ", self.my_rank, "] :","Unexpected error:", sys.exc_info()[0])
-             #print("[Rank ", self.my_rank, "] :","No more steps!!")
+             print("[Rank ", self.my_rank, "] :","No more steps!!")
              self.is_step = False
          return self.is_step    
-                      
-     def read_var(self, measure, procs=[0], threads=[0]):
+
+     def read_var(self, measure):
          var_data = {}
          if self.is_step == True: 
               if self.tau_file_type == "trace":
-                  #print("[Rank ", self.my_rank, "] :","Getting measure", measure) 
+                  is_dat, data = self.get_trace_var(measure, self.blocks_to_read, [-1])
+                  if is_dat:
+                      data = data[:,[2, 3]]
+                      return True, data 
+         return False, var_data
+
+     def read_var(self, measure, procs, threads=[]):
+         var_data = {}
+         if self.is_step == True: 
+              if self.tau_file_type == "trace":
+                  print("[Rank ", self.my_rank, "] :","Getting measure", measure, flush = True) 
                   return self.get_trace_var(measure, procs, threads)
          return False, var_data
 
@@ -143,8 +165,10 @@ class adios2_tau_reader():
              for b in self.blocks_to_read:
                  #print("[Rank ", self.my_rank, "] :","Reading block...", b)
                  if self.eng_name == "BPFile" or  self.eng_name == "BP4":
-                     self.data_counters[b] = self.cstep.read("counter_values", start = self.start, count = self.count) #, block_id = b)
+                     self.data_timers[b] = self.cstep.read("event_timestamps", start = self.start['timers'], count = self.count['timers']) #, block_id = b)
+                     self.data_counters[b] = self.cstep.read("counter_values", start = self.start['counters'], count = self.count['counters']) #, block_id = b)
                  else: 
+                     self.data_timers[b] = self.cstep.read("event_timestamps", block_id = b)
                      self.data_counters[b] = self.cstep.read("counter_values", block_id = b)
                  # TO DO: read events as well!!!
 
@@ -153,7 +177,7 @@ class adios2_tau_reader():
          var_data = {}
          all_measures = self.cstep_map_vars.keys()
          res_match = [ x for x in all_measures if bool(measure in x)]   
-
+         print("[Rank ", self.my_rank, "] :","Reading measure", measure, "matched" , self.cstep_map_vars[res_match[0]])
          if len(res_match) == 0 :
              return False, var_data
 
@@ -163,19 +187,39 @@ class adios2_tau_reader():
                  if self.cstep_map_vars[mesr][0] == "counter":
                      vdata = self.data_counters[b][self.data_counters[b][:,TraceID.MEASURE.value] == int(self.cstep_map_vars[mesr][1])]           
                  else:
-                     vdata = self.data_timers[b][self.data_timers[b][:,TraceID.MEASURE.value] == int(self.cstep_map_vars[mesr][1])]           
+                     vdata = self.data_timers[b][self.data_timers[b][:,TraceID.VALUE.value] == int(self.cstep_map_vars[mesr][1])]           
+                 #if vdata.shape[0] == 0:
+                 #    continue
+
+                 print("Read ", vdata, flush = True)
                  vtdata = None
+
                  for t in threads:
+                     print("Screenig thread ", t, flush = True)
                      if vtdata is None:
                          vtdata = vdata[vdata[:,TraceID.THREAD.value] == t]
                      else:
                          vtdata = np.concatenate((vdata[vdata[:,TraceID.THREAD.value] == t], vtdata ), axis=0)
-                 vtdata = vtdata[:, [TraceID.THREAD.value, TraceID.VALUE.value, TraceID.TIMESTAMP.value]]
+
+                 if self.cstep_map_vars[mesr][0] == "counter":
+                     if vtdata is None:
+                         vtdata = vdata[:, [TraceID.PROC.value, TraceID.THREAD.value, TraceID.VALUE.value, TraceID.TIMESTAMP.value]]
+                     else:
+                         vtdata = vtdata[:, [TraceID.PROC.value, TraceID.THREAD.value, TraceID.VALUE.value, TraceID.TIMESTAMP.value]]
+                 else:                  
+                     if vtdata is None:
+                         vtdata = vdata[:, [TraceID.PROC.value, TraceID.THREAD.value, TraceID.MEASURE.value, TraceID.TIMESTAMP.value]]
+                     else:
+                         vtdata = vtdata[:, [TraceID.PROC.value, TraceID.THREAD.value, TraceID.MEASURE.value, TraceID.TIMESTAMP.value]]
+                 #if vtdata.ndim == 0:
+                 #    continue
 
                  if b not in var_data.keys():
                      var_data[b] = vtdata
                  else:
                      var_data[b] = np.concatenate((var_data[b], vtdata), axis=0)
+         if len(var_data) == 0:
+             return False, var_data                 
          return True, var_data              
 
      def end_step(self):

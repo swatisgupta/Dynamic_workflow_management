@@ -5,8 +5,8 @@ from mpi4py import MPI
 import os
 from runtime_monitor import helper
 from runtime_monitor.models.memory_model import memory
-from runtime_monitor.models.outstep2_model import outsteps2
-from runtime_monitor.models.outstep1_model import outsteps1
+from runtime_monitor.models.heartbeat_model import heartbeat
+from runtime_monitor.models.pace_model import pace
 import threading
 from datetime import datetime
 import zmq
@@ -66,10 +66,10 @@ class Rmonitor():
         model = None
         if mdl_str == "memory":
             model = memory(self.config)
-        elif mdl_str == "outsteps2":
-            model = outsteps2(self.config)
-        elif mdl_str == "outsteps1":
-            model = outsteps1(self.config)
+        elif mdl_str == "heartbeat":
+            model = heartbeat(self.config)
+        elif mdl_str == "pace":
+            model = pace(self.config)
         else:
             return
         self.model_objs.append(model)
@@ -130,7 +130,7 @@ class Rmonitor():
             self.config.mpi_comm.Reduce(action, g_action, op=MPI.SUM)
             
             if g_action[0] > 0:
-                #print("Sending update for ", mdls.get_model_name()) 
+                print("Sending update for ", mdls.get_model_name()) 
                 request = self.get_update(mdls.get_model_name(), timestamp, mdls.get_curr_state(), "req:action")
                 self.send_req_or_res(socket, request)
                 if self.rank == 0 :
@@ -162,12 +162,12 @@ class Rmonitor():
     def worker(self):
         context = None
         socket = None
-        '''
+         
         if self.rank == 0:
             try:
                 context = zmq.Context()
                 socket = context.socket(zmq.REQ)
-                #print("Connecting to socket ", self.osocket) 
+                print("Connecting to socket ", self.osocket) 
                 socket.connect(self.osocket)
                 print("Connected to : ", self.osocket)  
                 timestamp = datetime.now() # - self.starttime
@@ -181,7 +181,7 @@ class Rmonitor():
             except:
                 traceback.print_exc()    
                 print("Worker : Got an exception ..")
-        '''
+        
 
         do_work = True
 
@@ -192,12 +192,12 @@ class Rmonitor():
                     print("Done...dumping the data!!")
                     self.close_connections()
                     self.write_model_data()
-                    '''
+                    
                     if self.rank == 0: 
                         socket.send_string("done")
                         msg = socket.recv()
                         sys.stdout.flush()
-                    '''
+                   
                 else:
                     #print("Worker: Next iteration ...")
                     sys.stdout.flush()  
@@ -206,7 +206,7 @@ class Rmonitor():
                         sys.stdout.flush()
 
                     message = None
-                    '''
+                    
                     with self.msg_cond:
                         #print("Worker: checking msg queue ..len ", len(self.msg_queue)) 
                         while len(self.msg_queue) > 0:
@@ -226,7 +226,7 @@ class Rmonitor():
                         else:
                             print("Worker: not sending a response...", response)
                     self.if_send_update(socket)
-                       '''
+                   
             except Exception as e:
                 traceback.print_exc()    
                 print("Worker : Got an exception ..", e)    
@@ -304,7 +304,7 @@ class Rmonitor():
              #timestamp = list(divmod(timestamp.total_seconds(), 60))
              #print(self.model_objs)   
              mdls = self.model_objs[-1] #s[request["model"]] 
-             ###response = self.get_update(mdls.name, timestamp, mdls.get_curr_state(), "res:update")
+             response = self.get_update(mdls.name, timestamp, mdls.get_curr_state(), "res:update")
          elif request["msg_type"] == "req:stop":
              #print("Processing an update request...", request)
              sys.stdout.flush()

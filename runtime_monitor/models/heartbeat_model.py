@@ -7,7 +7,7 @@ import sys
 import datetime as dt
 from runtime_monitor import abstract_model
 
-class outsteps2(abstract_model.model):
+class heartbeat(abstract_model.model):
     def __init__(self, config):
         self.active_conns = None
         self.rmap = None
@@ -23,7 +23,10 @@ class outsteps2(abstract_model.model):
         self.stream_ext = {} 
         self.stream_max_step = {} 
         self.update_model_conf(config, True)  
-        self.name = "outsteps2"
+        self.name = "heartbeat"
+
+    def dump_curr_state(self):
+        return
 
     def update_curr_state(self):
         #print(self.active_conns) 
