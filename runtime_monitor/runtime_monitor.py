@@ -192,7 +192,7 @@ class Rmonitor():
                     print("Done...dumping the data!!")
                     self.close_connections()
                     self.write_model_data()
-                    
+                  
                     if self.rank == 0: 
                         socket.send_string("done")
                         msg = socket.recv()

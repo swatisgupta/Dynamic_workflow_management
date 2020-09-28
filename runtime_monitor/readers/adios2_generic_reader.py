@@ -68,6 +68,9 @@ class adios2_generic_reader():
      def get_reset(self):
          return self.reset 
 
+     def set_reset(self, val):
+         self.reset = val 
+
      def get_open_timestamp(self):
          return self.timestamp
 

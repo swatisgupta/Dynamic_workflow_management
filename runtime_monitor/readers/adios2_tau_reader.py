@@ -36,6 +36,9 @@ class adios2_tau_reader():
          self.is_open = False  
          self.reset = False 
          self.current_step = 0
+         self.adios = adios2.ADIOS(mpi_comm)
+         self.ioReader = self.adios.DeclareIO("reader")
+         self.ioReader.SetEngine(self.eng_name)
          self.start = {} 
          self.count = {}
         
@@ -56,11 +59,12 @@ class adios2_tau_reader():
                          break
                      #time.sleep(1)
                  #print("[Rank ", self.my_rank, "] :","Found ? ", found) 
-                 '''
+                 
                  if found == 0:
                     return self.is_open
-                 '''
-                 self.conn = adios2.open(self.inputfile, "r", self.mpi_comm, self.eng_name)
+                
+                 self.conn = self.ioReader.Open(self.inputfile, adios2.Mode.Read)
+                 #self.conn = adios2.open(self.inputfile, "r", self.mpi_comm, self.eng_name)
                  self.is_open = True
              except Exception as ex:
                  traceback.print_exc()
@@ -71,20 +75,28 @@ class adios2_tau_reader():
      def get_reset(self):
          return self.reset 
 
+     def set_reset(self, val):
+         self.reset = val 
+
      def close(self):
+         print("Closing stream", self.inputfile , flush = True) 
          if self.is_open == True:
              try: 
-                 self.conn.close()
+                 self.conn.Close()
                  self.is_open = False
+                 self.reset = True
              except:
+                 traceback.print_exc()
                  self.is_open = True
 
      def get_step_number(self):
          return self.cstep.current_step()
 
      def get_trace_map(self):
-         self.cstep_avail_vars = self.cstep.available_variables()
-         self.cstep_avail_attrs = self.cstep.available_attributes() 
+         self.cstep_avail_vars = self.ioReader.AvailableVariables() 
+         #self.cstep.available_variables()
+         self.cstep_avail_attrs = self.ioReader.AvailableAttributes() 
+         #self.cstep.available_attributes() 
          for name, info in self.cstep_avail_vars.items():
              if name == "counter_values":
                  for key, value in info.items():
@@ -117,29 +129,38 @@ class adios2_tau_reader():
 
      def advance_step(self):
          if (self.eng_name == "BPFile" or self.eng_name == "BP4") and self.open() == False:
-             return False
+             self.open()
+             self.reset = True
+         else:
+             self.reset = False
+        
+         if self.is_open == False:
+             return self.is_step
+ 
          try:
-             if self.eng_name == "BPFile" or self.eng_name == "BP4":
-                 self.cstep = next(self.conn)
-             else:
-                 self.cstep = next(self.conn)
-             self.is_step = True
-             print("[Rank ", self.my_rank, "] :","Read step ",self.cstep.current_step(), " for stream", self.inputfile) 
-             if self.tau_file_type == "trace":
-                 #if self.current_step % 4 == 0: 
+             status = self.conn.BeginStep(adios2.StepMode.Read, 2.0)
+             if status == adios2.StepStatus.OK:
+                 self.is_step = True 
                  self.get_trace_map() # only reads counters for now
                  self.read_trace_data()
-             self.current_step = self.cstep.current_step()
+                 self.current_step += 1
+                 #self.current_step = self.cstep.current_step()
+             elif status == adios2.StepStatus.EndOfStream:
+                  self.close()
+                 #if self.current_step % 4 == 0: 
          except ValueError as e:
              #print("[Rank ", self.my_rank, "] :",e)
              traceback.print_exc()
              print("[Rank ", self.my_rank, "] :","Unexpected error:", sys.exc_info()[0])
              self.is_step = False
+             self.end_step()
          except:
-             #traceback.print_exc()
+             traceback.print_exc()
              #print("[Rank ", self.my_rank, "] :","Unexpected error:", sys.exc_info()[0])
              print("[Rank ", self.my_rank, "] :","No more steps!!")
              self.is_step = False
+             self.end_step()
+             #self.close()
          return self.is_step    
 
      def read_var(self, measure):
@@ -165,11 +186,12 @@ class adios2_tau_reader():
              for b in self.blocks_to_read:
                  #print("[Rank ", self.my_rank, "] :","Reading block...", b)
                  if self.eng_name == "BPFile" or  self.eng_name == "BP4":
-                     self.data_timers[b] = self.cstep.read("event_timestamps", start = self.start['timers'], count = self.count['timers']) #, block_id = b)
-                     self.data_counters[b] = self.cstep.read("counter_values", start = self.start['counters'], count = self.count['counters']) #, block_id = b)
+                     #self.data_timers[b] = self.cstep.read("event_timestamps", start = self.start['timers'], count = self.count['timers']) #, block_id = b)
+                     self.data_timers[b] = self.read_variable("event_timestamps", start = self.start['timers'], count = self.count['timers']) #, block_id = b)
+                     self.data_counters[b] = self.read_variable("counter_values", start = self.start['counters'], count = self.count['counters']) #, block_id = b)
                  else: 
-                     self.data_timers[b] = self.cstep.read("event_timestamps", block_id = b)
-                     self.data_counters[b] = self.cstep.read("counter_values", block_id = b)
+                     self.data_timers[b] = self.read_variable("event_timestamps")
+                     self.data_counters[b] = self.read_variable("counter_values")
                  # TO DO: read events as well!!!
 
      # returns data as a map of np array . Map index is process number. Numpy array has columns (thread, value, timestamp)    
@@ -177,16 +199,17 @@ class adios2_tau_reader():
          var_data = {}
          all_measures = self.cstep_map_vars.keys()
          res_match = [ x for x in all_measures if bool(measure in x)]   
-         print("[Rank ", self.my_rank, "] :","Reading measure", measure, "matched" , self.cstep_map_vars[res_match[0]])
          if len(res_match) == 0 :
              return False, var_data
+         print("[Rank ", self.my_rank, "] :","Reading measure", measure, "matched" , self.cstep_map_vars[res_match[0]], flush=True)
 
          for mesr in res_match:
              for b in procs:
-                 print("[Rank ", self.my_rank, "] :","Reading measure", mesr, "from block", b , "from ", self.inputfile) 
+                 print("[Rank ", self.my_rank, "] :","Reading measure", mesr, "from block", b , "from ", self.inputfile, flush=True) 
                  if self.cstep_map_vars[mesr][0] == "counter":
                      vdata = self.data_counters[b][self.data_counters[b][:,TraceID.MEASURE.value] == int(self.cstep_map_vars[mesr][1])]           
                  else:
+                     print(self.data_timers[b], flush = True)
                      vdata = self.data_timers[b][self.data_timers[b][:,TraceID.VALUE.value] == int(self.cstep_map_vars[mesr][1])]           
                  #if vdata.shape[0] == 0:
                  #    continue
@@ -222,12 +245,57 @@ class adios2_tau_reader():
              return False, var_data                 
          return True, var_data              
 
+     def read_variable(self, var_name, start=[], count=[]):
+         var_data = None 
+         if self.is_step == True:
+             var = self.ioReader.InquireVariable(var_name)
+             if var is not None: #self.cstep_avail_vars:
+                 count = tuple(var.Count())
+                 type = var.Type()
+                 print("Var type ...", type, flush = True)
+                 print("Var count ...", count, flush = True)
+                 if type == "int32_t":
+                     if len(count) == 0:
+                         var_data = np.zeros((1), dtype=np.int32)
+                     else:
+                         var_data = np.zeros(count, dtype=np.int32)
+                 elif type == "int64_t":
+                     if len(count) == 0:
+                         var_data = np.zeros((1), dtype=np.int64)
+                     else:
+                         var_data = np.zeros(count, dtype=np.int64)
+                 elif type == "float":  
+                     if len(count) == 0:
+                         var_data = np.zeros((1), dtype=np.float32)
+                     else:
+                         var_data = np.zeros(count, dtype=np.float32)
+                 elif type == "double":  
+                     if len(count) == 0:
+                         var_data = np.zeros((1), dtype=np.float64)
+                     else:
+                         var_data = np.zeros(count, dtype=np.float64)
+                 elif type == "uint64_t":
+                     if len(count) == 0:
+                         var_data = np.zeros((1), dtype=np.uint64)
+                     else:
+                         var_data = np.zeros(count, dtype=np.uint64)
+                 else:
+                     var_data = ""  
+                 self.conn.Get(var, var_data, adios2.Mode.Sync)
+         return var_data
+
+
+
      def end_step(self):
          if self.is_step == True:
              try: 
-                 self.conn.end_step()
+                 self.conn.EndStep()
                  self.is_step = False
-             except:
+                 #if self.eng_name == 'BPFile' or self.eng_name == 'BP4':
+                 #    self.conn.Close()
+                 #    self.is_open = False
+             except Exception as e:
+                 print("Caught an exception...", e)
                  self.is_step = False
                 
 

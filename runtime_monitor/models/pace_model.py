@@ -4,6 +4,7 @@ import sys
 import numpy as np
 import datetime as dt
 from runtime_monitor import abstract_model
+import json
 
 class pace(abstract_model.model):
     def __init__(self, config):
@@ -84,8 +85,9 @@ class pace(abstract_model.model):
         for i in range(nvals):
             if vals.size == 0:
                 vals = values[i]
+            print("Inside compute...", vals, values[i], flush=True)   
             vals = np.maximum(vals, values[i]) 
-        print("Inside compute", vals)   
+        print("Inside compute", vals, flush=True)   
         return vals
  
     def update_curr_state(self):
@@ -99,9 +101,10 @@ class pace(abstract_model.model):
                 x_conn_var = {}
                 x_step = self.stream_n_steps[node][stream]
                 i = 0
-                n_steps_min = 0
+                n_steps_min = -1
                 for adios_conc in self.active_conns[node][stream]: 
                     if adios_conc.get_reset() == True :
+                        adios_conc.set_reset(False)
                         self.stream_sum_steptime[node][stream] = 0
                         self.stream_cur_steps[node][stream] = 0
                         self.stream_n_steps[node][stream] = 0 
@@ -113,6 +116,7 @@ class pace(abstract_model.model):
                         isvalid, conn_var = adios_conc.read_var(self.stream_step_var[node][stream], [proc])
 
                         if isvalid is False:
+                            n_steps_min = 0
                             continue
 
                         x_conn_var[id] = conn_var[proc] 
@@ -126,18 +130,28 @@ class pace(abstract_model.model):
                         else:                 
                             #print("Contatenating ", self.read_values[node][stream][id], " with ", x_conn_var[id], flush = True) 
                             self.read_values[node][stream][id] = np.concatenate((self.read_values[node][stream][id], x_conn_var[id]), axis=0) 
-                        
+                        if self.read_values[node][stream][id].size != 0 and self.read_values[node][stream][id].ndim > 1: 
+                            if self.read_values[node][stream][id][0,self.read_values[node][stream][id].shape[1]-2 ] == 1:
+                                if self.read_values[node][stream][id].shape[0] > 1:
+                                    self.read_values[node][stream][id] = self.read_values[node][stream][id][1:,:] 
+                                else:
+                                    continue
+ 
                         x_conn_var[id] = self.read_values[node][stream][id]
                         print("Read 2 ", id ," isvlalid = ", isvalid, " var = ", x_conn_var[id], flush=True)
-                
-                        if n_steps_min == 0:
+                         
+                        if n_steps_min == -1:
                             n_steps_min = self.read_values[node][stream][id].shape[0]
                         elif self.read_values[node][stream][id].shape[0] < n_steps_min:
                             n_steps_min = self.read_values[node][stream][id].shape[0]
                     i += 1 
 
                 i = 0
-                print("Total steps" , n_steps_min, flush= True)  
+                print("Total steps" , n_steps_min, flush= True)
+
+                if n_steps_min == 0:
+                    continue
+  
                 for adios_conc in self.active_conns[node][stream]: 
                     for proc in self.procs_per_conns[node][stream]:
                         id = i + proc
@@ -175,15 +189,17 @@ class pace(abstract_model.model):
                     if self.restart[node][stream] == True:
                         self.restart_steps[node][stream].append(n_steps)
                         self.restart[node][stream] = False          
-                    self.stream_read_steps[node][stream].append(list(step_times[node][stream]))
-                    self.stream_cur_steps[node][stream] = self.stream_cur_steps[node][stream] + n_steps
-                    self.stream_sum_steptime[node][stream] = np.sum(step_times[node][stream]) #cur_diff
+                    self.stream_read_steps[node][stream].extend((step_times[node][stream]).tolist())
                     self.stream_n_steps[node][stream] = self.stream_n_steps[node][stream] + n_steps 
+                    self.stream_cur_steps[node][stream] = self.stream_cur_steps[node][stream] + n_steps
+                    print(" STEPTIMES :",  step_times[node][stream])
+                    self.stream_sum_steptime[node][stream] += np.sum(step_times[node][stream]) #cur_diff
                      
                 if self.stream_n_steps[node][stream] > 10:
-                    t_read = self.stream_cur_steps[node][stream] - 10
-                    self.stream_sum_steptime[node][stream] =  np.sum(self.stream_read_steps[node][stream][t_read:]) #cur_diff
-                    self.stream_n_steps[node][stream] = 0
+                    #t_read = self.stream_cur_steps[node][stream] - 10
+                    self.stream_sum_steptime[node][stream] =  np.sum(self.stream_read_steps[node][stream][-10:]) #cur_diff
+                    #self.stream_n_steps[node][stream] = 10
+                self.get_curr_state()
             return         
         #sys.stdout.flush()
 
@@ -238,17 +254,24 @@ class pace(abstract_model.model):
             j_data[node]['LAST_STEP_TIMES'] = {} 
             streams = list(self.active_conns[node].keys())
             for stream in streams:
-                str = stream.split('/')[1]
+                string = stream.split('/')[1]
                 print("Outsteps1: Preparing an update for node ", node, " stream ", str)
-                j_data[node]['N_STEPS'][str] = self.stream_cur_steps[node][stream]
-                j_data[node]['RESTART_STEPS'][str] = self.restart_steps[node][stream]
-                j_data[node]['LAST_STEP_TIMES'][str] = [ self.stream_connect_steps[node][stream], self.stream_read_steps[node][stream], 
+                j_data[node]['N_STEPS'][string] = self.stream_cur_steps[node][stream]
+                j_data[node]['RESTART_STEPS'][string] = self.restart_steps[node][stream]
+                j_data[node]['LAST_STEP_TIMES'][string] = [ self.stream_connect_steps[node][stream], self.stream_read_steps[node][stream], 
                                                          self.stream_process_steps[node][stream], self.stream_write_steps[node][stream] ] 
-                if self.stream_n_steps[node][stream] != 0 :
-                    j_data[node]['AVG_STEP_TIME'][str] = float(self.stream_sum_steptime[node][stream]/self.stream_n_steps[node][stream])  
+                if self.stream_n_steps[node][stream] >= 10 :
+                    j_data[node]['AVG_STEP_TIME'][string] = float(self.stream_sum_steptime[node][stream]/10)  
+                    print(stream, ": ", str(self.stream_sum_steptime[node][stream]), "10" )
+                elif self.stream_n_steps[node][stream] > 0:
+                    j_data[node]['AVG_STEP_TIME'][string] = float(self.stream_sum_steptime[node][stream]/self.stream_n_steps[node][stream])  
+                    print(stream, ": ", str(self.stream_sum_steptime[node][stream]), str(self.stream_n_steps[node][stream]) )
                 else:
-                    j_data[node]['AVG_STEP_TIME'][str] = float(self.stream_sum_steptime[node][stream])
+                    j_data[node]['AVG_STEP_TIME'][string] = float(self.stream_sum_steptime[node][stream])
+                    print(stream, ": ", str(self.stream_sum_steptime[node][stream]))
             break
+               
+        print("UPDATE: " + json.dumps(j_data))     
         return j_data
 
     def get_model_name(self):

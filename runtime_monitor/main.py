@@ -58,22 +58,22 @@ def sender():
     context = zmq.Context()
     socket = context.socket(zmq.REQ)
     socket_str = "tcp://" + address + ":" + str(oport)
-    socket.connect(socket_str)
+    # socket.connect(socket_str)
    
     keep_requesting = True 
     stop = False
     while keep_requesting == True:    
-        request = create_request("memory", datetime.now() - starttime , "req:get_update")
-        socket.send_string(request)
-        message = socket.recv()
-        message = message.decode("utf-8")
+        ##request = create_request("memory", datetime.now() - starttime , "req:get_update")
+        ##socket.send_string(request)
+        ##message = socket.recv()
+        ##message = message.decode("utf-8")
         print("Received message type 1", message)
         #time.sleep(1)
         stop = True
         if stop == True:
-            request = create_request("memory", datetime.now() - starttime, "req:stop")
-            socket.send_string(request)
-            message = socket.recv()
+            ##request = create_request("memory", datetime.now() - starttime, "req:stop")
+            ##socket.send_string(request)
+            ##message = socket.recv()
             print("Received message type 2", message)
             with recv_cond:
                 stop_recv = True
