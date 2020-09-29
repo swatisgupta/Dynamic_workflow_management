@@ -23,15 +23,15 @@ class adios2_tau_reader():
          self.blocks_to_read = blocks_to_read
          self.tau_file_type = tau_ftype
          self.my_rank = MPI.COMM_WORLD.Get_rank()
-         self.size = 1
          self.conn = None
          self.cstep_avail_vars = None
          self.cstep_avail_attrs = None
          self.cstep_map_vars = {}
          self.cstep = None
-         self.data_counters = {}
+         self.counters = {}
          self.data_timers = {}
-         self.event_counters = {}
+         self.event_times = {}
+         self.comm_events = {}
          self.is_step = False
          self.is_open = False  
          self.reset = False 
@@ -59,12 +59,7 @@ class adios2_tau_reader():
                          break
                      #time.sleep(1)
                  #print("[Rank ", self.my_rank, "] :","Found ? ", found) 
-                 
-                 if found == 0:
-                    return self.is_open
-                
                  self.conn = self.ioReader.Open(self.inputfile, adios2.Mode.Read)
-                 #self.conn = adios2.open(self.inputfile, "r", self.mpi_comm, self.eng_name)
                  self.is_open = True
              except Exception as ex:
                  traceback.print_exc()
@@ -90,7 +85,7 @@ class adios2_tau_reader():
                  self.is_open = True
 
      def get_step_number(self):
-         return self.cstep.current_step()
+         return self.ioReader.CurrentStep()
 
      def get_trace_map(self):
          self.cstep_avail_vars = self.ioReader.AvailableVariables() 
@@ -130,9 +125,9 @@ class adios2_tau_reader():
      def advance_step(self):
          if (self.eng_name == "BPFile" or self.eng_name == "BP4") and self.open() == False:
              self.open()
-             self.reset = True
-         else:
-             self.reset = False
+
+         if self.reset == True:
+             self.open()
         
          if self.is_open == False:
              return self.is_step
@@ -141,8 +136,11 @@ class adios2_tau_reader():
              status = self.conn.BeginStep(adios2.StepMode.Read, 2.0)
              if status == adios2.StepStatus.OK:
                  self.is_step = True 
-                 self.get_trace_map() # only reads counters for now
-                 self.read_trace_data()
+                 if self.tau_file_type == "trace":
+                     self.get_trace_map() 
+                     self.read_trace_data()
+                 else:
+                     self.get_profile_map() 
                  self.current_step += 1
                  #self.current_step = self.cstep.current_step()
              elif status == adios2.StepStatus.EndOfStream:
@@ -171,6 +169,9 @@ class adios2_tau_reader():
                   if is_dat:
                       data = data[:,[2, 3]]
                       return True, data 
+              elif self.tau_file_type == "profile":
+                  #all processess and threads 
+                  return self.get_profile_var(measure, self.blocks_to_read )
          return False, var_data
 
      def read_var(self, measure, procs, threads=[]):
@@ -179,6 +180,8 @@ class adios2_tau_reader():
               if self.tau_file_type == "trace":
                   print("[Rank ", self.my_rank, "] :","Getting measure", measure, flush = True) 
                   return self.get_trace_var(measure, procs, threads)
+              elif self.tau_file_type == "profile":
+                  return self.get_profile_var(measure, procs ) 
          return False, var_data
 
      def read_trace_data(self):
@@ -187,18 +190,49 @@ class adios2_tau_reader():
                  #print("[Rank ", self.my_rank, "] :","Reading block...", b)
                  if self.eng_name == "BPFile" or  self.eng_name == "BP4":
                      #self.data_timers[b] = self.cstep.read("event_timestamps", start = self.start['timers'], count = self.count['timers']) #, block_id = b)
-                     self.data_timers[b] = self.read_variable("event_timestamps", start = self.start['timers'], count = self.count['timers']) #, block_id = b)
-                     self.data_counters[b] = self.read_variable("counter_values", start = self.start['counters'], count = self.count['counters']) #, block_id = b)
+                     self.event_timers[b] = self.read_variable("event_timestamps", start = self.start['timers'], count = self.count['timers']) #, block_id = b)
+                     self.counters[b] = self.read_variable("counter_values", start = self.start['counters'], count = self.count['counters']) #, block_id = b)
                  else: 
-                     self.data_timers[b] = self.read_variable("event_timestamps")
-                     self.data_counters[b] = self.read_variable("counter_values")
+                     self.event_timers[b] = self.read_variable("event_timestamps")
+                     self.counters[b] = self.read_variable("counter_values")
                  # TO DO: read events as well!!!
 
-     # returns data as a map of np array . Map index is process number. Numpy array has columns (thread, value, timestamp)    
+""" returns true if values are read. Output data is a map of Numpy array which is indexed by 
+      process number. Function call data is a 4 column data with process, call, includesive and exculsive times. Otherwise, 6 column data is returned with process, max, Mean, Min, num events and sum square """ 
+     def get_profile_var(self, measure, procs):
+         var_data = {}
+         all_measures = self.cstep_map_vars.keys()
+         res_match = [ x for x in all_measures if bool(measure in x)]   
+
+         if len(res_match) == 0:
+             return False, var_data
+  
+         #res_match = res_match.sort()
+         #print(res_match)
+         for b in procs:
+             for mesr in res_match:
+                 vdata = self.read_variable( mesr, start = self.start['timers'], count = self.count['timers'])    
+                 if vdata.ndim == 0:
+                     continue
+                 #print(vdata)
+                 if b not in var_data.keys():
+                     var_data[b] = np.column_stack((np.array([b]), vdata))
+                 else:
+                     var_data[b] = np.column_stack((var_data[b], vdata))
+         if len(var_data) == 0:
+             return False, var_data
+         return True, var_data                 
+
+
+     """
+       returns true if data is found. Output data is a map of Numpy array which is indexed by 
+       process number. If counter_values are read, numpy array will have the following columns (process, thread, value, timestamp). Else if event_timestamps are read, numpy array will have the following columns (process, thread, entry(0)/exit(1), timestamp)
+     """  
      def get_trace_var(self, measure, procs, threads):
          var_data = {}
          all_measures = self.cstep_map_vars.keys()
          res_match = [ x for x in all_measures if bool(measure in x)]   
+
          if len(res_match) == 0 :
              return False, var_data
          print("[Rank ", self.my_rank, "] :","Reading measure", measure, "matched" , self.cstep_map_vars[res_match[0]], flush=True)
@@ -207,7 +241,7 @@ class adios2_tau_reader():
              for b in procs:
                  print("[Rank ", self.my_rank, "] :","Reading measure", mesr, "from block", b , "from ", self.inputfile, flush=True) 
                  if self.cstep_map_vars[mesr][0] == "counter":
-                     vdata = self.data_counters[b][self.data_counters[b][:,TraceID.MEASURE.value] == int(self.cstep_map_vars[mesr][1])]           
+                     vdata = self.counters[b][self.counters[b][:,TraceID.MEASURE.value] == int(self.cstep_map_vars[mesr][1])]           
                  else:
                      print(self.data_timers[b], flush = True)
                      vdata = self.data_timers[b][self.data_timers[b][:,TraceID.VALUE.value] == int(self.cstep_map_vars[mesr][1])]           
