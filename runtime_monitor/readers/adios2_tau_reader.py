@@ -29,8 +29,8 @@ class adios2_tau_reader():
          self.cstep_map_vars = {}
          self.cstep = None
          self.counters = {}
-         self.data_timers = {}
-         self.event_times = {}
+         self.event_timers = {}
+         self.event_timers = {}
          self.comm_events = {}
          self.is_step = False
          self.is_open = False  
@@ -189,7 +189,7 @@ class adios2_tau_reader():
              for b in self.blocks_to_read:
                  #print("[Rank ", self.my_rank, "] :","Reading block...", b)
                  if self.eng_name == "BPFile" or  self.eng_name == "BP4":
-                     #self.data_timers[b] = self.cstep.read("event_timestamps", start = self.start['timers'], count = self.count['timers']) #, block_id = b)
+                     #self.event_timers[b] = self.cstep.read("event_timestamps", start = self.start['timers'], count = self.count['timers']) #, block_id = b)
                      self.event_timers[b] = self.read_variable("event_timestamps", start = self.start['timers'], count = self.count['timers']) #, block_id = b)
                      self.counters[b] = self.read_variable("counter_values", start = self.start['counters'], count = self.count['counters']) #, block_id = b)
                  else: 
@@ -197,8 +197,10 @@ class adios2_tau_reader():
                      self.counters[b] = self.read_variable("counter_values")
                  # TO DO: read events as well!!!
 
-""" returns true if values are read. Output data is a map of Numpy array which is indexed by 
-      process number. Function call data is a 4 column data with process, call, includesive and exculsive times. Otherwise, 6 column data is returned with process, max, Mean, Min, num events and sum square """ 
+     """ 
+     returns true if values are read. Output data is a map of Numpy array which is indexed by 
+     process number. Function call data is a 4 column data with process, call, includesive and exculsive times. 
+     Otherwise, 6 column data is returned with process, max, Mean, Min, num events and sum square """ 
      def get_profile_var(self, measure, procs):
          var_data = {}
          all_measures = self.cstep_map_vars.keys()
@@ -239,12 +241,15 @@ class adios2_tau_reader():
 
          for mesr in res_match:
              for b in procs:
-                 print("[Rank ", self.my_rank, "] :","Reading measure", mesr, "from block", b , "from ", self.inputfile, flush=True) 
-                 if self.cstep_map_vars[mesr][0] == "counter":
+                 if self.cstep_map_vars[mesr][0] == "counter" and self.counters[b].size != 0:
+                     print("[Rank ", self.my_rank, "] :","Reading measure", mesr, "from block", b , "from ", self.inputfile, flush=True) 
                      vdata = self.counters[b][self.counters[b][:,TraceID.MEASURE.value] == int(self.cstep_map_vars[mesr][1])]           
+                 elif self.cstep_map_vars[mesr][0] == "timer" and self.event_timers[b].size != 0:
+                     print("[Rank ", self.my_rank, "] :","Reading measure", mesr, "from block", b , "from ", self.inputfile, flush=True) 
+                     print(self.event_timers[b], flush = True)
+                     vdata = self.event_timers[b][self.event_timers[b][:,TraceID.VALUE.value] == int(self.cstep_map_vars[mesr][1])]           
                  else:
-                     print(self.data_timers[b], flush = True)
-                     vdata = self.data_timers[b][self.data_timers[b][:,TraceID.VALUE.value] == int(self.cstep_map_vars[mesr][1])]           
+                     continue
                  #if vdata.shape[0] == 0:
                  #    continue
 
@@ -280,7 +285,7 @@ class adios2_tau_reader():
          return True, var_data              
 
      def read_variable(self, var_name, start=[], count=[]):
-         var_data = None 
+         var_data = np.array([])
          if self.is_step == True:
              var = self.ioReader.InquireVariable(var_name)
              if var is not None: #self.cstep_avail_vars:
@@ -316,6 +321,7 @@ class adios2_tau_reader():
                  else:
                      var_data = ""  
                  self.conn.Get(var, var_data, adios2.Mode.Sync)
+                 print("Data ", var_data) 
          return var_data
 
 
