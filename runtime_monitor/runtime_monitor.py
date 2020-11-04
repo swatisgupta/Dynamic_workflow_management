@@ -14,6 +14,7 @@ import numpy
 import json
 from queue import Queue
 import sys
+import time
 import traceback
 
 class Rmonitor():
@@ -29,7 +30,6 @@ class Rmonitor():
         #self.can_work = True
         self.stop_work = False
         self.stop_cntrl = False
-        self.rank = 0
         #self.mpi_comm = MPI.COMM_SELF
         self.starttime = None
         
@@ -45,6 +45,7 @@ class Rmonitor():
         self.lsocket = self.config.protocol + "://" + self.config.iaddr + ":" + str(self.config.iport + 1)
         self.rank = self.config.rank
         self.mpi_comm = self.config.mpi_comm
+        self.reconnect = False
  
     def config_models(self):
         mdl_str = self.config.perf_model
@@ -86,7 +87,7 @@ class Rmonitor():
     def send_req_or_res(self, socket, req_or_res):
         if self.rank == 0 :
             socket.send_string(req_or_res)
-        self.mpi_comm.Barrier()
+        #self.mpi_comm.Barrier()
 
     def get_connect_msg(self, model_name, timestamp):
         request = {}
@@ -133,6 +134,7 @@ class Rmonitor():
                 print("Sending update for ", mdls.get_model_name()) 
                 request = self.get_update(mdls.get_model_name(), timestamp, mdls.get_curr_state(), "req:action")
                 self.send_req_or_res(socket, request)
+                #self.mpi_comm.Barrier()
                 if self.rank == 0 :
                     message = socket.recv()
                     #print("Received ack ", message)
@@ -144,12 +146,16 @@ class Rmonitor():
     def perform_iteration(self):
         sys.stdout.flush() 
         ret = False
-        if self.config.begin_next_step():
+        ret1, ret2 = self.config.begin_next_step(self.reconnect)
+        if ret1 == True and self.reconnect:
+            self.reconnect = False 
+        if ret2 == True:
             ret = True  
             #print("Reading stream!!")  
         for mdls in self.model_objs:
             mdls.update_curr_state()
         self.config.end_current_step()
+        #self.mpi_comm.Barrier()
         return ret
 
     def write_model_data(self):
@@ -206,7 +212,7 @@ class Rmonitor():
                         sys.stdout.flush()
 
                     message = None
-                    
+                                        
                     with self.msg_cond:
                         #print("Worker: checking msg queue ..len ", len(self.msg_queue)) 
                         while len(self.msg_queue) > 0:
@@ -230,8 +236,8 @@ class Rmonitor():
             except Exception as e:
                 traceback.print_exc()    
                 print("Worker : Got an exception ..", e)    
-                self.close_connections()
-                self.write_model_data()
+                #self.close_connections()
+                #self.write_model_data()
 
     def controller(self):
         l_socket = None
@@ -254,65 +260,78 @@ class Rmonitor():
             l_socket = l_context.socket(zmq.SUB)
             l_socket.connect(self.lsocket)     
             l_socket.setsockopt_string(zmq.SUBSCRIBE, topic)
+            print("Connected on socket ", self.lsocket, flush = True)
 
         j_data = {}
 
         while if_stop == False:
-           try:
-               j_data = None
-               message=""
-               #print("Controller : Waiting for new message ")
-               sys.stdout.flush() 
-               if self.rank == 0:     
-                   j_data = g_socket.recv()
-                   #print("Got a request from ", self.isocket, " ", j_data) 
-                   j_data1 = j_data.decode("utf-8")
-                   message_bytes = topic + ' ' + j_data1
-                   l_socket.send_string(message_bytes)
-                   #print("Publishing request to ", self.lsocket, " ", j_data) 
-                   sys.stdout.flush()
+            try:
+                j_data = None
+                message=""
+                #print("Controller : Waiting for new message ")
+                sys.stdout.flush() 
+                if self.rank == 0:     
+                    j_data = g_socket.recv()
+                    js_data = json.loads(j_data)
+                    print("Rank [", self.rank,"] : Got a request from ", self.isocket, " ", js_data, flush = True) 
+                    if js_data["msg_type"] == "req:reconfig" :
+                       j_data1 = j_data.decode("utf-8")
+                       message_bytes = topic + ' ' + j_data1
+                       l_socket.send_string(message_bytes)
+                    #print("Publishing request to ", self.lsocket, " ", j_data) 
+                       sys.stdout.flush()
+                       #time.sleep(10)
                 
-               else:
-                   message = l_socket.recv()
-                   #print("Got a request from ", l_socket, " ", message) 
-                   sys.stdout.flush() 
-                   msg = message.find('{')
-                   j_data = message[msg:]
+                else:
+                    message = l_socket.recv_string()
+                    print("Rank [", self.rank, "] : Got a request from ", l_socket, " ", message, flush = True) 
+                    sys.stdout.flush() 
+                    msg = message.find('{')
+                    j_data = message[msg:]
+                    js_data = json.loads(j_data)
 
-               response = "OK"
-               self.send_req_or_res(g_socket, response)
-               #print("Send the ack response to ", g_socket, " ", response) 
-               sys.stdout.flush()
+                #print("Send the ack response to ", g_socket, " ", response) 
+                with self.msg_cond:
+                    if js_data["msg_type"] == "req:reconfig" :
+                        self.msg_queue.clear()
+                    self.msg_queue.append(js_data)
 
-               js_data = json.loads(j_data)
-      
-               with self.msg_cond:
-                   self.msg_queue.append(js_data)
+                response = "OK"
+                self.send_req_or_res(g_socket, response)
  
-               if self.stop_cntrl == True:
-                   print("Recieved stop request")
-                   if_stop = True
-           except Exception as e:
-               print("Contoller : Got an exception ", e)    
+                if self.stop_cntrl == True:
+                    print("Recieved stop request")
+                    if_stop = True
+            except Exception as e:
+                print("Contoller : Got an exception ", e)    
  
 
     def process_request(self, request):
-         response = None
-         if request["msg_type"] == "req:get_update":
-             #print("Processing an update request...", request)
-             timestamp = datetime.now() # - self.starttime
+        response = None
+        if request["msg_type"] == "req:get_update":
+            #print("Processing an update request...", request)
+            timestamp = datetime.now() # - self.starttime
              #timestamp = list(divmod(timestamp.total_seconds(), 60))
              #print(self.model_objs)   
-             mdls = self.model_objs[-1] #s[request["model"]] 
-             response = self.get_update(mdls.name, timestamp, mdls.get_curr_state(), "res:update")
-         elif request["msg_type"] == "req:stop":
-             #print("Processing an update request...", request)
-             sys.stdout.flush()
-             self.stop_work = True
-             self.stop_cntrl = True
-         #print("Send response", response)
-         sys.stdout.flush()
-         return response   
+            mdls = self.model_objs[-1] #s[request["model"]] 
+            response = self.get_update(mdls.name, timestamp, mdls.get_curr_state(), "res:update")
+        elif request["msg_type"] == "req:stop":
+            #print("Processing an update request...", request)
+            sys.stdout.flush()
+            self.stop_work = True
+            self.stop_cntrl = True
+        elif request["msg_type"] == "req:reconfig":
+            rfile = request["message"] 
+            print("Rank [ ", self.rank, " ]:Processing an reconfig request with resource info as ..." , rfile, flush=True)
+            self.config.reset_configurations(rfile)
+            for mdls in self.model_objs:
+                mdls.update_model_conf(self.config, True)
+            #self.reconnect = True
+            self.open_connections()
+            #response = "ok"
+        #print("Send response", response)
+        sys.stdout.flush()
+        return response   
           
    
    

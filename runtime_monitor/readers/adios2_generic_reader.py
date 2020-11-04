@@ -101,15 +101,18 @@ class adios2_generic_reader():
              #print("\n")         
          #print(self.cstep_map_vars)    
 
-     def advance_step(self):
+     def advance_step(self, reopen = False):
          self.is_step = False 
 
-         if self.eng_name == "BPFile" or  self.is_open == False:
+         if self.eng_name == "BPFile":
              self.open()
              self.reset = True
          else:
              self.reset = False
  
+         if reopen == True and self.is_open == False: 
+             return self.open() 
+
          if self.is_open == False: 
              return self.is_step 
 
