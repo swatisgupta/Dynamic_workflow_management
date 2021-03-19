@@ -29,4 +29,9 @@ class model(abc.ABC):
      @abc.abstractmethod 
      def if_urgent_update(self):
          pass   
+"""
+      @abc.abstractmethod
+      def join_with(self):
+          pass
 
+"""

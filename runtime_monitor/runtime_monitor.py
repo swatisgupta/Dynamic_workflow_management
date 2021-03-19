@@ -6,6 +6,7 @@ import os
 from runtime_monitor import helper
 from runtime_monitor.models.memory_model import memory
 from runtime_monitor.models.heartbeat_model import heartbeat
+from runtime_monitor.models.error_model import error
 from runtime_monitor.models.pace_model import pace
 import threading
 from datetime import datetime
@@ -71,6 +72,8 @@ class Rmonitor():
             model = heartbeat(self.config)
         elif mdl_str == "pace":
             model = pace(self.config)
+        elif mdl_str == "error":
+            model = error(self.config)
         else:
             return
         self.model_objs.append(model)
@@ -214,7 +217,7 @@ class Rmonitor():
                     message = None
                                         
                     with self.msg_cond:
-                        #print("Worker: checking msg queue ..len ", len(self.msg_queue)) 
+                        print("Worker: checking msg queue ..len ", len(self.msg_queue)) 
                         while len(self.msg_queue) > 0:
                             message = self.msg_queue[0]
                             self.msg_queue.remove(message)
@@ -309,7 +312,7 @@ class Rmonitor():
     def process_request(self, request):
         response = None
         if request["msg_type"] == "req:get_update":
-            #print("Processing an update request...", request)
+            print("Processing an update request...", request)
             timestamp = datetime.now() # - self.starttime
              #timestamp = list(divmod(timestamp.total_seconds(), 60))
              #print(self.model_objs)   

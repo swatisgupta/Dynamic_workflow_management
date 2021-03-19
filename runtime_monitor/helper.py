@@ -5,6 +5,7 @@ import os
 import sys
 from runtime_monitor.readers.adios2_tau_reader import adios2_tau_reader
 from runtime_monitor.readers.adios2_generic_reader import adios2_generic_reader
+from runtime_monitor.readers.error_reader import error_reader
 import socket
 import logging
 import time
@@ -154,12 +155,15 @@ class configuration():
             if node not in self.reader_config.keys():
                 self.reader_config[node] = {}
             self.reader_config[node][stream] = params_list 
-            if int(params_list[3].strip()) != 0 or int(params_list[3].strip()) != 1:
-                 self.logger.debug("[Rank %d] : tau_one_file should be 0 or 1 for %s .Params provided are %s. Using defalt value 0 ", self.wrank, stream, int(params_list[3].strip()))
-                 self.tau_one_file[node][stream] = 0
-            else:
-                self.tau_one_file[node][stream] = int(params_list[3].strip())
-            self.tau_file_type[node][stream] = "trace" 
+ 
+        if self.perf_model == "error":
+            if len(params_list) != 2:
+                self.logger.debug("[Rank %d] : Insufficient model parameters for %s", self.wrank, stream) 
+                exit
+            if node not in self.reader_config.keys():
+                self.reader_config[node] = {}
+            self.reader_config[node][stream] = params_list 
+            self.tau_file_type[node][stream] = 0 
 
     # Assigns nodes to each mpi ranks in round robin manner  
     def distribute_work(self):
@@ -202,6 +206,8 @@ class configuration():
                     #create  an adios2 object based on model
                     if "memory" == self.perf_model:
                         reader_obj = adios2_tau_reader(stream_nm1,  self.stream_engs[asg_node][stream_nm], mpi_comm, self.reader_blocks[asg_node][stream_nm], 0) #self.tau_file_type[asg_node][stream_nm])
+                    if "error" == self.perf_model:
+                        reader_obj = error_reader(stream_nm1, "text" ) #self.tau_file_type[asg_node][stream_nm])
                     elif "pace" == self.perf_model:
                         if  self.tau_file_type[asg_node][stream_nm] == "trace" or  self.tau_file_type[asg_node][stream_nm] == "trace":
                             reader_obj = adios2_tau_reader(stream_nm1,  self.stream_engs[asg_node][stream_nm], mpi_comm, self.reader_blocks[asg_node][stream_nm], self.tau_file_type[asg_node][stream_nm])
@@ -242,7 +248,7 @@ class configuration():
                 if asg_node not in  self.reader_blocks.keys():
                      self.reader_blocks[asg_node] = {}
 
-                if self.perf_model == "heartbeat" or self.tau_one_file[asg_node][stream_nm] == 0:
+                if self.perf_model == "heartbeat" or self.perf_model == "heartbeat" or self.tau_one_file[asg_node][stream_nm] == 0:
                     self.reader_blocks[asg_node][stream_nm] = [0]
                 else:
                     self.reader_blocks[asg_node][stream_nm] = self.reader_procs[asg_node][stream_nm]
@@ -262,7 +268,7 @@ class configuration():
 
                     for robj in reader_objs:
                         sname = None
-                        if "heartbeat" != self.perf_model:
+                        if "heartbeat" != self.perf_model or "error" != self.perf_model:
                             sname = robj.inputfile  #create  an adios2 object based on model
                         else:
                             sname = robj  #create  an adios2 object based on model
@@ -341,7 +347,7 @@ class configuration():
                 if asg_node not in  self.reader_blocks.keys():
                     self.reader_blocks[asg_node] = {}
 
-                if self.perf_model == "heartbeat" or (self.perf_model == "memory" and self.tau_one_file[asg_node][asg_stream] == 0): 
+                if self.perf_model == "heartbeat" or (self.perf_model == "memory" and self.tau_one_file[asg_node][asg_stream] == 0) or self.perf_model == "error": 
                     self.reader_blocks[asg_node][asg_stream] = [0] 
                 else:
                     self.reader_blocks[asg_node][asg_stream] = self.reader_procs[asg_node][asg_stream]
@@ -432,6 +438,9 @@ class configuration():
         elif args.model[0] == "pace":
             self.perf_model = "pace"        
             self.logger.debug("[Rank %d] : Pace loaded", self.wrank) 
+        elif args.model[0] == "error":
+            self.perf_model = "error"        
+            self.logger.debug("[Rank %d] : Pace loaded", self.wrank) 
 
         self.__compute_resource_mapping(args)
         self.__init_streams__(args)
@@ -468,7 +477,7 @@ class configuration():
     # Calls beginstep on all active (local): adios2 streams
     def begin_next_step(self, reconnect):
         if self.perf_model == "heartbeat":
-            return True
+            return True, False
         self.logger.debug("[Rank %d] : Next iteration begins..", self.wrank)
         sys.stdout.flush() 
         retAny = False
@@ -493,7 +502,7 @@ class configuration():
 
     # Calls endstep on all active (local): adios2 streams
     def end_current_step(self):
-        if self.perf_model == "heartbeat":
+        if self.perf_model == "heartbeat" or self.perf_model == "error":
             return True
         for nodes in self.active_reader_objs.keys():
             for streams in self.active_reader_objs[nodes].keys():
