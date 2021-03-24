@@ -11,5 +11,6 @@ setup(name='runtime_monitor',
       url='https://github.com/swatisgupta/Dynamic_workflow_management.git',
       packages=find_packages(),
       scripts=['r_monitor'],
-      install_requires=["numpy", "mpi4py", "pyzmq", "pandas"],
+      install_requires=["numpy", "mpi4py", "pyzmq", "pandas", "openpyxl", "xlsxwriter"],
       )
+
