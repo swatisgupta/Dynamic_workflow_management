@@ -71,16 +71,20 @@ class error_reader():
          return True #self.if_exists    
                       
      def read_var(self, var_name):
+         try:
 
-         if self.status == "Terminated":
-             if self.fileformat == "slurm":
-                self.error = 0
-             elif  self.fileformat == "psub":
-                self.error = 0
+             if self.status == "Terminated":
+                 if self.fileformat == "slurm":
+                    self.error = 0
+                 elif  self.fileformat == "psub":
+                    self.error = 0
+                 else:
+                    self.error = int(self.filepointer.read()) 
              else:
-                self.error = int(self.filepointer.read()) 
-         else:
+                 self.error = 0
+         except Exception as e:
              self.error = 0
+             print("Caught an exception...", e)
 
          return self.error
 
