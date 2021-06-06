@@ -149,9 +149,20 @@ class configuration():
             self.reader_config[node][stream] = params_list 
 
         if self.perf_model == "pace":
-            if len(params_list) != 4:
+            if len(params_list) != 5:
                 self.logger.debug("[Rank %d] : Insufficient model parameters for %s", self.wrank, stream) 
                 exit
+            if int(params_list[3].strip()) not in [0,1]: #!= 0 or int(params_list[3].strip()) != 1:
+                self.logger.debug("[Rank %d ] : tau_one_file should be 0 or 1 for %s .Params provided are %s . Using defalt value 0", self.wrank, stream, int(params_list[3].strip()))
+                self.tau_one_file[node][stream] = 0
+            else:
+                self.tau_one_file[node][stream] = int(params_list[3].strip())
+
+            if params_list[-1].strip() not in ["trace", "profile"] :
+                self.logger.debug("[Rank %s ] : tau_file_type %s not in trace or profile for %s. Using defalt value adios2", self.wrank, params_list[-1], stream)
+                self.tau_file_type[node][stream] = "adios2" 
+            else:
+                self.tau_file_type[node][stream] = params_list[-1].strip()
             if node not in self.reader_config.keys():
                 self.reader_config[node] = {}
             self.reader_config[node][stream] = params_list 

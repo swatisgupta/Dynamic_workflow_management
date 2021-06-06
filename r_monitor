@@ -6,7 +6,7 @@ import threading
 
 if __name__ == "__main__":
     appID = 10
-    
+    print("inside monitor", flush=True) 
     mpi_comm = MPI.COMM_WORLD.Split(appID, MPI.COMM_WORLD.Get_rank()) 
     r_monitor = Rmonitor(mpi_comm)
 

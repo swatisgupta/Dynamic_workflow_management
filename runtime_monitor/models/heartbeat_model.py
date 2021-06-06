@@ -46,7 +46,7 @@ class heartbeat(abstract_model.model):
                     #self.stream_cur_steps[node][stream_nm] = int(self.stream_config[node][stream][0])
                     print("Reset the local steps!!!")
 
-                if os.path.isfile(new_stream) == True:
+                if os.path.exists(new_stream) == True :
                     self.stream_cur_steps[node][stream_nm] += self.stream_out_freq[node][stream_nm]
                     self.stream_global_steps[node][stream_nm] += self.stream_out_freq[node][stream_nm]
                     self.stream_local_steps[node][stream_nm] += self.stream_out_freq[node][stream_nm]
