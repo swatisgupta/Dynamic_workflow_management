@@ -47,27 +47,27 @@ class adios2_tau_reader():
      def open(self):
          if self.is_open == False:
              try:
-                 #print("[Rank ", self.my_rank, "] :","Looking for..", self.inputfile) 
+                 ##print("[Rank ", self.my_rank, "] :","Looking for..", self.inputfile) 
                  i = 0
            
                  found = 0
                  while i < 1:
                      if self.eng_name == 'SST' and os.path.isfile(self.inputfile + ".sst"):
-                         print("[Rank ", self.my_rank, "] :","found file ", self.inputfile, ".sst", flush = True)
+                         #print("[Rank ", self.my_rank, "] :","found file ", self.inputfile, ".sst", flush = True)
                          found = 1
                          break
                      elif self.eng_name != 'SST' and ( os.path.isfile(self.inputfile) or os.path.isdir(self.inputfile) ):
-                         print("[Rank ", self.my_rank, "] :","found file ", self.inputfile, flush = True)
+                         #print("[Rank ", self.my_rank, "] :","found file ", self.inputfile, flush = True)
                          found = 1
                          break
                      #time.sleep(1
-                 #print("[Rank ", self.my_rank, "] :","Found ? ", found) 
+                 ##print("[Rank ", self.my_rank, "] :","Found ? ", found) 
                  self.conn = self.ioReader.Open(self.inputfile, adios2.Mode.Read)
                  self.is_open = True
                  self.is_first = True
              except Exception as ex:
                  traceback.print_exc()
-                 print("[Rank ", self.my_rank, "] :","Got an exception!!", ex)
+                 #print("[Rank ", self.my_rank, "] :","Got an exception!!", ex)
                  self.is_open = False
          return self.is_open
 
@@ -78,7 +78,7 @@ class adios2_tau_reader():
          self.reset = val 
 
      def close(self):
-         print("Closing stream", self.inputfile , flush = True) 
+         #print("Closing stream", self.inputfile , flush = True) 
          if self.is_open == True:
              try: 
                  self.conn.Close()
@@ -90,6 +90,7 @@ class adios2_tau_reader():
 
      def get_step_number(self):
          return self.ioReader.CurrentStep()
+
 
      def get_trace_map(self):
          self.cstep_avail_vars = self.ioReader.AvailableVariables() 
@@ -118,21 +119,21 @@ class adios2_tau_reader():
                      if key == "Type":
                          self.type['timers'] = value
                 
-         #print("[Rank ", self.my_rank, "] :","START ",  self.start, " COUNT ", self.count)
+         ##print("[Rank ", self.my_rank, "] :","START ",  self.start, " COUNT ", self.count)
 
          for name, info in self.cstep_avail_attrs.items():
              if bool("MetaData" in name):
                  continue 
-             #print("[Rank ", self.my_rank, "] :","attr_name: " + name)
+             ##print("[Rank ", self.my_rank, "] :","attr_name: " + name)
              for key, value in info.items():
                  if key == "Value":
-                     #print("[Rank ", self.my_rank, "] :","\t" + key + ": " + value)
+                     ##print("[Rank ", self.my_rank, "] :","\t" + key + ": " + value)
                      value = value.strip('\"')
                      value = value.split('[')[0].strip(' ')   
                      self.cstep_map_vars[value] = name.split()
-                     #print("[Rank ", self.my_rank, "] :",self.cstep_map_vars[value])
-             #print("[Rank ", self.my_rank, "] :","\n")         
-         #print("[Rank ", self.my_rank, "] :",self.cstep_map_vars)    
+                     ##print("[Rank ", self.my_rank, "] :",self.cstep_map_vars[value])
+             ##print("[Rank ", self.my_rank, "] :","\n")         
+         ##print("[Rank ", self.my_rank, "] :",self.cstep_map_vars)    
 
      def advance_step(self, reopen = False):
          #if (self.eng_name == "BPFile" or self.eng_name == "BP4") and self.open() == False:
@@ -154,20 +155,20 @@ class adios2_tau_reader():
                  if self.tau_file_type == "trace":
                      self.get_trace_map() 
                      self.read_trace_data()
-                 else:
-                     self.get_profile_map() 
                  self.current_step += 1
                  #self.current_step = self.cstep.current_step()
+                 #self.current_step = self.cstep.current_step()
+                 #self.current_step = self.cstep.current_step()
              elif status == adios2.StepStatus.EndOfStream:
-                 print("[Rank ", self.my_rank, "] : End of stream!", flush = True)
+                 #print("[Rank ", self.my_rank, "] : End of stream!", flush = True)
                  #self.is_step = False
                  self.end_step()
                  self.close()
                  #if self.current_step % 4 == 0: 
          except ValueError as e:
-             #print("[Rank ", self.my_rank, "] :",e)
+             ##print("[Rank ", self.my_rank, "] :",e)
              traceback.print_exc()
-             print("[Rank ", self.my_rank, "] :","Unexpected error:", sys.exc_info()[0])
+             #print("[Rank ", self.my_rank, "] :","Unexpected error:", sys.exc_info()[0])
              #self.is_step = False
              #try:
              self.end_step()
@@ -176,7 +177,7 @@ class adios2_tau_reader():
 
          except:
              traceback.print_exc()
-             print("[Rank ", self.my_rank, "] :","Unexpected error:", sys.exc_info()[0])
+             #print("[Rank ", self.my_rank, "] :","Unexpected error:", sys.exc_info()[0])
              #self.is_step = False
              self.end_step()
              #self.is_open = False
@@ -201,7 +202,7 @@ class adios2_tau_reader():
          var_data = {}
          if self.is_step == True: 
               if self.tau_file_type == "trace":
-                  #print("[Rank ", self.my_rank, "] :","Getting measure", measure, flush = True) 
+                  ##print("[Rank ", self.my_rank, "] :","Getting measure", measure, flush = True) 
                   return self.get_trace_var(measure, procs, threads)
               elif self.tau_file_type == "profile":
                   return self.get_profile_var(measure, procs ) 
@@ -210,11 +211,13 @@ class adios2_tau_reader():
      def read_trace_data(self):
          if self.is_step == True:
              for b in self.blocks_to_read:
-                 #print("[Rank ", self.my_rank, "] :","Reading block...", b)
-                 if self.eng_name == "BPFile":
+                 ##print("[Rank ", self.my_rank, "] :","Reading block...", b)
+                 if self.eng_name == "BPFile" or self.eng_name == "BP4":
                      #self.event_timers[b] = self.cstep.read("event_timestamps", start = self.start['timers'], count = self.count['timers']) #, block_id = b)
-                     self.event_timers[b] = self.read_variable("event_timestamps", start = self.start['timers'], count = self.count['timers'], type = self.type['timers']) #, block_id = b)
-                     self.counters[b] = self.read_variable("counter_values", start = self.start['counters'], count = self.count['counters'], type = self.type['counters']) #, block_id = b)
+                     #self.event_timers[b] = self.read_variable("event_timestamps", start = self.start['timers'], count = self.count['timers'], type = self.type['timers']) #, block_id = b)
+                     #self.event_timers[b] = self.read_variable("event_timestamps", start=[] , count = [])  #= self.start['timers'], count = self.count['timers'], type = self.type['timers']) #, block_id = b)
+                     #self.counters[b] = self.read_variable("counter_values", start = self.start['counters'], count = self.count['counters'], type = self.type['counters']) #, block_id = b)
+                     self.counters[b] = self.read_variable("counter_values", start = self.start['counters'], count = []) #, block_id = b)
                  else: 
                      self.event_timers[b] = self.read_variable("event_timestamps", start = self.start['timers'], count = self.count['timers'], type = self.type['timers'])
                      self.counters[b] = self.read_variable("counter_values", start = self.start['counters'], count = self.count['counters'], type = self.type['counters'])
@@ -226,25 +229,25 @@ class adios2_tau_reader():
      Otherwise, 6 column data is returned with process, max, Mean, Min, num events and sum square """ 
      def get_profile_var(self, measure, procs):
          var_data = {}
-         all_measures = self.cstep_map_vars.keys()
-         res_match = [ x for x in all_measures if bool(measure in x)]   
+         try:
+             #res_match = res_match.sort()
+             ##print(res_match)
+             for b in procs:
+                 for mesr in [measure]:
 
-         if len(res_match) == 0:
-             return False, var_data
-  
-         #res_match = res_match.sort()
-         #print(res_match)
-         for b in procs:
-             for mesr in res_match:
-                 vdata = self.read_variable( mesr, start = self.start['timers'], count = self.count['timers'])    
-                 if vdata.ndim == 0:
-                     continue
-                 #print(vdata)
-                 if b not in var_data.keys():
-                     var_data[b] = np.column_stack((np.array([b]), vdata))
-                 else:
-                     var_data[b] = np.column_stack((var_data[b], vdata))
-         if len(var_data) == 0:
+                     vdata = self.read_variable( mesr + " / Mean")    
+                     if vdata.ndim == 0 or len(vdata) == 0:
+                         continue
+                     #print(vdata)
+                     if b not in var_data.keys():
+                         var_data[b] = np.column_stack(vdata)
+                     else:
+                         var_data[b] = np.column_stack(var_data[b], vdata)
+             #print(var_data)            
+             if len(var_data) == 0:
+                 return False, var_data
+         except Exception as e:
+             print("Caught an exception while processing metric", measure, "for procs", procs, "exception", e)
              return False, var_data
          return True, var_data                 
 
@@ -265,22 +268,22 @@ class adios2_tau_reader():
          for mesr in res_match:
              for b in procs:
                  if self.cstep_map_vars[mesr][0] == "counter" and self.counters[b].size != 0:
-                     #print("[Rank ", self.my_rank, "] :","Reading measure", mesr, "from block", b , "from ", self.inputfile, flush=True) 
+                     ##print("[Rank ", self.my_rank, "] :","Reading measure", mesr, "from block", b , "from ", self.inputfile, flush=True) 
                      vdata = self.counters[b][self.counters[b][:,TraceID.MEASURE.value] == int(self.cstep_map_vars[mesr][1])]           
                  elif self.cstep_map_vars[mesr][0] == "timer" and self.event_timers[b].size != 0:
-                     #print("[Rank ", self.my_rank, "] :","Reading measure", mesr, "from block", b , "from ", self.inputfile, flush=True) 
-                     #print(self.event_timers[b], flush = True)
+                     ##print("[Rank ", self.my_rank, "] :","Reading measure", mesr, "from block", b , "from ", self.inputfile, flush=True) 
+                     ##print(self.event_timers[b], flush = True)
                      vdata = self.event_timers[b][self.event_timers[b][:,TraceID.VALUE.value] == int(self.cstep_map_vars[mesr][1])]           
                  else:
                      continue
                  #if vdata.shape[0] == 0:
                  #    continue
 
-                 print("Read ", vdata, flush = True)
+                 #print("Read ", vdata, flush = True)
                  vtdata = None
 
                  for t in threads:
-                     #print("Screenig thread ", t, flush = True)
+                     ##print("Screenig thread ", t, flush = True)
                      if vtdata is None:
                          vtdata = vdata[vdata[:,TraceID.THREAD.value] == t]
                      else:
@@ -313,11 +316,18 @@ class adios2_tau_reader():
              if self.is_step == True:
                  var = self.ioReader.InquireVariable(var_name)
                  if var is not None: #self.cstep_avail_vars:
+                     #print(var_name, var) 
                      if len(count) == 0:
-                         count = tuple(var.Count())
+                         count = var.Shape()
+                         print(count) #[0] = shape[0] -1
+                         #count = tuple(shape)
+                         #count[0] -= 1 #count = [ x -1 for x in count]
                          type = var.Type()
-                     #print("Var type ...", type, flush = True)
-                     #print("Var count ...", count, flush = True)
+                         if len(count) != 0:
+                             var.SetSelection([start, count]) 
+                     print("Var type ...", type, flush = True)
+                     print("Var count ...", count, flush = True)
+                     print("Var start ...", start, flush = True)
                      if type == "int32_t":
                          if len(count) == 0:
                              var_data = np.zeros((1), dtype=np.int32)
@@ -348,7 +358,7 @@ class adios2_tau_reader():
                      self.conn.Get(var, var_data, adios2.Mode.Sync)
                      #print("Data ", var_data)
          except Exception as e:
-             print("Unexpected error ", e, " in reading variable ", var)   
+             print("Unexpected error ", e, " in reading variable ", var_name)   
          return var_data
 
 

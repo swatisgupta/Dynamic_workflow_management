@@ -85,12 +85,14 @@ class configuration():
                 self.logger.debug("[Rank %d ]: node %s", self.wrank, node)
                 self.global_res_map[node] = {} 
                 self.stream_nm[node] = [] 
+                self.stream_prog[node] = {} 
                 self.stream_engs[node] = {} 
                 for nmap in nodes['mapping']:
                     stream_nm = nmap['stream_nm']
                     self.global_res_map[node][stream_nm] = []
                     self.global_res_map[node][stream_nm] = list(map(int, nmap['ranks']))  
                     self.stream_nm[node].append(stream_nm)
+                    self.stream_prog[node][stream_nm]= nmap['stream_prog']
                     self.stream_engs[node][stream_nm] = nmap['stream_eng']
                     self.validate_model_params(node, stream_nm, nmap['model_params'])
                     if stream_nm not in self.global_rev_res_map.keys():     
@@ -111,6 +113,7 @@ class configuration():
                 self.global_res_map[node][stream_nm] = []
                 self.global_res_map[node][stream_nm] = list(map(int, nmap['ranks']))  
                 self.stream_nm[node].append(stream_nm)
+                self.stream_prog[node][stream_nm]= nmap['stream_prog']
                 self.stream_engs[node][stream_nm] = nmap['stream_eng']
                 self.validate_model_params(node, stream_nm, nmap['model_params'])
                 if stream_nm not in self.global_rev_res_map.keys():    
@@ -129,16 +132,16 @@ class configuration():
             self.tau_file_type[node][stream] ={} 
 
         if self.perf_model == "memory":
-            if int(params_list[0].strip()) != 0 or int(params_list[0].strip()) != 1:
+            if int(params_list[0].strip()) != 0 and int(params_list[0].strip()) != 1:
                 self.logger.debug("[Rank %d ] : tau_one_file should be 0 or 1 for %s .Params provided are %s . Using defalt value 0", self.wrank, stream, int(params_list[0].strip()))
                 self.tau_one_file[node][stream] = 0  
             else:
-                self.tau_one_file[node][stream] = 1 #int(params_list[0].strip():)
-            if params_list[1] not in ["trace", "profile"] :
+                self.tau_one_file[node][stream] = int(params_list[0].strip())
+            if params_list[1].strip() not in ["trace", "profile"] :
                 self.logger.debug("[Rank %s ] : tau_file_type should be trace or profile for %s. Using defalt value trace", self.wrank, stream)
                 self.tau_file_type[node][stream] = "adios2" 
             else:
-                self.tau_file_type[node][stream] = params_list[1]
+                self.tau_file_type[node][stream] = params_list[1].strip() 
 
         if self.perf_model == "heartbeat":
             if len(params_list) != 10:
@@ -149,20 +152,20 @@ class configuration():
             self.reader_config[node][stream] = params_list 
 
         if self.perf_model == "pace":
-            if len(params_list) != 5:
+            if len(params_list) != 7:
                 self.logger.debug("[Rank %d] : Insufficient model parameters for %s", self.wrank, stream) 
                 exit
-            if int(params_list[3].strip()) not in [0,1]: #!= 0 or int(params_list[3].strip()) != 1:
-                self.logger.debug("[Rank %d ] : tau_one_file should be 0 or 1 for %s .Params provided are %s . Using defalt value 0", self.wrank, stream, int(params_list[3].strip()))
+            if int(params_list[4].strip()) not in [0,1]: #!= 0 or int(params_list[3].strip()) != 1:
+                self.logger.debug("[Rank %d ] : tau_one_file should be 0 or 1 for %s .Params provided are %s . Using defalt value 0", self.wrank, stream, int(params_list[4].strip()))
                 self.tau_one_file[node][stream] = 0
             else:
-                self.tau_one_file[node][stream] = int(params_list[3].strip())
+                self.tau_one_file[node][stream] = int(params_list[4].strip())
 
-            if params_list[-1].strip() not in ["trace", "profile"] :
-                self.logger.debug("[Rank %s ] : tau_file_type %s not in trace or profile for %s. Using defalt value adios2", self.wrank, params_list[-1], stream)
+            if params_list[5].strip() not in ["trace", "profile"] :
+                self.logger.debug("[Rank %s ] : tau_file_type %s not in trace or profile for %s. Using defalt value adios2", self.wrank, params_list[5], stream)
                 self.tau_file_type[node][stream] = "adios2" 
             else:
-                self.tau_file_type[node][stream] = params_list[-1].strip()
+                self.tau_file_type[node][stream] = params_list[5].strip()
             if node not in self.reader_config.keys():
                 self.reader_config[node] = {}
             self.reader_config[node][stream] = params_list 
@@ -211,19 +214,21 @@ class configuration():
                     self.reader_blocks[asg_node][stream_nm] = self.reader_procs[asg_node][stream_nm]
 
                 conn_streams_set = self.actual_streams_map[asg_node][stream_nm]
-                self.logger.debug("[Rank %d] : Stream : %s Node %s connections: %s", self.wrank, stream_nm, asg_node, conn_streams_set) # self.active_reader_objs)   
+                self.logger.debug("[Rank %d] : Stream : %s Node %s connections: %s Model %s", self.wrank, stream_nm, asg_node, conn_streams_set, self.perf_model) # self.active_reader_objs)   
                 for stream_nm1 in conn_streams_set:
                     reader_obj = None 
                     #create  an adios2 object based on model
-                    if "memory" == self.perf_model:
-                        reader_obj = adios2_tau_reader(stream_nm1,  self.stream_engs[asg_node][stream_nm], mpi_comm, self.reader_blocks[asg_node][stream_nm], 0) #self.tau_file_type[asg_node][stream_nm])
-                    if "error" == self.perf_model:
+                    if "memory" == self.perf_model.strip():
+                        self.logger.debug("[Rank %d] : Processing model %s", self.wrank, self.perf_model) # self.active_reader_objs)   
+                        reader_obj = adios2_tau_reader(stream_nm1,  self.stream_engs[asg_node][stream_nm], mpi_comm, self.reader_blocks[asg_node][stream_nm], self.tau_file_type[asg_node][stream_nm])
+                    elif "error" == self.perf_model:
                         reader_obj = error_reader(stream_nm1, "text" ) #self.tau_file_type[asg_node][stream_nm])
                     elif "pace" == self.perf_model:
                         if  self.tau_file_type[asg_node][stream_nm] == "trace" or  self.tau_file_type[asg_node][stream_nm] == "trace":
                             reader_obj = adios2_tau_reader(stream_nm1,  self.stream_engs[asg_node][stream_nm], mpi_comm, self.reader_blocks[asg_node][stream_nm], self.tau_file_type[asg_node][stream_nm])
                         else:
-                            reader_obj = adios2_generic_reader(stream_nm1,  self.stream_engs[asg_node][stream_nm], mpi_comm, self.reader_blocks[asg_node][stream_nm])
+                            reader_obj = adios2_tau_reader(stream_nm1,  self.stream_engs[asg_node][stream_nm], mpi_comm, self.reader_blocks[asg_node][stream_nm], self.tau_file_type[asg_node][stream_nm])
+                            #reader_obj = adios2_generic_reader(stream_nm1,  self.stream_engs[asg_node][stream_nm], mpi_comm, self.reader_blocks[asg_node][stream_nm])
                     else:
                         reader_obj = stream_nm1
 
@@ -406,6 +411,7 @@ class configuration():
         self.active_reader_objs = {}
         self.stream_engs = {}
         self.stream_nm = {} 
+        self.stream_prog = {} 
         self.reader_blocks = {}
         self.reader_procs = {}
         self.reader_config= {}
@@ -466,10 +472,11 @@ class configuration():
         for nodes in self.active_reader_objs.keys():
             for streams in self.active_reader_objs[nodes].keys():
                 for conc in self.active_reader_objs[nodes][streams]:
-                    self.logger.debug("[Rank %d] : Trying to open %s.....", self.wrank, conc )
+                    #self.logger.debug("[Rank %d] : Trying to open %s.....", self.wrank, conc )
                     conc.open() 
-            if self.perf_model == "pace":
-               return
+                    self.logger.debug("[Rank %d] : Opened %s.....", self.wrank, conc )
+            #if self.perf_model == "pace":
+            #   return
 
     # Close all active (local): adios2 streams
     def close_connections(self):
@@ -481,8 +488,8 @@ class configuration():
             for streams in self.active_reader_objs[nodes].keys():
                 for conc in self.active_reader_objs[nodes][streams]:
                     conc.close() 
-            if self.perf_model == "pace":
-               return
+            #if self.perf_model == "pace":
+            #   return
 
     
     # Calls beginstep on all active (local): adios2 streams
@@ -498,16 +505,16 @@ class configuration():
             for streams in self.active_reader_objs[nodes].keys():
                 stream_nm = streams
                 for conc in self.active_reader_objs[nodes][streams]:
-                    #self.logger.debug("[Rank ", self.wrank, "] :","Reading step from..", conc.inputfile):
                     ret_tmp = conc.advance_step(reconnect)
+                    #self.logger.debug("[Rank %d] : Next iteration begins..%s", self.wrank, streams)
                     if ret_tmp == True:
                         retAny =  True
                     else: 
                         ret =  False
-                    #self.logger.debug("[Rank ", self.wrank, "] :","Read step fro m..", conc.inputfile, " ... ret ", ret_tmp):
-            if stream_nm != None and self.tau_one_file[nodes][stream_nm] == 0:
-             #self.perf_model == "pace":
-               return ret, retAny
+                    #self.logger.debug("[Rank ", self.wrank, "] :","Read step fro m..", conc.inputfile, " ... ret ", ret_tmp)
+            #if stream_nm != None and self.tau_one_file[nodes][stream_nm] == 0:
+            #if self.perf_model == "pace":
+            #   return ret, retAny
         return ret, retAny
   
 
@@ -519,6 +526,8 @@ class configuration():
             for streams in self.active_reader_objs[nodes].keys():
                 for conc in self.active_reader_objs[nodes][streams]:
                     conc.end_step() 
+                    #self.logger.debug("[Rank %d] : Closing step for .. %s", self.wrank, streams)
+                    #self.logger.debug("[Rank ", self.wrank, "] :","Closed step from..", conc.inputfile)
             if self.perf_model == "pace":
                return
     

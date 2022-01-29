@@ -104,7 +104,9 @@ class Rmonitor():
             j_data = json.dumps(request)
         return j_data
  
-    def get_update(self, model_name, timestamp, local_state, req_type):
+    def get_update(self, model, timestamp, req_type):
+        model_name = model.name
+        local_state = model.get_curr_state()
         try: 
             global_state = self.mpi_comm.gather(local_state, root=0)
             request = {}
@@ -114,12 +116,14 @@ class Rmonitor():
                 request["socket"] = self.config.iport
                 request["timestamp"] = str(timestamp)
                 request["msg_type"] = req_type
+                if model_name == "memory":
+                   global_state = model.merge_curr_state(global_state)     
                 request["message"] = global_state
                 j_data = json.dumps(request)
         except Exception as e:
            traceback.print_exc()
            #print(e) 
-        #self.mpi_comm.Barrier()
+        self.mpi_comm.Barrier()
         return j_data
  
     def if_send_update(self, socket):
@@ -150,13 +154,15 @@ class Rmonitor():
         sys.stdout.flush() 
         ret = False
         ret1, ret2 = self.config.begin_next_step(self.reconnect)
+
         if ret1 == True and self.reconnect:
             self.reconnect = False 
         if ret2 == True:
             ret = True  
-            #print("Reading stream!!")  
+
         for mdls in self.model_objs:
             mdls.update_curr_state()
+
         self.config.end_current_step()
         #self.mpi_comm.Barrier()
         return ret
@@ -217,7 +223,7 @@ class Rmonitor():
                     message = None
                                         
                     with self.msg_cond:
-                        print("Worker: checking msg queue ..len ", len(self.msg_queue)) 
+                        #print("Worker: checking msg queue ..len ", len(self.msg_queue)) 
                         while len(self.msg_queue) > 0:
                             message = self.msg_queue[0]
                             self.msg_queue.remove(message)
@@ -225,7 +231,7 @@ class Rmonitor():
                     if message is not None: 
                         response = self.process_request(message)
                         if response is not None:
-                            #print("Worker: sending a response...", response)
+                            print("Worker: sending a response...", response)
                             sys.stdout.flush()
                             self.send_req_or_res(socket, response)
                             if self.rank == 0 :
@@ -273,7 +279,7 @@ class Rmonitor():
                 message=""
                 #print("Controller : Waiting for new message ")
                 sys.stdout.flush() 
-                if self.rank == 0:     
+                if self.rank == 0:
                     j_data = g_socket.recv()
                     js_data = json.loads(j_data)
                     print("Rank [", self.rank,"] : Got a request from ", self.isocket, " ", js_data, flush = True) 
@@ -284,7 +290,7 @@ class Rmonitor():
                     #print("Publishing request to ", self.lsocket, " ", j_data) 
                        sys.stdout.flush()
                        #time.sleep(10)
-                
+                    #print("Rank [", self.rank, "] : Got a request from ", l_socket, " ", message, flush = True) 
                 else:
                     message = l_socket.recv_string()
                     print("Rank [", self.rank, "] : Got a request from ", l_socket, " ", message, flush = True) 
@@ -317,7 +323,9 @@ class Rmonitor():
              #timestamp = list(divmod(timestamp.total_seconds(), 60))
              #print(self.model_objs)   
             mdls = self.model_objs[-1] #s[request["model"]] 
-            response = self.get_update(mdls.name, timestamp, mdls.get_curr_state(), "res:update")
+            #response = self.get_update(mdls.name, timestamp, mdls.get_curr_state(), "res:update")
+            response = self.get_update(mdls, timestamp, "res:update")
+            
         elif request["msg_type"] == "req:stop":
             #print("Processing an update request...", request)
             sys.stdout.flush()

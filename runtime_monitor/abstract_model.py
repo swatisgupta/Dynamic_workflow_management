@@ -19,6 +19,10 @@ class model(abc.ABC):
          pass   
 
      @abc.abstractmethod 
+     def merge_curr_state(self, data):
+         pass   
+
+     @abc.abstractmethod 
      def get_model_name(self):
          pass   
 

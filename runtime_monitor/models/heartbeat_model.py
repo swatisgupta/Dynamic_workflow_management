@@ -28,6 +28,9 @@ class heartbeat(abstract_model.model):
     def dump_curr_state(self):
         return
 
+    def merge_curr_state(self):
+        return
+
     def update_curr_state(self):
         #print(self.active_conns) 
         for node in self.active_conns.keys():

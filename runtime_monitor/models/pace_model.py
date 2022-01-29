@@ -35,6 +35,9 @@ class pace(abstract_model.model):
     def dump_curr_state(self):
         return
 
+    def merge_curr_state(self):
+        return
+
     def __timestamp_to_date(self, unix_ts):
         ts_in_ms = [ j/1000000 for j in unix_ts]
         dateconv = np.vectorize(dt.datetime.fromtimestamp)
@@ -120,7 +123,7 @@ class pace(abstract_model.model):
                             continue
 
                         x_conn_var[id] = conn_var[proc] 
-                        #print("Read ", id ," isvlalid = ", isvalid, " var = ", x_conn_var[id], flush=True)
+                        print("Read ", id ," isvlalid = ", isvalid, " var = ", x_conn_var[id], flush=True)
 
                         if id not in self.read_values[node][stream].keys():
                             self.read_values[node][stream][id] = np.array([])
@@ -192,14 +195,15 @@ class pace(abstract_model.model):
                     self.stream_read_steps[node][stream].extend((step_times[node][stream]).tolist())
                     self.stream_n_steps[node][stream] = self.stream_n_steps[node][stream] + n_steps 
                     self.stream_cur_steps[node][stream] = self.stream_cur_steps[node][stream] + n_steps
-                    #print(" STEPTIMES :",  step_times[node][stream])
+                    print(" STEPTIMES(", stream, ") :",  step_times[node][stream])
                     self.stream_sum_steptime[node][stream] += np.sum(step_times[node][stream]) #cur_diff
                      
                 if self.stream_n_steps[node][stream] > 10:
                     #t_read = self.stream_cur_steps[node][stream] - 10
                     self.stream_sum_steptime[node][stream] =  np.sum(self.stream_read_steps[node][stream][-10:]) #cur_diff
                     #self.stream_n_steps[node][stream] = 10
-                self.get_curr_state()
+                print(" STEPTIMES(", stream, ") :",  step_times[node][stream])
+                #self.get_curr_state()
             return         
         #sys.stdout.flush()
 
@@ -272,8 +276,7 @@ class pace(abstract_model.model):
                 #print("Outsteps1: Preparing an update for node ", node, " stream ", str)
                 j_data[node]['N_STEPS'][string] = self.stream_cur_steps[node][stream]
                 j_data[node]['RESTART_STEPS'][string] = self.restart_steps[node][stream]
-                j_data[node]['LAST_STEP_TIMES'][string] = [ self.stream_connect_steps[node][stream], self.stream_read_steps[node][stream], 
-                                                         self.stream_process_steps[node][stream], self.stream_write_steps[node][stream] ] 
+                j_data[node]['LAST_STEP_TIMES'][string] = [ self.stream_connect_steps[node][stream], self.stream_read_steps[node][stream], self.stream_process_steps[node][stream], self.stream_write_steps[node][stream] ] 
                 if self.stream_n_steps[node][stream] >= 10 :
                     j_data[node]['AVG_STEP_TIME'][string] = float(self.stream_sum_steptime[node][stream]/10)  
                     print(stream, ": ", str(self.stream_sum_steptime[node][stream]), "10" )
